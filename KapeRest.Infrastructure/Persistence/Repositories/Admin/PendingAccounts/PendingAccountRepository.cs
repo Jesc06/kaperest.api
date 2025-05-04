@@ -33,10 +33,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.PendingAccounts
         {
             var alreadyExists = await _context.PendingUserAccount
                .FirstOrDefaultAsync(x => x.Email == pending.Email);
-
             if (alreadyExists is not null)
                 return "A pending account with this email already exists.";
-
             //Validate role rules
             if (pending.Role == "Cashier")
             {
@@ -49,16 +47,12 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.PendingAccounts
             {
                 if (string.IsNullOrEmpty(pending.CashierId))
                     return "Staff must be linked to a cashier.";
-
                 var cashierExists = await _userManager.FindByIdAsync(pending.CashierId);
                 if (cashierExists == null)
                     return "Cashier does not exist.";
             }
-            else
-            {
-                pending.BranchId = null;
-            }
-
+            else { pending.BranchId = null; }
+            
             var pendingUser = new PendingUserAccount
             {
                 FirstName = pending.FirstName,
@@ -71,9 +65,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.PendingAccounts
                 BranchId = pending.BranchId,
                 CashierId = pending.CashierId //Save Cashier link
             };
-
             _context.PendingUserAccount.Add(pendingUser);
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = pending.Email,
@@ -82,20 +74,18 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.PendingAccounts
                 Description = "Processing pending account",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
             return "Successfully registered pending account!";
         }
 
+        
         public async Task<string> ApprovePendingAccount(int id, string username, string role)
         {
             var pending = await _context.PendingUserAccount.FindAsync(id);
             if (pending == null)
                 return "Pending account not found.";
-
             if (pending.Status is not "Pending")
                 throw new Exception("Account already processed.");
-
             var user = new UsersIdentity
             {
                 FirstName = pending.FirstName,
@@ -107,24 +97,20 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.PendingAccounts
                 //assign Cashier link if Staff
                 CashierId = pending.Role == "Staff" ? pending.CashierId : null
             };
-
-
             var branch = await _context.Branches
                 .Where(b => b.Id == pending.BranchId)
                 .FirstOrDefaultAsync();
-
             branch.Staff = $"{pending.FirstName} {pending.MiddleName} {pending.LastName}";
             branch.Status = "Active";
-
-
             var result = await _userManager.CreateAsync(user, pending.Password);
+            
             if (!result.Succeeded)
                 return "Failed to create user account. Already exists.";
-
+            
             await _userManager.AddToRoleAsync(user, pending.Role);
-
+            
             _context.PendingUserAccount.Remove(pending);
-
+            
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = username,
