@@ -22,17 +22,14 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
         {
             _context = context;
         }
-
-     
+        
         public async Task<string> AddProductOfSuppliers(string currentUser, string role, CreateProductDTO addProduct)
         {
             var supplier = await _context.Suppliers
                 .Include(s => s.TransactionHistories)
                 .FirstOrDefaultAsync(s => s.Id == addProduct.SupplierId);
-
             if (supplier is null)
                 return "Supplier does not exist.";
-
             var product = new ProductOfSupplier
             {
                 ProductName = addProduct.ProductName,
@@ -43,11 +40,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                 CashierId = currentUser,        // ⭐ SECURED — linked to authenticated user
                 BranchId = addProduct.BranchId  ,
                 UserId = addProduct.UserId 
-
             };
-
             await _context.Products.AddAsync(product);
-
             supplier.TransactionHistories.Add(new SupplierTransactionHistory
             {
                 User = currentUser,
@@ -59,7 +53,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                 TotalCost = addProduct.CostPrice * addProduct.Stocks,
                 TransactionDate = DateTime.Now
             });
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = currentUser,
@@ -68,9 +61,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                 Description = $"Added product {addProduct.ProductName}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
-
             return "Successfully added products";
         }
 
@@ -79,15 +70,12 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
             var product = await _context.Products
                 .Where(p => p.Id == update.Id && p.CashierId == currentUser)   
                 .FirstOrDefaultAsync();
-
             if (product == null)
                 return "Product not found or access denied.";
-
             product.ProductName = update.ProductName ?? product.ProductName;
             product.CostPrice = update.Prices ?? product.CostPrice;
             product.Stocks = update.Stocks ?? product.Stocks;
             product.Units = update.Units ?? product.Units;
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = currentUser,
@@ -96,7 +84,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                 Description = $"Updated product {product.ProductName}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
             return "Successfully updated products";
         }
@@ -107,12 +94,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
             var product = await _context.Products
                 .Where(p => p.Id == productId && p.CashierId == currentUser) 
                 .FirstOrDefaultAsync();
-
             if (product == null)
                 throw new Exception("Product not found or access denied.");
-
             _context.Products.Remove(product);
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = currentUser,
@@ -121,13 +105,11 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                 Description = $"Deleted product {product.ProductName}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
             return true;
         }
 
-
-
+        
         public async Task<ICollection> GetAllProducts(string userID)
         {
             var products = await _context.Products
@@ -162,7 +144,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                         .FirstOrDefault()
                 })
                 .ToListAsync();
-
             return products;
         }
 
@@ -179,7 +160,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                     p.CostPrice,
                     p.TransactionDate,
                     p.Supplier.SupplierName,
-
                     Branch = _context.Branches
                         .Where(b => b.Id == p.BranchId)
                         .Select(b => new
@@ -188,7 +168,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                             b.Location
                         })
                         .FirstOrDefault(),
-
                     Cashier = _context.UsersIdentity
                         .Where(c => c.Id == p.CashierId)
                         .Select(c => new
@@ -200,7 +179,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                         .FirstOrDefault()
                 })
                 .ToListAsync();
-
             return products;
         }
 
@@ -224,9 +202,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory
                     sm.BranchId
                 })
                 .ToListAsync();
-
             return movements;
         }
+        
 
     }
 }
