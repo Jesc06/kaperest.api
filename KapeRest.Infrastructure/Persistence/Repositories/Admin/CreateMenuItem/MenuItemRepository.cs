@@ -157,23 +157,18 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
         {
             var menuItem = await _context.MenuItems
                 .FirstOrDefaultAsync(m => m.Id == id && m.CashierId == cashierId);
-
             if (menuItem == null)
                 return "Menu item not found or does not belong to this cashier";
-
             // Delete child MenuItemProducts
             var linkedProducts = _context.MenuItemProducts
                 .Where(mp => mp.MenuItemId == id);
             _context.MenuItemProducts.RemoveRange(linkedProducts);
-
             // Delete child MenuItemSizes
             var linkedSizes = _context.MenuItemSizes
                 .Where(s => s.MenuItemId == id);
             _context.MenuItemSizes.RemoveRange(linkedSizes);
-
             // SalesItems are not deleted; MenuItemId will be set to NULL automatically
             _context.MenuItems.Remove(menuItem);
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = cashierId,
@@ -182,7 +177,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                 Description = $"Deleted menu item {menuItem.ItemName}",
                 Date = DateTime.Now
             });
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -193,9 +187,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                 return ex.InnerException?.Message ?? ex.Message;
             }
         }
-
-
-
+        
 
         public async Task<ICollection> GetAllMenuItem(string cashierId)
         {
@@ -205,12 +197,10 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                     .ThenInclude(mp => mp.ProductOfSupplier)
                 .Include(m => m.MenuItemSizes)
                 .ToListAsync();
-
             foreach (var menuItem in menuItems)
             {
                 // Compute availability
                 string newStatus = CheckAvailability(menuItem);
-
                 // Update only if changed (prevents unnecessary DB operations)
                 if (menuItem.IsAvailable != newStatus)
                 {
@@ -218,13 +208,11 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                     _context.MenuItems.Update(menuItem);
                 }
             }
-
             await _context.SaveChangesAsync();
             return menuItems;
         }
-
-
-
+        
 
     }
 }
+
