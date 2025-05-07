@@ -22,7 +22,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
         {
             _context = context;
         }
-
         // Helper: determine availability based on linked products and their stocks
         private string CheckAvailability(MenuItem menuItem)
         {
@@ -31,27 +30,13 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                 // If there are no linked products, consider it Available by default
                 return "Available";
             }
-
             foreach (var itemProduct in menuItem.MenuItemProducts)
             {
                 var product = itemProduct.ProductOfSupplier;
-                if (product == null)
-                {
-                    // missing product -> out of stock
-                    return "Out of Stock";
-                }
-
-                if (product.Stocks <= 0)
-                {
-                    return "Out of Stock";
-                }
-
-                if (product.Stocks < itemProduct.QuantityUsed)
-                {
-                    return "Out of Stock";
-                }
+                if (product == null) { return "Out of Stock"; }
+                if (product.Stocks <= 0) { return "Out of Stock"; }
+                if (product.Stocks < itemProduct.QuantityUsed){ return "Out of Stock"; }
             }
-
             return "Available";
         }
 
@@ -68,7 +53,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                 CashierId = dto.cashierId,
                 BranchId = null
             };
-
             // Only validate products if there are any
             if (dto.Products != null && dto.Products.Count > 0)
             {
@@ -76,7 +60,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                 {
                     var productExists = await _context.Products
                         .AnyAsync(p => p.Id == product.ProductOfSupplierId);
-
                     if (!productExists)
                         throw new Exception($"Product {product.ProductOfSupplierId} not found");
                     menuItem.MenuItemProducts.Add(new MenuItemProduct
@@ -100,9 +83,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                     });
                 }
             }
-
             _context.MenuItems.Add(menuItem);
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = user,
@@ -111,9 +92,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                 Description = $"Created menu item {dto.Item_name}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
-
             return menuItem;
         }
 
@@ -121,10 +100,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
         {
             var menuItem = await _context.MenuItems
                 .FirstOrDefaultAsync(m => m.Id == dto.Id && m.CashierId == dto.cashierId);
-
             if (menuItem == null)
                 throw new KeyNotFoundException("Menu item not found or does not belong to this cashier");
-
             // Update fields
             menuItem.ItemName = dto.Item_name;
             menuItem.Price = dto.Price;
@@ -132,12 +109,10 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
             menuItem.Description = dto.Description;
             menuItem.Image = dto.Image;
             menuItem.IsAvailable = dto.IsAvailable;
-
             // Remove existing MenuItemProducts
             var existingProducts = _context.MenuItemProducts
                 .Where(mp => mp.MenuItemId == dto.Id);
             _context.MenuItemProducts.RemoveRange(existingProducts);
-
             // Add new products (validation removed - products are shared)
             foreach (var product in dto.Products)
             {
@@ -148,12 +123,10 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                     QuantityUsed = product.QuantityUsed
                 });
             }
-
             // Update size variations
             var existingSizes = _context.MenuItemSizes
                 .Where(s => s.MenuItemId == dto.Id);
             _context.MenuItemSizes.RemoveRange(existingSizes);
-
             if (dto.Sizes != null && dto.Sizes.Count > 0)
             {
                 foreach (var size in dto.Sizes)
@@ -167,7 +140,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                     });
                 }
             }
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = dto.cashierId,
@@ -176,7 +148,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem
                 Description = $"Updated menu item {dto.Item_name}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
             return menuItem;
         }
