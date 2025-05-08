@@ -27,7 +27,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo
             var exists = await _context.Branches.AnyAsync(x => x.BranchName == dto.Name);
             if (exists)
                 throw new Exception("Branch already exists.");
-
             var branch = new BranchEntities
             {
                 BranchName = dto.Name,
@@ -35,9 +34,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo
                 Staff = "N/A",
                 Status = "N/A"
             };
-
             _context.Branches.Add(branch);
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = userId,
@@ -46,7 +43,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo
                 Description = $"Added branch {dto.Name} at {dto.Location}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
             return dto;
         }
@@ -70,9 +66,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo
             var branch = await _context.Branches.FindAsync(id);
             if (branch == null)
                 return "Branch not found.";
-
             _context.Branches.Remove(branch);
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = userId,
@@ -81,7 +75,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo
                 Description = $"Deleted branch {branch.BranchName}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
             return "Successfully deleted!";
         }
@@ -91,12 +84,10 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo
             var branch = await _context.Branches.FindAsync(dto.Id);
             if (branch == null)
                 throw new Exception("Branch not found.");
-
             branch.BranchName = dto.Name;
             branch.Location = dto.Location;
             branch.Staff = dto.Staff;
             branch.Status = dto.Status;
-
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = userId,
@@ -105,7 +96,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo
                 Description = $"Updated branch {dto.Name}",
                 Date = DateTime.Now
             });
-
             await _context.SaveChangesAsync();
             return dto;
         }

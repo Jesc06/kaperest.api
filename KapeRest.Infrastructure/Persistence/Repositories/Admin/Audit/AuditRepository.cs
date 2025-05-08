@@ -19,13 +19,11 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Audit
         {
             _context = context;
         }
-
         public async Task<List<AuditLogEntities>> GetAuditTrail()
         {
             var audit = await _context.AuditLog.ToListAsync();
             return audit;
         }
-
-
+        
     }
 }
