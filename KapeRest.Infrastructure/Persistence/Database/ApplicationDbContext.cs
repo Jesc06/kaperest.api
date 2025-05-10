@@ -133,11 +133,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                 entity.HasIndex(x => x.ContactNumber);
             });
         }
-
-
-
-
-
+        
         #region--Accounts--
         public DbSet<PendingUserAccount> PendingUserAccount { get; set; }
         public DbSet<UsersIdentity> UsersIdentity { get; set; }
