@@ -126,10 +126,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                     .OnDelete(DeleteBehavior.SetNull)
                     .IsRequired(false);
             });
-
-            // ---------------------------
-            // CUSTOMER
-            // ---------------------------
+            //customer
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasKey(x => x.Id);
