@@ -105,10 +105,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired(false);
             });
-
-            // ---------------------------
-            // VOUCHER USAGE
-            // ---------------------------
+            //vouncher usage
             modelBuilder.Entity<VoucherUsage>(entity =>
             {
                 entity.HasKey(x => x.Id);
