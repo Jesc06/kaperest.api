@@ -93,10 +93,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                     .HasForeignKey(x => x.MenuItemId)
                     .OnDelete(DeleteBehavior.SetNull); // Safe delete
             });
-
-            // ---------------------------
-            // VOUCHER
-            // ---------------------------
+            //vounchers
             modelBuilder.Entity<Voucher>(entity =>
             {
                 entity.HasKey(x => x.Id);
