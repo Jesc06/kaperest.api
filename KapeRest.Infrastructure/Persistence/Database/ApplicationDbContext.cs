@@ -78,10 +78,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired(false);
             });
-
-            // ---------------------------
-            // SALES ITEM
-            // ---------------------------
+            //sales items
             modelBuilder.Entity<SalesItemEntities>(entity =>
             {
                 entity.HasKey(x => x.Id);
