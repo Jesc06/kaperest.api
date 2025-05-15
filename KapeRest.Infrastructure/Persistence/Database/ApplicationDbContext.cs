@@ -62,10 +62,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                 .WithMany(b => b.PendingAccounts)
                 .HasForeignKey(p => p.BranchId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // ---------------------------
-            // SALES TRANSACTION
-            // ---------------------------
+            //sales transaction
             modelBuilder.Entity<SalesTransactionEntities>(entity =>
             {
                 entity.HasKey(x => x.Id);
