@@ -56,10 +56,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                 entity.HasIndex(e => new { e.MenuItemId, e.Size })
                     .IsUnique();
             });
-
-            // ---------------------------
-            // PENDING USER ACCOUNT
-            // ---------------------------
+            //pending user accounts
             modelBuilder.Entity<PendingUserAccount>()
                 .HasOne(p => p.Branch)
                 .WithMany(b => b.PendingAccounts)
