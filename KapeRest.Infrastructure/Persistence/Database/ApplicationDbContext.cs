@@ -43,10 +43,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
                     .HasForeignKey(e => e.ProductOfSupplierId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-
-            // ---------------------------
-            // MENU ITEM SIZE
-            // ---------------------------
+            //menu item size
             modelBuilder.Entity<MenuItemSize>(entity =>
             {
                 entity.HasKey(e => e.Id);
