@@ -28,10 +28,7 @@ namespace KapeRest.Infrastructure.Persistence.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // ---------------------------
-            // MENU ITEM PRODUCT
-            // ---------------------------
+            //menu item product
             modelBuilder.Entity<MenuItemProduct>(entity =>
             {
                 entity.HasKey(e => new { e.MenuItemId, e.ProductOfSupplierId });
