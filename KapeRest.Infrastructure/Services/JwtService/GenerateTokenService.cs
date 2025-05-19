@@ -98,7 +98,6 @@ namespace KapeRest.Infrastructure.Services.JwtService
                 IssuerSigningKey = new SymmetricSecurityKey(_key),
                 ValidateLifetime = false // allow expired token to get claims
             };
-
             var handler = new JwtSecurityTokenHandler();
             try
             {
@@ -108,13 +107,8 @@ namespace KapeRest.Infrastructure.Services.JwtService
                     return null;
                 return principal;
             }
-            catch
-            {
-                return null;
-            }
+            catch{return null;}
         }
-
         
-
     }
 }
