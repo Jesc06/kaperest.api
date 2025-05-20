@@ -23,6 +23,7 @@ namespace KapeRest.Infrastructure.Services.JwtService
         private readonly string Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")!;
         private readonly string Key = Environment.GetEnvironmentVariable("JWT_KEY")!;
         private readonly string TokenDurationInMinutes = Environment.GetEnvironmentVariable("JWT_TOKEN_DURATION_MINUTES")!;
+        
         public GenerateTokenService(IConfiguration config)
         {
             _config = config;
@@ -32,7 +33,6 @@ namespace KapeRest.Infrastructure.Services.JwtService
         public string CreateToken(JwtPayloadDTO payload, IEnumerable<Claim>? additionalClaim = null)
         {
             var expiry = double.Parse(TokenDurationInMinutes ?? "1");
-
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, payload.username ?? ""),
@@ -51,15 +51,11 @@ namespace KapeRest.Infrastructure.Services.JwtService
             if (payload.branchId != null)//ito ay option nilagay ko lang for features na gusto ko pero in by default alisin na ito
                 claims.Add(new Claim("branchId", payload.branchId.ToString()!));
             #endregion
-
             if (payload.roles != null)
                 claims.AddRange(payload.roles.Select(r => new Claim(ClaimTypes.Role, r)));
-
             if (additionalClaim != null)
                 claims.AddRange(additionalClaim);
-
             var credentials = new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256);
-
             var token = new JwtSecurityToken(
                 issuer: Issuer,
                 audience: Audience,
@@ -67,7 +63,6 @@ namespace KapeRest.Infrastructure.Services.JwtService
                 expires: DateTime.UtcNow.AddMinutes(expiry),
                 signingCredentials: credentials
             );
-
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
