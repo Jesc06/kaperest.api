@@ -29,6 +29,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             _context = context;
         }
 
+        
         public async Task<PaymentResultDto> CreateGcashPaymentAsync(CreatePaymentDTO dto)
         {
             if (dto == null) throw new ArgumentNullException(nameof(dto));
@@ -71,6 +72,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             };
         }
 
+        
         public byte[] GenerateQrCode(string checkoutUrl)
         {
             using var qrGenerator = new QRCodeGenerator();
@@ -81,6 +83,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
             return stream.ToArray();
         }
+        
         // Database storage for pending payments
         public async Task SavePendingPaymentAsync(PendingPaymentDTO dto)
         {
@@ -129,6 +132,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             Console.WriteLine($"Pending payment saved to database successfully!");
         }
 
+        
         public async Task<PaymentVerificationResult> VerifyPaymentStatusAsync(string referenceId)
         {
             if (string.IsNullOrEmpty(referenceId))
@@ -178,6 +182,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             }
         }
 
+        
         public async Task<bool> CompletePendingPaymentAsync(string paymentReference, string cashierId)
         {
             if (string.IsNullOrEmpty(paymentReference))
@@ -194,6 +199,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             return true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         }
 
+        
         public PendingPaymentDTO GetPendingPayment(string paymentReference)
         {
             var entity = _context.PendingGCashPayments
