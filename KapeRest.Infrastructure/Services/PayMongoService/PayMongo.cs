@@ -33,15 +33,12 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
         {
             if (dto == null) throw new ArgumentNullException(nameof(dto));
             if (dto.Amount <= 0) throw new ArgumentException("Amount must be greater than zero.");
-
             var client = new RestClient($"{_baseUrl}/sources");
             var request = new RestRequest();
             request.Method = Method.Post;
-
             var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(_secretKey + ":"));
             request.AddHeader("Authorization", $"Basic {authToken}");
             request.AddHeader("Content-Type", "application/json");
-
             var payload = new
             {
                 data = new
@@ -59,20 +56,14 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                     }
                 }
             };
-
             request.AddJsonBody(payload);
-
             var response = await client.ExecuteAsync(request);
-
             if (!response.IsSuccessful)
                 throw new Exception($"PayMongo error ({response.StatusCode}): {response.Content}");
-
             dynamic result = JsonConvert.DeserializeObject(response.Content!)!;
             string checkoutUrl = result?.data?.attributes?.redirect?.checkout_url!;
-
             if (string.IsNullOrEmpty(checkoutUrl))
                 throw new Exception("Checkout URL not found in PayMongo response.");
-
             return new PaymentResultDto
             {
                 CheckoutUrl = checkoutUrl,
@@ -90,24 +81,20 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
             return stream.ToArray();
         }
-
         // Database storage for pending payments
         public async Task SavePendingPaymentAsync(PendingPaymentDTO dto)
         {
             if (string.IsNullOrEmpty(dto.PaymentReference))
                 throw new ArgumentException("Payment reference is required");
-
             Console.WriteLine($"Saving pending payment to DATABASE:");
             Console.WriteLine($"Reference: {dto.PaymentReference}");
             Console.WriteLine($"CashierId: {dto.CashierId}");
             Console.WriteLine($"BranchId: {dto.BranchId}");
             Console.WriteLine($"Items: {dto.CartItems.Count}");
             Console.WriteLine($"Total: ₱{dto.TotalAmount:F2}");
-
             // Check if already exists
             var existing = await _context.PendingGCashPayments
                 .FirstOrDefaultAsync(p => p.PaymentReference == dto.PaymentReference);
-
             if (existing != null)
             {
                 // Update existing
@@ -136,10 +123,8 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                     CreatedAt = DateTime.Now,
                     IsCompleted = false
                 };
-
                 await _context.PendingGCashPayments.AddAsync(entity);
             }
-
             await _context.SaveChangesAsync();
             Console.WriteLine($"Pending payment saved to database successfully!");
         }
@@ -148,20 +133,16 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
         {
             if (string.IsNullOrEmpty(referenceId))
                 throw new ArgumentException("Reference ID is required");
-
             try
             {
                 // Call PayMongo API to check payment source status
                 var client = new RestClient($"{_baseUrl}/sources/{referenceId}");
                 var request = new RestRequest();
                 request.Method = Method.Get;
-
                 var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(_secretKey + ":"));
                 request.AddHeader("Authorization", $"Basic {authToken}");
                 request.AddHeader("Content-Type", "application/json");
-
                 var response = await client.ExecuteAsync(request);
-
                 if (!response.IsSuccessful)
                 {
                     return new PaymentVerificationResult
@@ -172,14 +153,11 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                         Message = $"Failed to verify payment: {response.Content}"
                     };
                 }
-
                 dynamic result = JsonConvert.DeserializeObject(response.Content!)!;
                 string status = result?.data?.attributes?.status?.ToString() ?? "pending";
-
                 // PayMongo source statuses: chargeable, pending, cancelled, expired
                 // "chargeable" means customer has authorized the payment
                 bool isCompleted = status.ToLower() == "chargeable";
-
                 return new PaymentVerificationResult
                 {
                     Status = status,
@@ -204,17 +182,14 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
         {
             if (string.IsNullOrEmpty(paymentReference))
                 throw new ArgumentException("Payment reference is required");
-
             // Check if exists in database and not completed
             var exists = await _context.PendingGCashPayments
                 .AnyAsync(p => p.PaymentReference == paymentReference && !p.IsCompleted);
-            
             if (!exists)
             {                                                                                                                                                                                                                               
                 Console.WriteLine($"No pending payment found in database for {paymentReference}");
                 return false;
             }
-
             Console.WriteLine($"Pending payment found for {paymentReference} - ready for completion");
             return true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         }
@@ -223,20 +198,16 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
         {
             var entity = _context.PendingGCashPayments
                 .FirstOrDefault(p => p.PaymentReference == paymentReference && !p.IsCompleted);
-
             if (entity == null)
             {
                 Console.WriteLine($"No pending payment found in database for {paymentReference}");
                 return null;
             }
-
             Console.WriteLine($"Found pending payment in database for {paymentReference}");
             Console.WriteLine($"CashierId: {entity.CashierId}");
             Console.WriteLine($"BranchId: {entity.BranchId}");
-
             // Deserialize cart items
             var cartItems = JsonConvert.DeserializeObject<List<CartItemDTO>>(entity.CartItemsJson) ?? new List<CartItemDTO>();
-
             var dto = new PendingPaymentDTO
             {
                 PaymentReference = entity.PaymentReference,
@@ -247,13 +218,11 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                 TotalAmount = entity.TotalAmount,
                 CartItems = cartItems
             };
-
             // Mark as completed
             entity.IsCompleted = true;
             _context.PendingGCashPayments.Update(entity);
             _context.SaveChanges();
             Console.WriteLine($"Marked payment as completed in database");
-
             return dto;
         }
         
