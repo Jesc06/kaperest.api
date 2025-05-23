@@ -98,11 +98,11 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                 throw new ArgumentException("Payment reference is required");
 
             Console.WriteLine($"Saving pending payment to DATABASE:");
-            Console.WriteLine($"   Reference: {dto.PaymentReference}");
-            Console.WriteLine($"   CashierId: {dto.CashierId}");
-            Console.WriteLine($"   BranchId: {dto.BranchId}");
-            Console.WriteLine($"   Items: {dto.CartItems.Count}");
-            Console.WriteLine($"   Total: ₱{dto.TotalAmount:F2}");
+            Console.WriteLine($"Reference: {dto.PaymentReference}");
+            Console.WriteLine($"CashierId: {dto.CashierId}");
+            Console.WriteLine($"BranchId: {dto.BranchId}");
+            Console.WriteLine($"Items: {dto.CartItems.Count}");
+            Console.WriteLine($"Total: ₱{dto.TotalAmount:F2}");
 
             // Check if already exists
             var existing = await _context.PendingGCashPayments
