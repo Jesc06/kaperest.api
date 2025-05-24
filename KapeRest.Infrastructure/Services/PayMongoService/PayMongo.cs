@@ -97,7 +97,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             if (string.IsNullOrEmpty(dto.PaymentReference))
                 throw new ArgumentException("Payment reference is required");
 
-            Console.WriteLine($"💾 Saving pending payment to DATABASE:");
+            Console.WriteLine($"Saving pending payment to DATABASE:");
             Console.WriteLine($"   Reference: {dto.PaymentReference}");
             Console.WriteLine($"   CashierId: {dto.CashierId}");
             Console.WriteLine($"   BranchId: {dto.BranchId}");
