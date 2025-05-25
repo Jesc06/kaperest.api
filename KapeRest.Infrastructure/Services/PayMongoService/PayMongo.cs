@@ -215,7 +215,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                 return false;
             }
 
-            Console.WriteLine($"✅ Pending payment found for {paymentReference} - ready for completion");
+            Console.WriteLine($"Pending payment found for {paymentReference} - ready for completion");
             return true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         }
 
