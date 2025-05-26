@@ -211,7 +211,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             
             if (!exists)
             {                                                                                                                                                                                                                               
-                Console.WriteLine($"❌ No pending payment found in database for {paymentReference}");
+                Console.WriteLine($"No pending payment found in database for {paymentReference}");
                 return false;
             }
 
