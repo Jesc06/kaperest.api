@@ -231,8 +231,8 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             }
 
             Console.WriteLine($"Found pending payment in database for {paymentReference}");
-            Console.WriteLine($"   CashierId: {entity.CashierId}");
-            Console.WriteLine($"   BranchId: {entity.BranchId}");
+            Console.WriteLine($"CashierId: {entity.CashierId}");
+            Console.WriteLine($"BranchId: {entity.BranchId}");
 
             // Deserialize cart items
             var cartItems = JsonConvert.DeserializeObject<List<CartItemDTO>>(entity.CartItemsJson) ?? new List<CartItemDTO>();
