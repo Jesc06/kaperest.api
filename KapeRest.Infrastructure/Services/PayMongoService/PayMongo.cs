@@ -230,7 +230,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                 return null;
             }
 
-            Console.WriteLine($"✅ Found pending payment in database for {paymentReference}");
+            Console.WriteLine($"Found pending payment in database for {paymentReference}");
             Console.WriteLine($"   CashierId: {entity.CashierId}");
             Console.WriteLine($"   BranchId: {entity.BranchId}");
 
