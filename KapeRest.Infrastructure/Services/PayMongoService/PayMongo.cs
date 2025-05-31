@@ -210,13 +210,13 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
                 .AnyAsync(p => p.PaymentReference == paymentReference && !p.IsCompleted);
             
             if (!exists)
-            {
+            {                                                                                                                                                                                                                               
                 Console.WriteLine($"❌ No pending payment found in database for {paymentReference}");
                 return false;
             }
 
             Console.WriteLine($"✅ Pending payment found for {paymentReference} - ready for completion");
-            return true;
+            return true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         }
 
         public PendingPaymentDTO GetPendingPayment(string paymentReference)
@@ -252,10 +252,11 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             entity.IsCompleted = true;
             _context.PendingGCashPayments.Update(entity);
             _context.SaveChanges();
-            Console.WriteLine($"✅ Marked payment as completed in database");
+            Console.WriteLine($"Marked payment as completed in database");
 
             return dto;
         }
-
+        
+        
     }
 }
