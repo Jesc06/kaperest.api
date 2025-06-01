@@ -141,7 +141,7 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             }
 
             await _context.SaveChangesAsync();
-            Console.WriteLine($"✅ Pending payment saved to database successfully!");
+            Console.WriteLine($"Pending payment saved to database successfully!");
         }
 
         public async Task<PaymentVerificationResult> VerifyPaymentStatusAsync(string referenceId)
