@@ -26,22 +26,6 @@
 
 
 <br>
-
-## Tech Stack
-
-| Category | Technology |
-|-----------|-------------|
-| **Backend** | ASP.NET Core Web API |
-| **Frontend** | React (TypeScript / JavaScript) |
-| **Programming Language** | C# |
-| **API Testing** | Postman |
-| **API Documentation** | Swagger |
-| **Version Control** | Git & GitHub |
-
-
-
-
-<br>
 <br>
 <br>
 
