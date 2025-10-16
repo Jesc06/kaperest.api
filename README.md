@@ -1,12 +1,6 @@
-<p align="center">
+<p align="left">
   <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="120" alt="Kape Rest Logo">
 </p>
-
-<h1 align="center">KapeRest POS</h1> 
-
-<br>
-<br>
-
 
 <h1 align="left">KapeRest☕</h1>
 <h3 align="left">
