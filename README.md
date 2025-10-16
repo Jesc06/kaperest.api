@@ -4,7 +4,7 @@
 
 
 <p align="left">
-  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="120" alt="Kape Rest Logo">
+  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="130" alt="Kape Rest Logo">
 </p>
 
 <h1 align="left">KapeRest</h1>
@@ -67,5 +67,5 @@ Every component emphasizes clean design, maintainability, and user experience.
 <br>
 
 <p align="left">
-  <b>Built for KapeRest</b> — a refined approach to café management for the modern age.
+  <b>Built for KapeRest</b> a refined approach to café management for the modern age.
 </p>
