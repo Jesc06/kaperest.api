@@ -1,6 +1,8 @@
 <p align="center">
-  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kaperest-banner.png" width="100%" alt="KapeRest Banner">
+  <img src="https://github.com/Jesc06/Images-Sources/blob/main/banner.jpg" width="100%" alt="KapeRest Banner">
 </p>
+
+<br>
 
 <p align="left">
   <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="120" alt="Kape Rest Logo">
