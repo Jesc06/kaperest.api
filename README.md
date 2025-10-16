@@ -10,7 +10,7 @@
 <h1 align="left">KapeRest</h1>
 
 <h3 align="left">
-  A full-stack web application crafted for <b>KapeRest</b>, integrating <b>Point of Sale</b> and <b>Inventory Management</b> into one seamless system designed for performance, reliability, and the refined rhythm of modern café operations.
+  A full-stack web application build for <b>KapeRest</b>, integrating <b>Point of Sale</b> and <b>Inventory Management</b> into one seamless system designed for performance, reliability, and the refined rhythm of modern café operations.
 </h3>
 
 ---
@@ -59,13 +59,18 @@ Customizable business settings — taxes, discounts, and operational parameters.
 
 ### Vision
 
-KapeRest is more than a POS system — it’s a foundation for digital café management built to scale with real-world business needs.  
+KapeRest is more than a POS system it’s a foundation for digital café management built to scale with real-world business needs.  
 Every component emphasizes clean design, maintainability, and user experience.
 
 ---
 
-<br>
-
 <p align="left">
   <b>Built for KapeRest</b> a refined approach to café management for the modern age.
 </p>
+
+<br>
+<br>
+
+---
+
+<b>Made with</b> ❤️ by John Joshua Manalo Escarez
