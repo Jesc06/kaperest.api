@@ -1,16 +1,16 @@
-<p align="center">
-  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="150" alt="Kape Rest Logo">
+<p align="left">
+  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="120" alt="Kape Rest Logo">
 </p>
 
-<h1 align="center">☕KapeRest</h1>
-<h3 align="center">
+<h1 align="left">KapeRest☕</h1>
+<h3 align="left">
   A full-stack web application for <b>Kape Rest</b> integrating Point of Sale and Inventory Management features using modern web technologies built for efficiency, reliability, and smooth café operations.
 </h3>
 
 <br>
 
 
-<div align="center">
+<div align="left">
 
 ## Tech Stack
 
@@ -41,8 +41,8 @@
 <br>
 <br>
 
-<p align="center">
-  ☕<b>Built for Kape Rest</b> — Efficient, reliable, and modern café management system.
+<p align="left">
+  <b>Built for KapeRest☕</b> — Efficient, reliable, and modern café management system.
 </p>
 
 </div>
