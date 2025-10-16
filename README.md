@@ -12,6 +12,21 @@
 
 <div align="left">
 
+
+
+## Main Modules & Features
+
+**User Management** – Secure login, roles, and account control  
+**Point of Sale (POS)** – Fast and accurate sales transactions  
+**Inventory Management** – Real-time stock tracking and alerts  
+**Supplier Management** – Organized supplier records and history  
+**Sales Reports** – Daily, weekly, and monthly performance summaries  
+**Transaction History** – View and reprint past sales  
+**System Settings** – Configurable tax, discounts, and business info  
+
+
+<br>
+
 ## Tech Stack
 
 | Category | Technology |
@@ -23,17 +38,6 @@
 | **API Documentation** | Swagger |
 | **Version Control** | Git & GitHub |
 
-<br>
-
-## Main Modules & Features
-
-**User Management** – Secure login, roles, and account control  
-**Point of Sale (POS)** – Fast and accurate sales transactions  
-**Inventory Management** – Real-time stock tracking and alerts  
-**Supplier Management** – Organized supplier records and history  
-**Sales Reports** – Daily, weekly, and monthly performance summaries  
-**Transaction History** – View and reprint past sales  
-**System Settings** – Configurable tax, discounts, and business info  
 
 
 
