@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kaperest-banner.png" width="100%" alt="KapeRest Banner">
+</p>
+
 <p align="left">
   <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="120" alt="Kape Rest Logo">
 </p>
@@ -54,7 +58,7 @@ Customizable business settings — taxes, discounts, and operational parameters.
 
 ### Vision
 
-KapeRest is more than a POS system it’s a foundation for digital café management built to scale with real-world business needs.  
+KapeRest is more than a POS system — it’s a foundation for digital café management built to scale with real-world business needs.  
 Every component emphasizes clean design, maintainability, and user experience.
 
 ---
@@ -62,5 +66,5 @@ Every component emphasizes clean design, maintainability, and user experience.
 <br>
 
 <p align="left">
-  <b>Built for KapeRest</b> a refined approach to café management for the modern age.
+  <b>Built for KapeRest</b> — a refined approach to café management for the modern age.
 </p>
