@@ -1,4 +1,4 @@
-<p align="left">
+<p align="center">
   <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="120" alt="Kape Rest Logo">
 </p>
 
