@@ -4,7 +4,7 @@
 
 <h1 align="left">KapeRest☕</h1>
 <h3 align="left">
-  A full-stack web application for <b>Kape Rest</b> integrating Point of Sale and Inventory Management features using modern web technologies built for efficiency, reliability, and smooth café operations.
+  A full-stack web application for <b>KapeRest</b> integrating Point of Sale and Inventory Management features using modern web technologies built for efficiency, reliability, and smooth café operations.
 </h3>
 
 <br>
