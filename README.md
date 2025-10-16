@@ -2,6 +2,12 @@
   <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="120" alt="Kape Rest Logo">
 </p>
 
+<h1 align="center">KapeRest POS</h1> 
+
+<br>
+<br>
+
+
 <h1 align="left">KapeRest☕</h1>
 <h3 align="left">
   A full-stack web application for <b>Kape Rest</b> integrating Point of Sale and Inventory Management features using modern web technologies built for efficiency, reliability, and smooth café operations.
