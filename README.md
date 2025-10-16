@@ -12,7 +12,7 @@
 
 <div align="center">
 
-## 🚀 Tech Stack
+## Tech Stack
 
 | Category | Technology |
 |-----------|-------------|
@@ -25,15 +25,15 @@
 
 <br>
 
-## 💻 Main Modules & Features
+## Main Modules & Features
 
-🧾 **User Management** – Secure login, roles, and account control  
-🛍️ **Point of Sale (POS)** – Fast and accurate sales transactions  
-📦 **Inventory Management** – Real-time stock tracking and alerts  
-👥 **Supplier Management** – Organized supplier records and history  
-📊 **Sales Reports** – Daily, weekly, and monthly performance summaries  
-📑 **Transaction History** – View and reprint past sales  
-⚙️ **System Settings** – Configurable tax, discounts, and business info  
+**User Management** – Secure login, roles, and account control  
+**Point of Sale (POS)** – Fast and accurate sales transactions  
+**Inventory Management** – Real-time stock tracking and alerts  
+**Supplier Management** – Organized supplier records and history  
+**Sales Reports** – Daily, weekly, and monthly performance summaries  
+**Transaction History** – View and reprint past sales  
+**System Settings** – Configurable tax, discounts, and business info  
 
 
 
@@ -42,7 +42,7 @@
 <br>
 
 <p align="center">
-  ☕ <b>Built for Kape Rest</b> — Efficient, reliable, and modern café management system.
+  ☕<b>Built for Kape Rest</b> — Efficient, reliable, and modern café management system.
 </p>
 
 </div>
