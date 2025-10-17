@@ -53,7 +53,6 @@ Customizable business settings — taxes, discounts, and operational parameters.
 - **Frontend:** React (Vite + TypeScript)  
 - **Database:** MySQL  
 - **Authentication:** JWT & ASP.NET Identity  
-- **Deployment:** Docker-ready architecture  
 
 ---
 
