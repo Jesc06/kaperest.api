@@ -88,7 +88,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             var token = _jwtService.CreateToken(payload);
             var refreshToken = _jwtService.RefreshToken();
 
-            var tokenExpiry = int.Parse(_config["Jwt:TokenDurationInMinutes"] ?? "1");
+            var tokenExpiry = int.Parse(_config["Jwt:RefreshTokenDurationInMinutes"] ?? "1");
             user.RefreshTokenHash = _jwtService.HashToken(refreshToken);
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(tokenExpiry);
 
@@ -122,7 +122,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
                ?? principal.FindFirst(ClaimTypes.NameIdentifier)?.Value
                ?? principal.FindFirst("name")?.Value;
 
-
             if (username is null)
                 return null;
 
@@ -130,18 +129,26 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             if (user is null)
                 return null;
 
-            if(!user.RefreshTokenExpiryTime.HasValue || user.RefreshTokenExpiryTime.Value <= DateTime.UtcNow)
+            // Check if refresh token is expired
+            if (!user.RefreshTokenExpiryTime.HasValue || user.RefreshTokenExpiryTime.Value <= DateTime.UtcNow)
                 return null;
 
+            // Check if refresh token matches
             bool isValidRefreshToken = _jwtService.VerifyHashedToken(user.RefreshTokenHash ?? "", requestDTO.RefreshToken);
             if (!isValidRefreshToken)
                 return null;
 
+            // --- Rotate refresh token, but keep expiry fixed ---
+            var newRefreshToken = _jwtService.RefreshToken();
+            var hashedRefreshToken = _jwtService.HashToken(newRefreshToken);
+
+            // Update user with new refresh token but keep original expiry
             var trackUser = await _userManager.FindByIdAsync(user.Id);
-            trackUser.RefreshTokenHash = null;
-            trackUser.RefreshTokenExpiryTime = null;
+            trackUser.RefreshTokenHash = hashedRefreshToken;
+            // Do NOT reset trackUser.RefreshTokenExpiryTime
             await _userManager.UpdateAsync(trackUser);
 
+            // Generate new access token
             var roles = await _userManager.GetRolesAsync(user);
             var newToken = _jwtService.CreateToken(new JwtPayloadDTO
             {
@@ -154,11 +161,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             return new JwtRefreshResponseDTO
             {
                 Token = newToken,
-                RefreshToken = requestDTO.RefreshToken
+                RefreshToken = newRefreshToken // return the new rotated refresh token
             };
-
-
         }
+
 
 
 
