@@ -38,6 +38,11 @@ namespace KapeRest.Application.Services.Account
             await _accountRepository.Logout(email);
         }
 
+        public async Task<bool> ChangePassword(ChangePassDTO changePassDTO)
+        {
+            return await _accountRepository.ChangePassword(changePassDTO);
+        }
+
         public async Task<JwtRefreshResponseDTO> TokenRefresh(JwtRefreshRequestDTO request)
         {
             return await _accountRepository.RefreshToken(request);

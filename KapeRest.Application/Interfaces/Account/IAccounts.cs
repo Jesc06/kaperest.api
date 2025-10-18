@@ -13,6 +13,7 @@ namespace KapeRest.Application.Interfaces.Account
         Task<bool> RegisterAccount(RegisterAccountDTO register);
         Task<CreateJwtTokenDTO> Login(LoginDTO login);
         Task Logout(string email);
+        Task<bool> ChangePassword(ChangePassDTO changePassDTO);
         Task<JwtRefreshResponseDTO> RefreshToken(JwtRefreshRequestDTO requestToken);
     }
 }

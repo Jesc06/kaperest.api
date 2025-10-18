@@ -10,4 +10,8 @@
     <Folder Include="Exceptions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\KapeRest.Domain\KapeRest.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -4,6 +4,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251018154241_pendingAccount")]
+    partial class pendingAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace KapeRest.Infrastructures.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>
+            modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingAccounts", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +66,7 @@ namespace KapeRest.Infrastructures.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PendingUserAccount");
+                    b.ToTable("PendingAccounts");
                 });
 
             modelBuilder.Entity("KapeRest.Infrastructures.Persistence.Database.Users", b =>

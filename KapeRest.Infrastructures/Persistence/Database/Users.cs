@@ -12,6 +12,8 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public string FirstName { get; set; }
         public string MiddleName { get; set; }  
         public string LastName { get; set; }
+
+        //Jwt refresh token properties
         public string? RefreshTokenHash { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
 

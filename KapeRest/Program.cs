@@ -1,9 +1,12 @@
 using KapeRest.Application.Interfaces.Account;
+using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.Jwt;
 using KapeRest.Application.Services.Account;
+using KapeRest.Application.Services.Admin.PendingAcc;
 using KapeRest.Infrastructures.Persistence.Database;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
+using KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccounts;
 using KapeRest.Infrastructures.Persistence.Seeder;
 using KapeRest.Infrastructures.Services.CurrentUserService;
 using KapeRest.Infrastructures.Services.JwtService; 
@@ -104,6 +107,9 @@ builder.Services.AddScoped<IJwtService, GenerateTokenService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserService>();
+
+builder.Services.AddScoped<IpendingAccount, PendingAccountRepo>();
+builder.Services.AddScoped<PendingAccService>();
 #endregion
 
 var app = builder.Build();

@@ -25,15 +25,13 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
         private readonly IConfiguration _config;
         private readonly IJwtService _jwtService;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         public RegisterAccountRepositories(
                 UserManager<Users> userManager,
                 SignInManager<Users> signInManager,
                 ApplicationDbContext context,
                 RoleManager<IdentityRole> roleManager,
                 IConfiguration config,
-                IJwtService jwtService,
-                IHttpContextAccessor httpContextAccessor
+                IJwtService jwtService
                 )
         {
             _userManager = userManager;
@@ -42,7 +40,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             _roleManager = roleManager;
             _config = config;
             _jwtService = jwtService;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<bool> RegisterAccount(RegisterAccountDTO register)
@@ -112,6 +109,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             await _userManager.UpdateAsync(user);
         }
 
+        public async Task<bool> ChangePassword(ChangePassDTO changePassDTO)
+        {
+            var user = await _userManager.FindByEmailAsync(changePassDTO.Email);
+            if (user == null) return false;
+            var result = await _userManager.ChangePasswordAsync(user, changePassDTO.CurrentPassword, changePassDTO.NewPassword);
+            return result.Succeeded;
+        }
+
         public async Task<JwtRefreshResponseDTO> RefreshToken(JwtRefreshRequestDTO requestDTO)
         {
             var principal = _jwtService.GetPrincipalFromExpiredToken(requestDTO.Token);
@@ -129,26 +134,24 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             if (user is null)
                 return null;
 
-            // Check if refresh token is expired
+            //Check if refresh token is expired
             if (!user.RefreshTokenExpiryTime.HasValue || user.RefreshTokenExpiryTime.Value <= DateTime.UtcNow)
                 return null;
 
-            // Check if refresh token matches
+            //Check if refresh token matches
             bool isValidRefreshToken = _jwtService.VerifyHashedToken(user.RefreshTokenHash ?? "", requestDTO.RefreshToken);
             if (!isValidRefreshToken)
                 return null;
 
-            // --- Rotate refresh token, but keep expiry fixed ---
+            //Rotate refresh token, but keep expiry fixed
             var newRefreshToken = _jwtService.RefreshToken();
             var hashedRefreshToken = _jwtService.HashToken(newRefreshToken);
 
-            // Update user with new refresh token but keep original expiry
+            //Update user with new refresh token but keep original expiry
             var trackUser = await _userManager.FindByIdAsync(user.Id);
             trackUser.RefreshTokenHash = hashedRefreshToken;
-            // Do NOT reset trackUser.RefreshTokenExpiryTime
             await _userManager.UpdateAsync(trackUser);
 
-            // Generate new access token
             var roles = await _userManager.GetRolesAsync(user);
             var newToken = _jwtService.CreateToken(new JwtPayloadDTO
             {
@@ -161,7 +164,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             return new JwtRefreshResponseDTO
             {
                 Token = newToken,
-                RefreshToken = newRefreshToken // return the new rotated refresh token
+                RefreshToken = newRefreshToken
             };
         }
 

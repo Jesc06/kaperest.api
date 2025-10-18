@@ -95,5 +95,23 @@ namespace KapeRest.Controllers.Account
             return Ok("Logged out successfully.");
         }
 
+        [HttpPost("ChangePassword")]
+        public async Task<ActionResult>ChangePassword(API_ChangePass pass)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var changePassDTO = new ChangePassDTO
+            {
+                Email = pass.Email,
+                CurrentPassword = pass.CurrentPassword,
+                NewPassword = pass.NewPassword
+            };
+
+            await _accountService.ChangePassword(changePassDTO);
+            return Ok("Password changed successfully.");
+        }
+
+
     }
 }
