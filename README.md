@@ -72,4 +72,38 @@ Every component emphasizes clean design, maintainability, and user experience.
 
 ---
 
+# `Project Configuration Setup`
+
+#### `appSettings.json Config`
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "KapeRest_DB": "Server=your server;Database=your database name;Trusted_Connection=True;TrustServerCertificate=True"
+  },
+  "AdminSeededAccount": {
+    "Email": "your admin email",
+    "Password": "your admin password",
+    "FirstName": "your firstname",
+    "MiddleName": "your middlename",
+    "LastName": "your lastname"
+  },
+  "Jwt": {
+    "key": "your super secrete key",
+    "Issuer": "your issuer",
+    "Audience": "your audience",
+    "TokenDurationInMinutes": your token duration,
+    "RefreshTokenDurationInMinutes": your refresh token duration
+  }
+}
+
+
+```
+
 Made with ❤️ by John Joshua Manalo Escarez, Cj Royo Mendoza, Lhey Anne Pedernal, and Jaira Gomez.
