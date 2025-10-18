@@ -1,10 +1,6 @@
-<p align="center">
-  <img src="https://github.com/Jesc06/Images-Sources/blob/main/banner.jpg" width="100%" alt="KapeRest Banner">
-</p>
-
 
 <p align="left">
-  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="130" alt="Kape Rest Logo">
+  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="140" alt="Kape Rest Logo">
 </p>
 
 <h1 align="left">KapeRest</h1>
@@ -63,15 +59,6 @@ Every component emphasizes clean design, maintainability, and user experience.
 
 ---
 
-<p align="left">
-  <b>Built for KapeRest</b> a refined approach to café management for the modern age.
-</p>
-
-<br>
-<br>
-
----
-
 # `Project Configuration Setup`
 
 #### `appSettings.json Config`
@@ -105,6 +92,9 @@ Every component emphasizes clean design, maintainability, and user experience.
 
 
 ```
+<p align="left">
+  <b>Built for KapeRest</b> a refined approach to café management for the modern age.
+</p>
 
 <br>
 
