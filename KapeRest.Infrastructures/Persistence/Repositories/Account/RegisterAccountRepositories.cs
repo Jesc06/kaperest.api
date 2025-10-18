@@ -114,7 +114,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
 
         public async Task<JwtRefreshResponseDTO> RefreshToken(JwtRefreshRequestDTO requestDTO)
         {
-            var principal = _jwtService.GetPrincipalFromExpiredToken(requestDTO.Token);
+            var principal = _jwtService.GetPrincipalFromExpiredToken(requestDTO.requestRefreshToken);
             if (principal is null)
                 return null;
 
@@ -133,7 +133,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             if(!user.RefreshTokenExpiryTime.HasValue || user.RefreshTokenExpiryTime.Value <= DateTime.UtcNow)
                 return null;
 
-            bool isValidRefreshToken = _jwtService.VerifyHashedToken(user.RefreshTokenHash ?? "", requestDTO.RefreshToken);
+            bool isValidRefreshToken = _jwtService.VerifyHashedToken(user.RefreshTokenHash ?? "", requestDTO.requestRefreshToken);
             if (!isValidRefreshToken)
                 return null;
 
@@ -153,9 +153,11 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
 
             return new JwtRefreshResponseDTO
             {
-                Token = newToken,
-                RefreshToken = requestDTO.RefreshToken
+                responseToken = newToken,
+                responseRefreshToken = requestDTO.requestRefreshToken
             };
+
+
         }
 
 
