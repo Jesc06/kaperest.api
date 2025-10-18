@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructures.Services.CurrentUserService
 {
-    public class CurrentUser : ICurrentUser
+    public class CurrentUserService : ICurrentUser
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public CurrentUser(IHttpContextAccessor httpContextAccessor)
+        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

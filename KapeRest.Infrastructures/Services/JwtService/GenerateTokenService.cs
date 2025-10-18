@@ -15,11 +15,11 @@ using System.Net.Http.Headers;
 
 namespace KapeRest.Infrastructures.Services.JwtService
 {
-    public class GenerateToken : IJwtService
+    public class GenerateTokenService : IJwtService
     {
         private readonly IConfiguration _config;
         private readonly Byte[] _key;
-        public GenerateToken(IConfiguration config)
+        public GenerateTokenService(IConfiguration config)
         {
             _config = config;
             _key = Encoding.UTF8.GetBytes(_config["Jwt:key"]!);
@@ -89,17 +89,20 @@ namespace KapeRest.Infrastructures.Services.JwtService
                 IssuerSigningKey = new SymmetricSecurityKey(_key),
                 ValidateLifetime = false // allow expired token to get claims
             };
+
             var handler = new JwtSecurityTokenHandler();
             try
             {
                 var principal = handler.ValidateToken(token, validationParams, out var securityToken);
                 if (securityToken is not JwtSecurityToken jwt ||
                     !jwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                     return null;
-
+                    return null;
                 return principal;
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
         }
 
 

@@ -2,7 +2,7 @@
 {
     public class JwtRefreshToken
     {
-        public string token { get; set; }
-        public string refreshToken { get; set; }
+        public string Token { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

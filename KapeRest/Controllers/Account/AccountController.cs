@@ -23,7 +23,7 @@ namespace KapeRest.Controllers.Account
         }
 
         [HttpPost("RegisterAccount")]
-        public async Task<IActionResult> RegisterAccount(API_RegisterAccountDTO register)
+        public async Task<IActionResult> RegisterAccount([FromBody]API_RegisterAccountDTO register)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -42,7 +42,7 @@ namespace KapeRest.Controllers.Account
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<JwtTokenDTO>> Login(API_LoginDTO login)
+        public async Task<ActionResult<JwtTokenDTO>> Login([FromBody]API_LoginDTO login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -70,17 +70,20 @@ namespace KapeRest.Controllers.Account
 
 
         [HttpPost("RefreshToken")]
-        public async Task<ActionResult<JwtRefreshResponseDTO>> RefreshToken(JwtRefreshToken refreshToken)
+        public async Task<ActionResult<JwtRefreshResponseDTO>> RefreshToken([FromBody]JwtRefreshToken refreshToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
             var tokenRequest = new JwtRefreshRequestDTO
             {
-                requestToken = refreshToken.token,
-                requestRefreshToken = refreshToken.refreshToken
+                Token = refreshToken.Token,
+                RefreshToken = refreshToken.RefreshToken
             };
             var result = await _accountService.TokenRefresh(tokenRequest);
+            if (result is null)
+                return Unauthorized(new { message = "Invalid or expired refresh token" });
+
             return Ok(result);
         }
 
