@@ -5,24 +5,44 @@ using System.Text;
 using System.Threading.Tasks;
 using KapeRest.Application.Interfaces.Account;
 using KapeRest.Application.DTOs.Account;
+using KapeRest.Application.DTOs.Jwt;
+using KapeRest.Application.Interfaces.CurrentUserService;
 
 namespace KapeRest.Application.Services.Account
 {
     public class AccountService
     {
         private IAccounts _accountRepository;
-        public AccountService(IAccounts accountRepository)
+        private ICurrentUser _currentUser;
+        public AccountService(IAccounts accountRepository, ICurrentUser currentUser)
         {
             _accountRepository = accountRepository;
+            _currentUser = currentUser;
         }
         public async Task<bool> RegisterAccountService(RegisterAccountDTO register)
         {
             return await _accountRepository.RegisterAccount(register);
         }
-        public async Task<bool> Login (LoginDTO login)
+       
+        public async Task<CreateJwtTokenDTO> Login (LoginDTO login)
         {
             return await _accountRepository.Login(login);
         }
+
+        public async Task Logout()
+        {
+            var email = _currentUser.Email;
+            if (string.IsNullOrEmpty(email))
+                throw new Exception("User is not logged in.");
+
+            await _accountRepository.Logout(email);
+        }
+
+        public async Task<JwtRefreshResponseDTO> TokenRefresh(JwtRefreshRequestDTO request)
+        {
+            return await _accountRepository.RefreshToken(request);
+        }
+
 
     }
 }

@@ -1,0 +1,108 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using KapeRest.Application.Interfaces.Jwt;
+using Microsoft.Extensions.Configuration;
+using KapeRest.Application.DTOs.Jwt;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
+using System.Runtime.Intrinsics.Arm;
+using System.Net.Http.Headers;
+
+namespace KapeRest.Infrastructures.Services.JwtService
+{
+    public class GenerateToken : IJwtService
+    {
+        private readonly IConfiguration _config;
+        private readonly Byte[] _key;
+        public GenerateToken(IConfiguration config)
+        {
+            _config = config;
+            _key = Encoding.UTF8.GetBytes(_config["Jwt:key"]!);
+        }
+
+        public string CreateToken(JwtPayloadDTO payload, IEnumerable<Claim>? additionalClaim = null)
+        {
+            var expiry = double.Parse(_config["Jwt:TokenDurationInMinutes"] ?? "1");
+
+                    var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, payload.username ?? ""),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("uid", payload.id.ToString()),
+                new Claim(ClaimTypes.Email, payload.email ?? ""),
+                new Claim(ClaimTypes.NameIdentifier, payload.id.ToString())
+            };
+
+            if (payload.roles != null)
+                claims.AddRange(payload.roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+            if (additionalClaim != null)
+                claims.AddRange(additionalClaim);
+
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(expiry),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+        public string RefreshToken()
+        {
+            var bytes = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
+        }
+
+        public string HashToken(string token)
+        {
+            using var sha256 = SHA256.Create();
+            var bytes = Encoding.UTF8.GetBytes(token);
+            return Convert.ToBase64String(sha256.ComputeHash(bytes));
+        }
+
+        public bool VerifyHashedToken(string hashedToken, string token)
+        {
+            return hashedToken == HashToken(token);
+        }
+
+        public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
+        {
+            var validationParams = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = _config["Jwt:Issuer"],
+                ValidAudience = _config["Jwt:Audience"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(_key),
+                ValidateLifetime = false // allow expired token to get claims
+            };
+            var handler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = handler.ValidateToken(token, validationParams, out var securityToken);
+                if (securityToken is not JwtSecurityToken jwt ||
+                    !jwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                     return null;
+
+                return principal;
+            }
+            catch { return null; }
+        }
+
+
+    }
+}

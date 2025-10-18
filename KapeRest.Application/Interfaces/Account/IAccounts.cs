@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KapeRest.Application.DTOs.Account;
+using KapeRest.Application.DTOs.Jwt;
 
 namespace KapeRest.Application.Interfaces.Account
 {
     public interface IAccounts
     {
         Task<bool> RegisterAccount(RegisterAccountDTO register);
-        Task<bool> Login(LoginDTO login);
+        Task<CreateJwtTokenDTO> Login(LoginDTO login);
+        Task Logout(string email);
+        Task<JwtRefreshResponseDTO> RefreshToken(JwtRefreshRequestDTO requestToken);
     }
 }

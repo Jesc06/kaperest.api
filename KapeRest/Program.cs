@@ -1,12 +1,19 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-using KapeRest.Infrastructures.Persistence.Database;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using KapeRest.Application.Services.Account;
 using KapeRest.Application.Interfaces.Account;
+using KapeRest.Application.Interfaces.CurrentUserService;
+using KapeRest.Application.Interfaces.Jwt;
+using KapeRest.Application.Services.Account;
+using KapeRest.Infrastructures.Persistence.Database;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
 using KapeRest.Infrastructures.Persistence.Seeder;
+using KapeRest.Infrastructures.Services.CurrentUserService;
+using KapeRest.Infrastructures.Services.JwtService; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,9 +63,37 @@ builder.Services.AddSwaggerGen(options =>
 });
 #endregion
 
+#region --JWT Authentication--
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"])),
+        ValidateLifetime = true
+    };
+});
+
+builder.Services.AddAuthorization();
+#endregion
+
 #region --Dependency Injection--
 builder.Services.AddScoped<IAccounts, RegisterAccountRepositories>();
 builder.Services.AddScoped<AccountService>();
+
+builder.Services.AddScoped<IJwtService, GenerateToken>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 #endregion
 
 var app = builder.Build();
@@ -72,11 +107,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
-//AdminSeeded account config
+#region --Seed Admin Account--
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -85,5 +121,6 @@ using (var scope = app.Services.CreateScope())
 
     await AdminSeededAccount.AdminAccount(roleManager, userManager, config);
 }
+#endregion
 
 app.Run();

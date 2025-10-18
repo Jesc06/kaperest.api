@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using KapeRest.Application.DTOs.Account;
+using KapeRest.Application.DTOs.Jwt;
 using KapeRest.Application.Services.Account;
 using KapeRest.DTOs.Account;
-using KapeRest.Application.DTOs.Account;
+using KapeRest.DTOs.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace KapeRest.Controllers.Account
 {
@@ -32,11 +38,11 @@ namespace KapeRest.Controllers.Account
                 Roles = register.Roles
             };
             var result = await _accountService.RegisterAccountService(registeredAccount);
-            return Ok(result);
+            return Created();
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(API_LoginDTO login)
+        public async Task<ActionResult<JwtTokenDTO>> Login(API_LoginDTO login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -48,13 +54,47 @@ namespace KapeRest.Controllers.Account
             };
 
             var result = await _accountService.Login(loginAccountDTO);
-            if (result)
+
+            var tokenDTO = new CreateJwtTokenDTO
             {
-                return Ok("Login Successfully");
+                token = result.token,
+                refreshToken = result.refreshToken
+            };
+
+            if (result is not null)
+            {
+                return Ok(tokenDTO);
             }
             return BadRequest("Invalid credentials");
-
         }
+
+
+        [HttpPost("RefreshToken")]
+        public async Task<ActionResult<JwtRefreshResponseDTO>> RefreshToken(JwtRefreshToken refreshToken)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var tokenRequest = new JwtRefreshRequestDTO
+            {
+                requestToken = refreshToken.token,
+                requestRefreshToken = refreshToken.refreshToken
+            };
+            var result = await _accountService.TokenRefresh(tokenRequest);
+            return Ok(result);
+        }
+
+
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _accountService.Logout();
+            return Ok("Logged out successfully.");
+        }
+
+
+
 
 
     }
