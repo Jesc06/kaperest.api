@@ -99,7 +99,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
 
         }
 
-
         public async Task Logout(string username)
         {
             var user = await _userManager.FindByNameAsync(username);

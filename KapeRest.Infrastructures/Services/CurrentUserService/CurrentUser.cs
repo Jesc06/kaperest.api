@@ -19,7 +19,5 @@ namespace KapeRest.Infrastructures.Services.CurrentUserService
         }
         public string? Email => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email);
         public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-
-
     }
 }

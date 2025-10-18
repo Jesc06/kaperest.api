@@ -29,7 +29,7 @@ namespace KapeRest.Infrastructures.Services.JwtService
         {
             var expiry = double.Parse(_config["Jwt:TokenDurationInMinutes"] ?? "1");
 
-                    var claims = new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, payload.username ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -56,7 +56,6 @@ namespace KapeRest.Infrastructures.Services.JwtService
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
 
         public string RefreshToken()
         {

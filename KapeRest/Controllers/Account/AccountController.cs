@@ -85,17 +85,12 @@ namespace KapeRest.Controllers.Account
         }
 
 
-
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
             await _accountService.Logout();
             return Ok("Logged out successfully.");
         }
-
-
-
-
 
     }
 }

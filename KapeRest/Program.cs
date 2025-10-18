@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+#region --Identity--
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("KapeRest_DB")));
 builder.Services.AddIdentity<Users, IdentityRole>(options =>
 {
@@ -35,6 +35,7 @@ builder.Services.AddIdentity<Users, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
+#endregion
 
 #region --Token Autorization UI in Swagger--
 builder.Services.AddSwaggerGen(options =>
