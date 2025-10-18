@@ -80,7 +80,8 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"])),
-        ValidateLifetime = true
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero // remove 5 minutes grace
     };
 });
 
@@ -91,10 +92,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAccounts, RegisterAccountRepositories>();
 builder.Services.AddScoped<AccountService>();
 
-builder.Services.AddScoped<IJwtService, GenerateToken>();
+builder.Services.AddScoped<IJwtService, GenerateTokenService>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddScoped<ICurrentUser, CurrentUserService>();
 #endregion
 
 var app = builder.Build();
