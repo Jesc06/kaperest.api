@@ -106,4 +106,6 @@ Every component emphasizes clean design, maintainability, and user experience.
 
 ```
 
+<br>
+
 Made with ❤️ by John Joshua Manalo Escarez, Cj Royo Mendoza, Lhey Anne Pedernal, and Jaira Gomez.
