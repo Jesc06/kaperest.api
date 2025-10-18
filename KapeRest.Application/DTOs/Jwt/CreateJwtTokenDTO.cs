@@ -8,7 +8,7 @@ namespace KapeRest.Application.DTOs.Jwt
 {
     public class CreateJwtTokenDTO
     {
-        public string token { get; set; }
-        public string refreshToken { get; set; }    
+        public string Token { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

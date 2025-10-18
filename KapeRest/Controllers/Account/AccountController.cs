@@ -57,8 +57,8 @@ namespace KapeRest.Controllers.Account
 
             var tokenDTO = new CreateJwtTokenDTO
             {
-                token = result.token,
-                refreshToken = result.refreshToken
+                Token = result.Token,
+                RefreshToken = result.RefreshToken
             };
 
             if (result is not null)
@@ -77,8 +77,8 @@ namespace KapeRest.Controllers.Account
 
             var tokenRequest = new JwtRefreshRequestDTO
             {
-                requestToken = refreshToken.token,
-                requestRefreshToken = refreshToken.refreshToken
+                Token = refreshToken.Token,
+                RefreshToken = refreshToken.RefreshToken
             };
             var result = await _accountService.TokenRefresh(tokenRequest);
             if (result is null)
