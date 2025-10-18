@@ -58,6 +58,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             var registerUser = await _userManager.CreateAsync(users, register.Password);
             if (registerUser.Succeeded)
             {
+                if(register.Roles.Equals("Admin",StringComparison.InvariantCultureIgnoreCase))
+                    throw new Exception("Cannot assign Admin role during registration.");
+
                 await _userManager.AddToRoleAsync(users, register.Roles);
                 return true;
             }
