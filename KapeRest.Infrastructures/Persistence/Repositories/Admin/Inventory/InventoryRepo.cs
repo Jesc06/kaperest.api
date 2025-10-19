@@ -1,5 +1,4 @@
 ﻿using KapeRest.Application.DTOs.Admin.Inventory;
-using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Domain.Entities.Inventory;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -10,8 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
 namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 {
     public class InventoryRepo : IInventory
@@ -21,7 +18,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
         {
             _context = context;
         }
-
         public async Task<ProductResponseDTO> AddProduct(CreateProductDTO addProduct)
         {
           var supplier = await _context.Suppliers
@@ -32,7 +28,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 
           var add = new Product
           {
-            Name = addProduct.Name,
+            ProductName = addProduct.ProductName,
             Category = addProduct.Category,
             Price = addProduct.Price,
             Quantity = addProduct.Quantity,
@@ -45,7 +41,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
           supplier.TransactionHistories.Add(new SupplierTransactionHistory
           {
              SupplierId = supplier.Id,
-             ProductName = addProduct.Name,
+             ProductName = addProduct.ProductName,
              QuantityDelivered = addProduct.Quantity,
              TotalCost = addProduct.Price * addProduct.Quantity,
              TransactionDate = DateTime.Now
@@ -56,11 +52,11 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
           var response = new ProductResponseDTO
           {
             Id = add.Id,
-            Name = add.Name,
+            ProductName = add.ProductName,
             Category = add.Category,
             Price = add.Price,
             Quantity = add.Quantity,
-            SupplierName = supplier.Name
+            SupplierName = supplier.SupplierName
           };
           
           return response;

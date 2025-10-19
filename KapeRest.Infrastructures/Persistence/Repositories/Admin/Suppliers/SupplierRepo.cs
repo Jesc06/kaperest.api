@@ -1,4 +1,4 @@
-﻿using KapeRest.Application.DTOs.Admin.Inventory;
+﻿using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.Supplier;
 using KapeRest.Domain.Entities.Inventory;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -22,8 +22,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
         {
             var supplier = new Supplier
             {
-                Name = addSupplier.Name,
-                Contact = addSupplier.Contact,
+                SupplierName = addSupplier.SupplierName,
+                ContactPerson = addSupplier.ContactPerson,
+                PhoneNumber = addSupplier.PhoneNumber,
+                Email = addSupplier.Email,
                 Address = addSupplier.Address,
                 Products = new List<Product>(),
                 TransactionHistories = new List<SupplierTransactionHistory>()
@@ -35,8 +37,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             var response = new SupplierResponseDTO
             {
                 Id = supplier.Id,
-                Name = supplier.Name,
-                Contact = supplier.Contact,
+                SupplierName = supplier.SupplierName,
+                ContactPerson = supplier.ContactPerson,
+                PhoneNumber = supplier.PhoneNumber,
+                Email = supplier.Email,
                 Address = supplier.Address,
                 Transactions = supplier.TransactionHistories?
                   .Select(t => $"{t.FormattedDate} - {t.ProductName} ({t.QuantityDelivered}) = {t.TotalCost:C}")

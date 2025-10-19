@@ -9,9 +9,13 @@ namespace KapeRest.Domain.Entities.Inventory
     public class Supplier
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Contact { get; set; }
+        public string SupplierName { get; set; }
+        public string ContactPerson { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
         public string Address { get; set; }
+        public DateTime TransactionDate { get; set; } = DateTime.Now;
+        public string FormattedDate => TransactionDate.ToString("MM/dd/yyyy");
 
         // Navigation (one-to-many)
         public ICollection<Product> Products { get; set; }

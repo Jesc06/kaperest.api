@@ -1,4 +1,4 @@
-﻿using KapeRest.Application.DTOs.Admin.Inventory;
+﻿using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Application.Services.Admin.Supplier;
 using Microsoft.AspNetCore.Http;
@@ -24,8 +24,8 @@ namespace KapeRest.Controllers.Admin.Supplier
 
             var supplierDTO = new CreateSupplierDTO
             {
-                Name = addSuppliers.Name,
-                Contact = addSuppliers.Contact,
+                SupplierName = addSuppliers.SupplierName,
+                ContactPerson = addSuppliers.ContactPerson,
                 Address = addSuppliers.Address,
             };
 

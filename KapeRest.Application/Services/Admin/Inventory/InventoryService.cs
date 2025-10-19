@@ -1,5 +1,4 @@
 ﻿using KapeRest.Application.DTOs.Admin.Inventory;
-using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using System;
 using System.Collections.Generic;

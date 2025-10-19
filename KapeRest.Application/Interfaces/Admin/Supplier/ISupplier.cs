@@ -1,4 +1,4 @@
-﻿using KapeRest.Application.DTOs.Admin.Inventory;
+﻿using KapeRest.Application.DTOs.Admin.Supplier;
 using System;
 using System.Collections.Generic;
 using System.Linq;

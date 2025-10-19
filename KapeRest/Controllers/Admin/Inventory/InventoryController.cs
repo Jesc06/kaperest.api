@@ -23,7 +23,7 @@ namespace KapeRest.Controllers.Admin.Inventory
             
             var productDTO = new CreateProductDTO
             {
-                Name = addProduct.Name,
+                ProductName = addProduct.ProductName,
                 Category = addProduct.Category,
                 Price = addProduct.Price,
                 Quantity = addProduct.Quantity,
@@ -34,22 +34,6 @@ namespace KapeRest.Controllers.Admin.Inventory
             return Ok(response);
         }
 
-        [HttpPost("AddSuppliers")]
-        public async Task<ActionResult> AddSuppliers(CreateSupplierDTO addSuppliers)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var supplierDTO = new CreateSupplierDTO
-            {
-                Name = addSuppliers.Name,
-                Contact = addSuppliers.Contact,
-                Address = addSuppliers.Address,
-            };
-
-            var response = await _inventoryService.addSupplier(supplierDTO);
-            return Ok(response);
-        }
 
 
     }
