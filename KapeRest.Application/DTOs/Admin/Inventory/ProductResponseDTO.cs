@@ -14,5 +14,8 @@ namespace KapeRest.Application.DTOs.Admin.Inventory
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public string SupplierName { get; set; }
+
+        public string Base64Image { get; set; }  // frontend can send image as Base64
+        public string ImageMimeType { get; set; }
     }
 }

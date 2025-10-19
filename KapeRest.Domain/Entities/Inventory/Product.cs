@@ -9,7 +9,8 @@ namespace KapeRest.Domain.Entities.Inventory
     public class Product
     {
         public int Id { get; set; }
-        public string imageURL { get; set; }
+        public byte[] ImageBase64 { get; set; }
+        public string ImageMimeType { get; set; }
         public string ProductName { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }

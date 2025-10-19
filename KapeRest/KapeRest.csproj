@@ -25,8 +25,4 @@
     <ProjectReference Include="..\KapeRest.Infrastructures\KapeRest.Infrastructures.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Admin\Inventory\" />
-  </ItemGroup>
-
 </Project>

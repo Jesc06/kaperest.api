@@ -16,5 +16,8 @@ namespace KapeRest.Application.DTOs.Admin.Inventory
 
         //connect to Supplier
         public int SupplierId { get; set; }
+
+        public string Base64Image { get; set; }  // frontend can send image as Base64
+        public string ImageMimeType { get; set; }
     }
 }

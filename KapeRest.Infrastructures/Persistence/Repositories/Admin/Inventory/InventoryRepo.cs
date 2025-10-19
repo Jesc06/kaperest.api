@@ -26,15 +26,23 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             if (supplier is null)
                 throw new Exception("Supplier does not exist.");
 
-          var add = new Product
+            // Convert Base64 to byte array
+            byte[]? imageBytes = string.IsNullOrEmpty(addProduct.Base64Image)
+                ? null
+                : Convert.FromBase64String(addProduct.Base64Image);
+
+
+           var add = new Product
           {
             ProductName = addProduct.ProductName,
             Category = addProduct.Category,
             Price = addProduct.Price,
             Quantity = addProduct.Quantity,
             ReorderLevel = addProduct.ReorderLevel,
-            SupplierId = addProduct.SupplierId
-          };
+            SupplierId = addProduct.SupplierId,
+            ImageBase64 = imageBytes,
+            ImageMimeType = addProduct.ImageMimeType
+            };
           
           await _context.Products.AddAsync(add);
 
@@ -48,7 +56,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
           });
 
           await _context.SaveChangesAsync();
-            
+
+          // Convert image back to Base64 for response
+          string responseBase64 = add.ImageBase64 != null ? Convert.ToBase64String(add.ImageBase64) : null;
+       
           var response = new ProductResponseDTO
           {
             Id = add.Id,
@@ -56,7 +67,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             Category = add.Category,
             Price = add.Price,
             Quantity = add.Quantity,
-            SupplierName = supplier.SupplierName
+            SupplierName = supplier.SupplierName,
+            Base64Image = responseBase64,
+            ImageMimeType = add.ImageMimeType
           };
           
           return response;
