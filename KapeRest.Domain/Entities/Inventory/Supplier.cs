@@ -15,5 +15,8 @@ namespace KapeRest.Domain.Entities.Inventory
 
         // Navigation (one-to-many)
         public ICollection<Product> Products { get; set; }
+
+        //Transaction history per supplier
+        public ICollection<SupplierTransactionHistory> TransactionHistories { get; set; }
     }
 }
