@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KapeRest.Application.Interfaces.Account;
-using KapeRest.Application.DTOs.Account;
+using KapeRest.Application.Interfaces.Auth;
+using KapeRest.Application.DTOs.Auth;
 using KapeRest.Application.DTOs.Jwt;
 using KapeRest.Application.Interfaces.CurrentUserService;
 
-namespace KapeRest.Application.Services.Account
+namespace KapeRest.Application.Services.Auth
 {
     public class AccountService
     {

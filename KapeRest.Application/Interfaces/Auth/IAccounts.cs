@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KapeRest.Application.DTOs.Account;
+using KapeRest.Application.DTOs.Auth;
 using KapeRest.Application.DTOs.Jwt;
 
-namespace KapeRest.Application.Interfaces.Account
+namespace KapeRest.Application.Interfaces.Auth
 {
     public interface IAccounts
     {

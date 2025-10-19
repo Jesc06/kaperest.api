@@ -1,4 +1,4 @@
-﻿using KapeRest.Application.DTOs.Admin.PendingAcc;
+﻿using KapeRest.Application.DTOs.Admin.PendingAccount;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Domain.Entities.PendingAccounts;
 using System;

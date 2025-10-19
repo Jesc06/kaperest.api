@@ -1,8 +1,8 @@
-using KapeRest.Application.Interfaces.Account;
+using KapeRest.Application.Interfaces.Auth;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.Jwt;
-using KapeRest.Application.Services.Account;
+using KapeRest.Application.Services.Auth;
 using KapeRest.Application.Services.Admin.PendingAcc;
 using KapeRest.Infrastructures.Persistence.Database;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
@@ -20,7 +20,6 @@ using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

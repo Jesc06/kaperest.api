@@ -1,4 +1,4 @@
-﻿using KapeRest.Application.DTOs.Admin.PendingAcc;
+﻿using KapeRest.Application.DTOs.Admin.PendingAccount;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Domain.Entities.PendingAccounts;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -78,7 +78,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             if (pending == null)
                 throw new Exception("Pending account not found.");
 
-            pending.Status = "Rejected";
+            _context.PendingUserAccount.Remove(pending);
             await _context.SaveChangesAsync();
         }
 

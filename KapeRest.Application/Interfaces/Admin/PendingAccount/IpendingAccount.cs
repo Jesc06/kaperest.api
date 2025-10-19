@@ -1,4 +1,4 @@
-﻿using KapeRest.Application.DTOs.Admin.PendingAcc;
+﻿using KapeRest.Application.DTOs.Admin.PendingAccount;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using KapeRest.DTOs.Admin.PendingAccount;
-using KapeRest.Application.DTOs.Admin.PendingAcc;
+using KapeRest.Application.DTOs.Admin.PendingAccount;
 using Microsoft.AspNetCore.Authorization;
 
 namespace KapeRest.Controllers.Admin.PendingAccount
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class RegisterPendingAccountController : ControllerBase
     {
         private readonly PendingAccService _pendingAccService;

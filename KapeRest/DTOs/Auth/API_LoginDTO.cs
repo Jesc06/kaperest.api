@@ -1,4 +1,4 @@
-﻿namespace KapeRest.DTOs.Account
+﻿namespace KapeRest.DTOs.Auth
 {
     public class API_LoginDTO
     {
