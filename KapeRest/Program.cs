@@ -18,6 +18,9 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using KapeRest.Application.Interfaces.Admin.Inventory;
+using KapeRest.Application.Services.Admin.Inventory;
+using KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +112,9 @@ builder.Services.AddScoped<ICurrentUser, CurrentUserService>();
 
 builder.Services.AddScoped<IpendingAccount, PendingAccountRepo>();
 builder.Services.AddScoped<PendingAccService>();
+
+builder.Services.AddScoped<IInventory, InventoryRepo>();
+builder.Services.AddScoped<InventoryService>();
 #endregion
 
 var app = builder.Build();

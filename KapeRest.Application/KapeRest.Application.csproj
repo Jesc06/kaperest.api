@@ -7,10 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Admin\Inventory\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Interfaces\Admin\Inventory\" />
-    <Folder Include="Services\Admin\Inventory\" />
   </ItemGroup>
 
   <ItemGroup>

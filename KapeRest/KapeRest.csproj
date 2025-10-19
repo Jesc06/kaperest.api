@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Admin\Inventory\" />
+    <Folder Include="DTOs\Admin\Inventory\" />
   </ItemGroup>
 
 </Project>

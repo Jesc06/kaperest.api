@@ -41,7 +41,7 @@ namespace KapeRest.Controllers.Admin.PendingAccount
             return Ok("Successfully approved the pending account.");
         }
 
-        [HttpPost("RejectPendingAccount/{id}")]
+        [HttpDelete("RejectPendingAccount/{id}")]
         public async Task<ActionResult> RejectPendingAccount(int id)
         {
             await _pendingAccService.RejectPendingAccount(id);
