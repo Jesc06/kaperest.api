@@ -1,10 +1,12 @@
-﻿using System;
+﻿using KapeRest.Domain.Entities.InventoryEntities;
+using KapeRest.Domain.Entities.SupplierEntities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KapeRest.Domain.Entities.Inventory
+namespace KapeRest.Domain.Entities.SupplierEntities
 {
     public class Supplier
     {

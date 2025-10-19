@@ -1,6 +1,7 @@
 ﻿using KapeRest.Application.DTOs.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.Inventory;
-using KapeRest.Domain.Entities.Inventory;
+using KapeRest.Domain.Entities.InventoryEntities;
+using KapeRest.Domain.Entities.SupplierEntities;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;

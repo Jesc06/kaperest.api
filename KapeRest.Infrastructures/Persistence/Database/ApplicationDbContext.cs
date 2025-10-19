@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KapeRest.Domain.Entities.PendingAccounts;
-using KapeRest.Domain.Entities.Inventory;
+using KapeRest.Domain.Entities.InventoryEntities;
+using KapeRest.Domain.Entities.SupplierEntities;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {

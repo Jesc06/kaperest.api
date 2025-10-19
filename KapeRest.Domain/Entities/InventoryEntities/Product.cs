@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KapeRest.Domain.Entities.SupplierEntities;
 
-namespace KapeRest.Domain.Entities.Inventory
+namespace KapeRest.Domain.Entities.InventoryEntities
 {
     public class Product
     {

@@ -1,6 +1,7 @@
 ﻿using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.Supplier;
-using KapeRest.Domain.Entities.Inventory;
+using KapeRest.Domain.Entities.InventoryEntities;
+using KapeRest.Domain.Entities.SupplierEntities;
 using KapeRest.Infrastructures.Persistence.Database;
 using System;
 using System.Collections.Generic;
