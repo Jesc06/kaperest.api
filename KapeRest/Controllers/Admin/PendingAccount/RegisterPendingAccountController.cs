@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using KapeRest.DTOs.Admin.PendingAccount;
 using KapeRest.Application.DTOs.Admin.PendingAcc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KapeRest.Controllers.Admin.PendingAccount
 {
@@ -28,9 +29,7 @@ namespace KapeRest.Controllers.Admin.PendingAccount
                 Password = pending.Password,
                 Role = pending.Role,
             };
-
             await _pendingAccService.RegisterPending(pendingAccDTO);
-
             return Ok("Successfully pending your account");
         }
 
