@@ -1,4 +1,5 @@
 ﻿using KapeRest.Application.DTOs.Admin.Inventory;
+using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using System;
 using System.Collections.Generic;
@@ -16,17 +17,10 @@ namespace KapeRest.Application.Services.Admin.Inventory
         {
             _inventory = inventory;
         }
-
-        public async Task<SupplierResponseDTO> addSupplier(CreateSupplierDTO add)
-        {
-            return await _inventory.AddSupplier(add);
-        }
         public async Task<ProductResponseDTO> addProduct(CreateProductDTO add)
         {
             return await _inventory.AddProduct(add);
         }
-
-
 
     }
 }

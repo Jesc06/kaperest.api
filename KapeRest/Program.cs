@@ -21,6 +21,9 @@ using System.Text;
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory;
+using KapeRest.Application.Interfaces.Admin.Supplier;
+using KapeRest.Application.Services.Admin.Supplier;
+using KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,6 +118,9 @@ builder.Services.AddScoped<PendingAccService>();
 
 builder.Services.AddScoped<IInventory, InventoryRepo>();
 builder.Services.AddScoped<InventoryService>();
+
+builder.Services.AddScoped<ISupplier, SupplierRepo>();
+builder.Services.AddScoped<SupplierService>();
 #endregion
 
 var app = builder.Build();
