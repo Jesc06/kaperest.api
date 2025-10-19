@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Application.Services.Admin.Supplier
 {
-    public class SupplierService
+    public class AddSupplierService
     {
         private readonly ISupplier _supplier;
-        public SupplierService(ISupplier supplier)
+        public AddSupplierService(ISupplier supplier)
         {
             _supplier = supplier;
         }
@@ -20,5 +20,16 @@ namespace KapeRest.Application.Services.Admin.Supplier
         {
             return await _supplier.AddSupplier(add);
         }
+
+        public async Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update)
+        {
+            return await _supplier.UpdateSupplier(update);
+        }
+
+        public async Task<bool> DeleteSupplier(int supplierId)
+        {
+            return await _supplier.DeleteSupplier(supplierId);
+        }
+
     }
 }

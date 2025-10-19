@@ -11,5 +11,7 @@ namespace KapeRest.Application.Interfaces.Admin.Inventory
     public interface IInventory
     {
         Task<ProductResponseDTO> AddProduct(CreateProductDTO addProduct);
+        Task<ProductResponseDTO> UpdateProduct(UpdateProductDTO update);
+        Task<bool> DeleteProduct(int productId);
     }
 }

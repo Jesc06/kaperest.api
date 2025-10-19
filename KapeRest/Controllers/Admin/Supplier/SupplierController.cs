@@ -10,8 +10,8 @@ namespace KapeRest.Controllers.Admin.Supplier
     [ApiController]
     public class SupplierController : ControllerBase
     {
-        public readonly SupplierService _supplierService;
-        public SupplierController(SupplierService supplierService)
+        public readonly AddSupplierService _supplierService;
+        public SupplierController(AddSupplierService supplierService)
         {
             _supplierService = supplierService;
         }
@@ -32,5 +32,25 @@ namespace KapeRest.Controllers.Admin.Supplier
             var response = await _supplierService.addSupplier(supplierDTO);
             return Ok(response);
         }
+
+        [HttpPut("UpdateSupplier")]
+        public async Task<ActionResult> UpdateSupplier(UpdateSupplierDTO update)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var response = await _supplierService.UpdateSupplier(update);
+            return Ok(response);
+        }
+
+        [HttpDelete("DeleteSupplier/{Id}")]
+        public async Task<ActionResult> DeleteSupplier(int Id)
+        {
+            var result = await _supplierService.DeleteSupplier(Id);
+            if (!result)
+                return NotFound(new { Message = "Supplier not found or could not be deleted." });
+            return Ok(new { Message = "Supplier deleted successfully." });
+        }
+
     }
 }

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Application.Services.Admin.Inventory
 {
-    public class InventoryService
+    public class AddProductService
     {
         private readonly IInventory _inventory;
-        public InventoryService(IInventory inventory)
+        public AddProductService(IInventory inventory)
         {
             _inventory = inventory;
         }
@@ -20,6 +20,16 @@ namespace KapeRest.Application.Services.Admin.Inventory
         {
             return await _inventory.AddProduct(add);
         }
+        public async Task<ProductResponseDTO> UpdateProduct (UpdateProductDTO update)
+        {
+            return await _inventory.UpdateProduct(update);
+        }
+
+        public async Task<bool> DeleteProduct (int id)
+        {
+            return await _inventory.DeleteProduct(id);
+        }
+
 
     }
 }

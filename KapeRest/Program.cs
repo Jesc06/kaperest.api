@@ -116,11 +116,11 @@ builder.Services.AddScoped<ICurrentUser, CurrentUserService>();
 builder.Services.AddScoped<IpendingAccount, PendingAccountRepo>();
 builder.Services.AddScoped<PendingAccService>();
 
-builder.Services.AddScoped<IInventory, InventoryRepo>();
-builder.Services.AddScoped<InventoryService>();
+builder.Services.AddScoped<IInventory, AddProductRepo>();
+builder.Services.AddScoped<AddProductService>();
 
-builder.Services.AddScoped<ISupplier, SupplierRepo>();
-builder.Services.AddScoped<SupplierService>();
+builder.Services.AddScoped<ISupplier, AddSupplierRepo>();
+builder.Services.AddScoped<AddSupplierService>();
 #endregion
 
 var app = builder.Build();

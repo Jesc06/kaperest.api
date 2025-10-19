@@ -12,17 +12,20 @@ namespace KapeRest.Domain.Entities.SupplierEntities
 
         // Relationship
         public int SupplierId { get; set; }
-        public Supplier Supplier { get; set; }
+        public AddSupplier Supplier { get; set; }
 
         // Details
         public string ProductName { get; set; }
         public int QuantityDelivered { get; set; }
         public decimal TotalCost { get; set; }
 
-        //Transaction date
+        // Transaction status (Added, Updated, Deleted)
+        public string Status { get; set; } = "Active";
+
+        // Transaction date
         public DateTime TransactionDate { get; set; } = DateTime.Now;
 
-        //auto format date
-        public string FormattedDate => TransactionDate.ToString("MM/dd/yyyy");
+        // Formatted date (auto)
+        public string FormattedDate => TransactionDate.ToString("MMMM d, yyyy h:mm tt");
     }
 }

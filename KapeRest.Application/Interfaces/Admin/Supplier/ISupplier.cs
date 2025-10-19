@@ -1,4 +1,5 @@
-﻿using KapeRest.Application.DTOs.Admin.Supplier;
+﻿using KapeRest.Application.DTOs.Admin.Inventory;
+using KapeRest.Application.DTOs.Admin.Supplier;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace KapeRest.Application.Interfaces.Admin.Supplier
     public interface ISupplier
     {
         Task<SupplierResponseDTO> AddSupplier(CreateSupplierDTO addSupplier);
+        Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update);
+        Task<bool> DeleteSupplier(int productId);
     }
 }

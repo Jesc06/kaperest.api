@@ -7,7 +7,7 @@ using KapeRest.Domain.Entities.SupplierEntities;
 
 namespace KapeRest.Domain.Entities.InventoryEntities
 {
-    public class Product
+    public class AddProduct
     {
         public int Id { get; set; }
         public byte[] ImageBase64 { get; set; }
@@ -24,6 +24,6 @@ namespace KapeRest.Domain.Entities.InventoryEntities
 
         // Relation
         public int SupplierId { get; set; }
-        public Supplier Supplier { get; set; }
+        public AddSupplier Supplier { get; set; }
     }
 }

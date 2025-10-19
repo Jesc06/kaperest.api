@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Domain.Entities.SupplierEntities
 {
-    public class Supplier
+    public class AddSupplier
     {
         public int Id { get; set; }
         public string SupplierName { get; set; }
@@ -20,7 +20,7 @@ namespace KapeRest.Domain.Entities.SupplierEntities
         public string FormattedDate => TransactionDate.ToString("MM/dd/yyyy");
 
         // Navigation (one-to-many)
-        public ICollection<Product> Products { get; set; }
+        public ICollection<AddProduct> Products { get; set; }
 
         //Transaction history per supplier
         public ICollection<SupplierTransactionHistory> TransactionHistories { get; set; }
