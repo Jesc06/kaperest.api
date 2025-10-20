@@ -37,6 +37,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                     Email = pending.Email,
                     Password = pending.Password,
                     Role = pending.Role,
+                    Status = "Pending"
                 };
 
             _context.PendingUserAccount.Add(pendingUser);
@@ -66,7 +67,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 throw new Exception("Failed to create user account.");
 
             await _userManager.AddToRoleAsync(user, pending.Role);
-
             pending.Status = "Approved";
             await _context.SaveChangesAsync();  
 

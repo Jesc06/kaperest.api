@@ -1,15 +1,16 @@
-﻿using KapeRest.Application.Services.Admin.PendingAcc;
+﻿using KapeRest.Application.DTOs.Admin.PendingAccount;
+using KapeRest.Application.Services.Admin.PendingAcc;
+using KapeRest.DTOs.Admin.PendingAccount;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using KapeRest.DTOs.Admin.PendingAccount;
-using KapeRest.Application.DTOs.Admin.PendingAccount;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace KapeRest.Controllers.Admin.PendingAccount
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+  
     public class RegisterPendingAccountController : ControllerBase
     {
         private readonly PendingAccService _pendingAccService;
@@ -21,6 +22,9 @@ namespace KapeRest.Controllers.Admin.PendingAccount
         [HttpPost("RegisterPendingAccount")]
         public async Task<ActionResult> RegisterPendingAccount(API_PendingAccount pending)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var pendingAccDTO = new PendingAccDTO
             {
                 FirstName = pending.FirstName,

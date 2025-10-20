@@ -20,7 +20,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
         {
             _context = context;
         }
-        public async Task<ProductResponseDTO> AddProduct(CreateProductDTO addProduct)
+        public async Task<ProductResponseDTO> AddProduct(string currentUser,CreateProductDTO addProduct)
         {
           var supplier = await _context.Suppliers
                .Include(s => s.TransactionHistories)
@@ -34,8 +34,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 ? null
                 : Convert.FromBase64String(addProduct.Base64Image);
 
-
-           var add = new AddProduct
+          var add = new AddProduct
           {
             ProductName = addProduct.ProductName,
             Category = addProduct.Category,
@@ -45,19 +44,19 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             SupplierId = addProduct.SupplierId,
             ImageBase64 = imageBytes,
             ImageMimeType = addProduct.ImageMimeType
-            };
+          };
           
           await _context.Products.AddAsync(add);
-
+            
           supplier.TransactionHistories.Add(new SupplierTransactionHistory
           {
+             User = currentUser,
+             Action = "Added",
              SupplierId = supplier.Id,
              ProductName = addProduct.ProductName,
              QuantityDelivered = addProduct.Quantity,
              TotalCost = addProduct.Price * addProduct.Quantity,
-             TransactionDate = DateTime.Now,
-             Status = "Added"
-
+             TransactionDate = DateTime.Now
           });
 
           await _context.SaveChangesAsync();
@@ -110,7 +109,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 ProductName = product.ProductName,
                 QuantityDelivered = product.Quantity,
                 TotalCost = product.Price * product.Quantity,
-                Status = "Updated",
+                Action = "Updated",
                 TransactionDate = DateTime.Now
             });
 
@@ -151,7 +150,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 ProductName = product.ProductName,
                 QuantityDelivered = 0,
                 TotalCost = 0,
-                Status = "Deleted",
+                Action = "Deleted",
                 TransactionDate = DateTime.Now
             });
 
