@@ -145,8 +145,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 User = currentUser,
                 SupplierId = product.SupplierId,
                 ProductName = product.ProductName,
-                QuantityDelivered = 0,
-                TotalCost = 0,
+                QuantityDelivered = product.Quantity,
+                TotalCost = product.Price,
                 Action = "Deleted",
                 TransactionDate = DateTime.Now
             });

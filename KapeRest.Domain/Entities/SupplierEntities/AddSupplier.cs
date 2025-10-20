@@ -1,5 +1,4 @@
 ﻿using KapeRest.Domain.Entities.InventoryEntities;
-using KapeRest.Domain.Entities.SupplierEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
