@@ -79,8 +79,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
           return response;
         }
 
-
-        public async Task<ProductResponseDTO> UpdateProduct(UpdateProductDTO update)
+        public async Task<ProductResponseDTO> UpdateProduct(string currentUser,UpdateProductDTO update)
         {
           
             var product = await _context.Products.FindAsync(update.Id);
@@ -101,10 +100,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 product.ImageMimeType = update.ImageMimeType;
             }
 
-          
             //gumawa ako context dbset para di mag error kase yung transaction history di gumagana kapag di ako ng set ng addsupplier logic kase nga nabigation lang siya gumagana kaya gumawa ako ng dbset
             _context.SupplierTransactionHistories.Add(new SupplierTransactionHistory
             {
+                User = currentUser,
                 SupplierId = product.SupplierId,
                 ProductName = product.ProductName,
                 QuantityDelivered = product.Quantity,
@@ -112,7 +111,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 Action = "Updated",
                 TransactionDate = DateTime.Now
             });
-
 
             await _context.SaveChangesAsync();
 
@@ -131,11 +129,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             };
 
             return response;
-
         }
 
-
-        public async Task<bool> DeleteProduct(int productId)
+        public async Task<bool> DeleteProduct(string currentUser, int productId)
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null)
@@ -146,6 +142,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             // Log deletion in supplier transaction history
             _context.SupplierTransactionHistories.Add(new SupplierTransactionHistory
             {
+                User = currentUser,
                 SupplierId = product.SupplierId,
                 ProductName = product.ProductName,
                 QuantityDelivered = 0,
