@@ -1,11 +1,13 @@
 ﻿using KapeRest.Application.DTOs.Admin.PendingAccount;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
+using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.PendingAccounts;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,10 +43,22 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 };
 
             _context.PendingUserAccount.Add(pendingUser);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                User = pending.Email,
+                Role = pending.Role,
+                Category = "Authentication",
+                Action = "Pending Account",
+                AffectedEntity = pending.Email,
+                Description = "Processing pending account",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();  
         }
 
-        public async Task ApprovePendingAccount(int id)
+        public async Task ApprovePendingAccount(int id, string username, string role)
         {
             var pending = await _context.PendingUserAccount.FindAsync(id);
             if (pending == null)
@@ -64,19 +78,42 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
 
             var result = await _userManager.CreateAsync(user, pending.Password);
             if(!result.Succeeded)
-                throw new Exception("Failed to create user account.");
+                throw new Exception("Failed to create user account. already exist username");
 
             await _userManager.AddToRoleAsync(user, pending.Role);
-            pending.Status = "Approved";
-            await _context.SaveChangesAsync();  
 
+            _context.PendingUserAccount.Remove(pending);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                User = username,
+                Role = role,
+                Category = "Authentication",
+                Action = "Approved Account",
+                AffectedEntity = pending.Email,
+                Description = "Approved pending account successfully registered.",
+                Date = DateTime.Now
+            });
+
+            await _context.SaveChangesAsync();  
         }
 
-        public async Task RejectPendingAccount(int id)
+        public async Task RejectPendingAccount(int id, string username, string role)
         {
             var pending = await _context.PendingUserAccount.FindAsync(id);
             if (pending == null)
                 throw new Exception("Pending account not found.");
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                User = username,
+                Role = role,
+                Category = "Authentication",
+                Action = "Rejected Account",
+                AffectedEntity = pending.Email,
+                Description = "Rejected pending account",
+                Date = DateTime.Now
+            });
 
             _context.PendingUserAccount.Remove(pending);
             await _context.SaveChangesAsync();

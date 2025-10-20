@@ -66,9 +66,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             {
                 User = currentUser,
                 Role = role,
-                Module = "Inventory",
+                Category = "Inventory",
                 Action = "Added",
-                Target = addProduct.ProductName,
+                AffectedEntity = addProduct.ProductName,
                 Description = $"Added product {addProduct.ProductName}",
                 Date = DateTime.Now
             });
@@ -118,9 +118,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             {
                 User = currentUser,
                 Role = role,
-                Module = "Inventory",
+                Category = "Inventory",
                 Action = "Updated",
-                Target = product.ProductName,
+                AffectedEntity = product.ProductName,
                 Description = $"Updated product {product.ProductName}",
                 Date = DateTime.Now
             });
@@ -156,9 +156,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             {
                 User = currentUser,
                 Role  = role,
-                Module = "Inventory",
+                Category = "Inventory",
                 Action = "Deleted",
-                Target = product.ProductName,
+                AffectedEntity = product.ProductName,
                 Description = $"Deleted product {product.ProductName}",
                 Date = DateTime.Now
             });
