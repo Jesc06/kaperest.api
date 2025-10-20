@@ -21,6 +21,7 @@ namespace KapeRest.Infrastructures.Migrations
                 newName: "AffectedEntity");
         }
 
+
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {

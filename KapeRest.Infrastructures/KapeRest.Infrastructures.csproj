@@ -22,4 +22,8 @@
     <ProjectReference Include="..\KapeRest.Domain\KapeRest.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\Repositories\NewFolder\" />
+  </ItemGroup>
+
 </Project>
