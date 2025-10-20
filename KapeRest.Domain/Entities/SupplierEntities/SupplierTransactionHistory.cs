@@ -15,6 +15,7 @@ namespace KapeRest.Domain.Entities.SupplierEntities
         public AddSupplier Supplier { get; set; }
         public string User { get; set; }
         public string ProductName { get; set; }
+        public string Price { get; set; }
         public int QuantityDelivered { get; set; }
         public decimal TotalCost { get; set; }
         public string Action { get; set; } = "Active";

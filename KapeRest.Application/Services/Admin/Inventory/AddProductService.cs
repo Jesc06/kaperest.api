@@ -23,30 +23,33 @@ namespace KapeRest.Application.Services.Admin.Inventory
         public async Task<ProductResponseDTO> addProduct(CreateProductDTO add)
         {
             var currentActiveUser = _currentUser.Email;
+            var role = _currentUser.Role;
 
             if (string.IsNullOrEmpty(currentActiveUser))
                 throw new UnauthorizedAccessException("User is not authenticated.");
 
-            return await _inventory.AddProduct(currentActiveUser, add);
+            return await _inventory.AddProduct(currentActiveUser,role, add);
         }
 
         public async Task<ProductResponseDTO> UpdateProduct (UpdateProductDTO update)
         {
             var currentActiveUser = _currentUser.Email;
+            var role = _currentUser.Role;
 
             if (string.IsNullOrEmpty(currentActiveUser))
                 throw new UnauthorizedAccessException("User is not authenticated.");
-            return await _inventory.UpdateProduct(currentActiveUser, update);
+            return await _inventory.UpdateProduct(currentActiveUser,role, update);
         }
 
         public async Task<bool> DeleteProduct (int id)
         {
             var currentActiveUser = _currentUser.Email;
+            var role = _currentUser.Role;
 
             if (string.IsNullOrEmpty(currentActiveUser))
                 throw new UnauthorizedAccessException("User is not authenticated.");
 
-            return await _inventory.DeleteProduct(currentActiveUser, id);
+            return await _inventory.DeleteProduct(currentActiveUser,role, id);
         }
 
 

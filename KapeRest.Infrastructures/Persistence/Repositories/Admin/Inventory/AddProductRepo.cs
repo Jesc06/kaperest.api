@@ -1,5 +1,6 @@
 ﻿using KapeRest.Application.DTOs.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.Inventory;
+using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.InventoryEntities;
 using KapeRest.Domain.Entities.SupplierEntities;
 using KapeRest.Infrastructures.Migrations;
@@ -7,6 +8,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +22,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
         {
             _context = context;
         }
-        public async Task<ProductResponseDTO> AddProduct(string currentUser,CreateProductDTO addProduct)
+        public async Task<ProductResponseDTO> AddProduct(string currentUser,string role,CreateProductDTO addProduct)
         {
           var supplier = await _context.Suppliers
                .Include(s => s.TransactionHistories)
@@ -54,12 +56,24 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
              Action = "Added",
              SupplierId = supplier.Id,
              ProductName = addProduct.ProductName,
+             Price = addProduct.Price.ToString("C"),
              QuantityDelivered = addProduct.Quantity,
              TotalCost = addProduct.Price * addProduct.Quantity,
              TransactionDate = DateTime.Now
           });
 
-          await _context.SaveChangesAsync();
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                User = currentUser,
+                Role = role,
+                Module = "Inventory",
+                Action = "Added",
+                Target = addProduct.ProductName,
+                Description = $"Added product {addProduct.ProductName}",
+                Date = DateTime.Now
+            });
+
+            await _context.SaveChangesAsync();
 
           // Convert image back to Base64 for response
           string responseBase64 = add.ImageBase64 != null ? Convert.ToBase64String(add.ImageBase64) : null;
@@ -79,7 +93,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
           return response;
         }
 
-        public async Task<ProductResponseDTO> UpdateProduct(string currentUser,UpdateProductDTO update)
+        public async Task<ProductResponseDTO> UpdateProduct(string currentUser,string role,UpdateProductDTO update)
         {
           
             var product = await _context.Products.FindAsync(update.Id);
@@ -100,16 +114,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 product.ImageMimeType = update.ImageMimeType;
             }
 
-            //gumawa ako context dbset para di mag error kase yung transaction history di gumagana kapag di ako ng set ng addsupplier logic kase nga nabigation lang siya gumagana kaya gumawa ako ng dbset
-            _context.SupplierTransactionHistories.Add(new SupplierTransactionHistory
+            _context.AuditLog.Add(new AuditLogEntities
             {
                 User = currentUser,
-                SupplierId = product.SupplierId,
-                ProductName = product.ProductName,
-                QuantityDelivered = product.Quantity,
-                TotalCost = product.Price * product.Quantity,
+                Role = role,
+                Module = "Inventory",
                 Action = "Updated",
-                TransactionDate = DateTime.Now
+                Target = product.ProductName,
+                Description = $"Updated product {product.ProductName}",
+                Date = DateTime.Now
             });
 
             await _context.SaveChangesAsync();
@@ -131,7 +144,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             return response;
         }
 
-        public async Task<bool> DeleteProduct(string currentUser, int productId)
+        public async Task<bool> DeleteProduct(string currentUser,string role, int productId)
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null)
@@ -139,16 +152,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 
             _context.Products.Remove(product);
 
-            // Log deletion in supplier transaction history
-            _context.SupplierTransactionHistories.Add(new SupplierTransactionHistory
+            _context.AuditLog.Add(new AuditLogEntities
             {
                 User = currentUser,
-                SupplierId = product.SupplierId,
-                ProductName = product.ProductName,
-                QuantityDelivered = product.Quantity,
-                TotalCost = product.Price,
+                Role  = role,
+                Module = "Inventory",
                 Action = "Deleted",
-                TransactionDate = DateTime.Now
+                Target = product.ProductName,
+                Description = $"Deleted product {product.ProductName}",
+                Date = DateTime.Now
             });
 
             await _context.SaveChangesAsync();

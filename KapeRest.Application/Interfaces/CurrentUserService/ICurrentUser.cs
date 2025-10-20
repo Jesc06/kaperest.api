@@ -10,5 +10,6 @@ namespace KapeRest.Application.Interfaces.CurrentUserService
     {
         string? Email { get; }
         string? UserId { get; }
+        string? Role { get; }
     }
 }
