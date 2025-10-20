@@ -19,15 +19,19 @@ namespace KapeRest.Infrastructures.Services.JwtService
     {
         private readonly IConfiguration _config;
         private readonly Byte[] _key;
+        private readonly string Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER")!;
+        private readonly string Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")!;
+        private readonly string Key = Environment.GetEnvironmentVariable("JWT_KEY")!;
+        private readonly string TokenDurationInMinutes = Environment.GetEnvironmentVariable("JWT_TOKEN_DURATION_MINUTES")!;
         public GenerateTokenService(IConfiguration config)
         {
             _config = config;
-            _key = Encoding.UTF8.GetBytes(_config["Jwt:key"]!);
+            _key = Encoding.UTF8.GetBytes(Key);
         }
 
         public string CreateToken(JwtPayloadDTO payload, IEnumerable<Claim>? additionalClaim = null)
         {
-            var expiry = double.Parse(_config["Jwt:TokenDurationInMinutes"] ?? "1");
+            var expiry = double.Parse(TokenDurationInMinutes ?? "1");
 
             var claims = new List<Claim>
             {
@@ -47,8 +51,8 @@ namespace KapeRest.Infrastructures.Services.JwtService
             var credentials = new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
+                issuer: Issuer,
+                audience: Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(expiry),
                 signingCredentials: credentials
@@ -83,8 +87,8 @@ namespace KapeRest.Infrastructures.Services.JwtService
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidIssuer = _config["Jwt:Issuer"],
-                ValidAudience = _config["Jwt:Audience"],
+                ValidIssuer = Issuer,
+                ValidAudience = Audience,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(_key),
                 ValidateLifetime = false // allow expired token to get claims

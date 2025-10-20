@@ -85,7 +85,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             var token = _jwtService.CreateToken(payload);
             var refreshToken = _jwtService.RefreshToken();
 
-            var tokenExpiry = int.Parse(_config["Jwt:RefreshTokenDurationInMinutes"] ?? "1");
+            var RefreshTokenExpiration = Environment.GetEnvironmentVariable("JWT_REFRESH_TOKEN_DURATION_MINUTES")!;
+            var tokenExpiry = int.Parse(RefreshTokenExpiration);
             user.RefreshTokenHash = _jwtService.HashToken(refreshToken);
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(tokenExpiry);
 

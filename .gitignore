@@ -10,5 +10,4 @@ bin/
 obj/
 out/
 
-/KapeRest/appsettings.json
-/KapeRest/appsettings.*.json
+.env

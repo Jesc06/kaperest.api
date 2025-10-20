@@ -26,7 +26,9 @@ namespace KapeRest.Controllers.Admin.Supplier
             {
                 SupplierName = addSuppliers.SupplierName,
                 ContactPerson = addSuppliers.ContactPerson,
-                Address = addSuppliers.Address,
+                PhoneNumber = addSuppliers.PhoneNumber,
+                Email = addSuppliers.Email,
+                Address = addSuppliers.Address
             };
 
             var response = await _supplierService.addSupplier(supplierDTO);

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Repositories\NewFolder\" />
+    <Folder Include="Persistence\Repositories\Admin\AuditLog\" />
   </ItemGroup>
 
 </Project>

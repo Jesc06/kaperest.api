@@ -24,13 +24,18 @@ using KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.Supplier;
 using KapeRest.Application.Services.Admin.Supplier;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+Env.Load();
+
 #region --Identity--
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("KapeRest_DB")));
+var connectionString = Environment.GetEnvironmentVariable("KapeRest_DB");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<Users, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -74,8 +79,10 @@ builder.Services.AddSwaggerGen(options =>
 #endregion
 
 #region --JWT Authentication--
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["key"]!);
+var Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+var JwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+var key = Encoding.UTF8.GetBytes(JwtKey!);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -92,8 +99,8 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"],
+            ValidIssuer = Issuer,
+            ValidAudience = Audience,
             IssuerSigningKey = new SymmetricSecurityKey(key),
             RoleClaimType = ClaimTypes.Role,
 

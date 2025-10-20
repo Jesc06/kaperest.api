@@ -23,9 +23,11 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
                 await roleManager.CreateAsync(new IdentityRole(role));
             }
 
-            var AppSettingsJsonAdminAccount = configuration.GetSection("AdminSeededAccount");
-            var AdminEmail = AppSettingsJsonAdminAccount["Email"];
-            var AdminPassword = AppSettingsJsonAdminAccount["Password"];
+            var AdminEmail = Environment.GetEnvironmentVariable("Admin_Email")!;
+            var AdminPassword = Environment.GetEnvironmentVariable("Admin_Password")!;
+            var FirstName = Environment.GetEnvironmentVariable("Admin_FirstName")!;
+            var MiddleName = Environment.GetEnvironmentVariable("Admin_MiddleName")!;
+            var LastName = Environment.GetEnvironmentVariable("Admin_LastName")!;
 
             var findUser = await userManager.FindByEmailAsync(AdminEmail);  
             if(findUser is null)
@@ -34,9 +36,9 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
                 {
                     UserName = AdminEmail,
                     Email = AdminEmail,
-                    FirstName = AppSettingsJsonAdminAccount["FirstName"],
-                    MiddleName = AppSettingsJsonAdminAccount["MiddleName"],
-                    LastName = AppSettingsJsonAdminAccount["LastName"],
+                    FirstName = FirstName,
+                    MiddleName = MiddleName,
+                    LastName = LastName,
                     EmailConfirmed = true,
                 };
                 var createUserResult = await userManager.CreateAsync(createUser, AdminPassword);
