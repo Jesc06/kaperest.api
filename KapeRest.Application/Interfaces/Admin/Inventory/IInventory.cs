@@ -10,8 +10,8 @@ namespace KapeRest.Application.Interfaces.Admin.Inventory
 {
     public interface IInventory
     {
-        Task<ProductResponseDTO> AddProduct(string currentUser,string role,CreateProductDTO addProduct);
-        Task<ProductResponseDTO> UpdateProduct(string currentUser,string role,UpdateProductDTO update);
-        Task<bool> DeleteProduct(string currentUser,string role,int productId);
+        Task<ProductResponseDTO> AddProductOfSuppliers(string currentUser,string role,CreateProductDTO addProduct);
+        Task<ProductResponseDTO> UpdateProductOfSuppliers(string currentUser,string role,UpdateProductDTO update);
+        Task<bool> DeleteProductOfSuppliers(string currentUser,string role,int productId);
     }
 }

@@ -22,7 +22,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
         {
             _context = context;
         }
-        public async Task<ProductResponseDTO> AddProduct(string currentUser,string role,CreateProductDTO addProduct)
+
+        public async Task<ProductResponseDTO> AddProductOfSuppliers(string currentUser,string role,CreateProductDTO addProduct)
         {
           var supplier = await _context.Suppliers
                .Include(s => s.TransactionHistories)
@@ -31,21 +32,13 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             if (supplier is null)
                 throw new Exception("Supplier does not exist.");
 
-            // Convert Base64 to byte array
-            byte[]? imageBytes = string.IsNullOrEmpty(addProduct.Base64Image)
-                ? null
-                : Convert.FromBase64String(addProduct.Base64Image);
-
-          var add = new AddProduct
+          var add = new ProductOfSupplier
           {
             ProductName = addProduct.ProductName,
             Category = addProduct.Category,
             Price = addProduct.Price,
-            Quantity = addProduct.Quantity,
-            ReorderLevel = addProduct.ReorderLevel,
+            Stock = addProduct.Stock,
             SupplierId = addProduct.SupplierId,
-            ImageBase64 = imageBytes,
-            ImageMimeType = addProduct.ImageMimeType
           };
           
           await _context.Products.AddAsync(add);
@@ -57,8 +50,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
              SupplierId = supplier.Id,
              ProductName = addProduct.ProductName,
              Price = addProduct.Price.ToString("C"),
-             QuantityDelivered = addProduct.Quantity,
-             TotalCost = addProduct.Price * addProduct.Quantity,
+             QuantityDelivered = addProduct.Stock,
+             TotalCost = addProduct.Price * addProduct.Stock,
              TransactionDate = DateTime.Now
           });
 
@@ -74,9 +67,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             });
 
             await _context.SaveChangesAsync();
-
-          // Convert image back to Base64 for response
-          string responseBase64 = add.ImageBase64 != null ? Convert.ToBase64String(add.ImageBase64) : null;
        
           var response = new ProductResponseDTO
           {
@@ -84,16 +74,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             ProductName = add.ProductName,
             Category = add.Category,
             Price = add.Price,
-            Quantity = add.Quantity,
+            Stock = add.Stock,
             SupplierName = supplier.SupplierName,
-            Base64Image = responseBase64,
-            ImageMimeType = add.ImageMimeType
           };
           
           return response;
         }
 
-        public async Task<ProductResponseDTO> UpdateProduct(string currentUser,string role,UpdateProductDTO update)
+        public async Task<ProductResponseDTO> UpdateProductOfSuppliers(string currentUser,string role,UpdateProductDTO update)
         {
           
             var product = await _context.Products.FindAsync(update.Id);
@@ -104,15 +92,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             product.ProductName = update.ProductName ?? product.ProductName;
             product.Category = update.Category ?? product.Category;
             product.Price = update.Price ?? product.Price;
-            product.Quantity = update.Quantity ?? product.Quantity;
-            product.ReorderLevel = update.ReorderLevel ?? product.ReorderLevel;
-
-            // Update image if new one provided
-            if (!string.IsNullOrEmpty(update.Base64Image))
-            {
-                product.ImageBase64 = Convert.FromBase64String(update.Base64Image);
-                product.ImageMimeType = update.ImageMimeType;
-            }
+            product.Stock = update.Stock ?? product.Stock;
 
             _context.AuditLog.Add(new AuditLogEntities
             {
@@ -135,16 +115,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                 ProductName = product.ProductName,
                 Category = product.Category,
                 Price = product.Price,
-                Quantity = product.Quantity,
+                Stock = product.Stock,
                 SupplierName = supplier?.SupplierName,
-                Base64Image = product.ImageBase64 != null ? Convert.ToBase64String(product.ImageBase64) : null,
-                ImageMimeType = product.ImageMimeType
             };
 
             return response;
         }
 
-        public async Task<bool> DeleteProduct(string currentUser,string role, int productId)
+        public async Task<bool> DeleteProductOfSuppliers(string currentUser,string role, int productId)
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null)

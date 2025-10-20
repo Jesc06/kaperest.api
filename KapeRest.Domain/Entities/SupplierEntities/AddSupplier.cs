@@ -18,10 +18,8 @@ namespace KapeRest.Domain.Entities.SupplierEntities
         public DateTime TransactionDate { get; set; } = DateTime.Now;
         public string FormattedDate => TransactionDate.ToString("MM/dd/yyyy");
 
-        // Navigation (one-to-many)
-        public ICollection<AddProduct> Products { get; set; }
+        public ICollection<ProductOfSupplier> Products { get; set; }
 
-        //Transaction history per supplier
         public ICollection<SupplierTransactionHistory> TransactionHistories { get; set; }
     }
 }

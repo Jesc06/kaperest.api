@@ -7,16 +7,13 @@ using KapeRest.Domain.Entities.SupplierEntities;
 
 namespace KapeRest.Domain.Entities.InventoryEntities
 {
-    public class AddProduct
+    public class ProductOfSupplier
     {
         public int Id { get; set; }
-        public byte[] ImageBase64 { get; set; }
-        public string ImageMimeType { get; set; }
         public string ProductName { get; set; }
-        public int Quantity { get; set; }
+        public int Stock { get; set; }
         public decimal Price { get; set; }
         public string Category { get; set; }
-        public int ReorderLevel { get; set; }
 
         //time added new product
         public DateTime TransactionDate { get; set; } = DateTime.Now;

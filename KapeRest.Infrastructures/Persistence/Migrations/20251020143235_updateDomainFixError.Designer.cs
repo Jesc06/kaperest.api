@@ -4,6 +4,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251020143235_updateDomainFixError")]
+    partial class updateDomainFixError
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,44 +97,6 @@ namespace KapeRest.Infrastructures.Migrations
                     b.HasIndex("SupplierId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MenuItems");
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItemProduct", b =>
-                {
-                    b.Property<int>("MenuItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("MenuItemId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("MenuItemProducts");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>
@@ -484,25 +449,6 @@ namespace KapeRest.Infrastructures.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItemProduct", b =>
-                {
-                    b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
-                        .WithMany("Products")
-                        .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MenuItem");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("KapeRest.Domain.Entities.SupplierEntities.SupplierTransactionHistory", b =>
                 {
                     b.HasOne("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", "Supplier")
@@ -563,11 +509,6 @@ namespace KapeRest.Infrastructures.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItem", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", b =>

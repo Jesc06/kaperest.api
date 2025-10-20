@@ -28,7 +28,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
                 PhoneNumber = addSupplier.PhoneNumber,
                 Email = addSupplier.Email,
                 Address = addSupplier.Address,
-                Products = new List<AddProduct>(),
+                Products = new List<ProductOfSupplier>(),
                 TransactionHistories = new List<SupplierTransactionHistory>()
             };
 

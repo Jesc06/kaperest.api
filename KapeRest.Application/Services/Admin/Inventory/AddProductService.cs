@@ -20,7 +20,7 @@ namespace KapeRest.Application.Services.Admin.Inventory
             _inventory = inventory;
             _currentUser = currentUser;
         }
-        public async Task<ProductResponseDTO> addProduct(CreateProductDTO add)
+        public async Task<ProductResponseDTO> AddProductOfSuppliers(CreateProductDTO add)
         {
             var currentActiveUser = _currentUser.Email;
             var role = _currentUser.Role;
@@ -28,20 +28,20 @@ namespace KapeRest.Application.Services.Admin.Inventory
             if (string.IsNullOrEmpty(currentActiveUser))
                 throw new UnauthorizedAccessException("User is not authenticated.");
 
-            return await _inventory.AddProduct(currentActiveUser,role, add);
+            return await _inventory.AddProductOfSuppliers(currentActiveUser,role, add);
         }
 
-        public async Task<ProductResponseDTO> UpdateProduct (UpdateProductDTO update)
+        public async Task<ProductResponseDTO> UpdateProductOfSuppliers (UpdateProductDTO update)
         {
             var currentActiveUser = _currentUser.Email;
             var role = _currentUser.Role;
 
             if (string.IsNullOrEmpty(currentActiveUser))
                 throw new UnauthorizedAccessException("User is not authenticated.");
-            return await _inventory.UpdateProduct(currentActiveUser,role, update);
+            return await _inventory.UpdateProductOfSuppliers(currentActiveUser,role, update);
         }
 
-        public async Task<bool> DeleteProduct (int id)
+        public async Task<bool> DeleteProductOfSuppliers (int id)
         {
             var currentActiveUser = _currentUser.Email;
             var role = _currentUser.Role;
@@ -49,7 +49,7 @@ namespace KapeRest.Application.Services.Admin.Inventory
             if (string.IsNullOrEmpty(currentActiveUser))
                 throw new UnauthorizedAccessException("User is not authenticated.");
 
-            return await _inventory.DeleteProduct(currentActiveUser,role, id);
+            return await _inventory.DeleteProductOfSuppliers(currentActiveUser,role, id);
         }
 
 

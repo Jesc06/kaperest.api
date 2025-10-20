@@ -9,10 +9,7 @@ namespace KapeRest.Domain.Entities.SupplierEntities
     public class SupplierTransactionHistory
     {
         public int Id { get; set; }
-
-        // Relationship
         public int SupplierId { get; set; }
-        public AddSupplier Supplier { get; set; }
         public string User { get; set; }
         public string ProductName { get; set; }
         public string Price { get; set; }
@@ -21,5 +18,6 @@ namespace KapeRest.Domain.Entities.SupplierEntities
         public string Action { get; set; } = "Active";
         public DateTime TransactionDate { get; set; } = DateTime.Now;
         public string FormattedDate => TransactionDate.ToString("MMMM d, yyyy h:mm tt");
+        public AddSupplier Supplier { get; set; }
     }
 }

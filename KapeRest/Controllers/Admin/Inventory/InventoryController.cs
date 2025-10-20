@@ -17,50 +17,31 @@ namespace KapeRest.Controllers.Admin.Inventory
             _inventoryService = inventoryService;
         }
 
-        //helper method for converting image to base64
-        private async Task<(string base64, string mimeType)> ConvertImageToBase64Async(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-                return (null, null);
 
-            using var ms = new MemoryStream();
-            await file.CopyToAsync(ms);
-            var base64 = Convert.ToBase64String(ms.ToArray());
-            return (base64, file.ContentType);
-        }
-
-
-        [HttpPost("AddProducts")]
-        public async Task<ActionResult> AddProduct(API_CreateProductDTO addProduct)
+        [HttpPost("AddProductsOfSuppliers")]
+        public async Task<ActionResult> AddProductOfSuppliers(API_CreateProductDTO addProduct)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var (base64Image, mimeType) = await ConvertImageToBase64Async(addProduct.ImageFile);
 
             var productDTO = new CreateProductDTO
             {
                 ProductName = addProduct.ProductName,
                 Category = addProduct.Category,
                 Price = addProduct.Price,
-                Quantity = addProduct.Quantity,
-                ReorderLevel = addProduct.ReorderLevel,
+                Stock = addProduct.Stock,
                 SupplierId = addProduct.SupplierId,
-                Base64Image = base64Image,
-                ImageMimeType = mimeType
             };
-            var response = await _inventoryService.addProduct(productDTO);
+            var response = await _inventoryService.AddProductOfSuppliers(productDTO);
             return Ok(response);
         }
 
 
-        [HttpPut("UpdateProduct")]
-        public async Task<ActionResult> UpdateProduct(API_UpdateProductDTO update) 
+        [HttpPut("UpdateProductOfSuppliers")]
+        public async Task<ActionResult> UpdateProductOfSuppliers(API_UpdateProductDTO update) 
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var (base64Image, mimeType) = await ConvertImageToBase64Async(update.ImageFile);
 
             var updatedProduct = new UpdateProductDTO
             {
@@ -68,22 +49,19 @@ namespace KapeRest.Controllers.Admin.Inventory
                 ProductName = update.ProductName,
                 Category = update.Category,
                 Price = update.Price,
-                Quantity = update.Quantity,
-                ReorderLevel = update.ReorderLevel,
-                Base64Image = base64Image,
-                ImageMimeType = mimeType
+                Stock = update.Stock,
             };
 
-            var response = await _inventoryService.UpdateProduct(updatedProduct);
+            var response = await _inventoryService.UpdateProductOfSuppliers(updatedProduct);
             return Ok(response);
         }
 
-        [HttpDelete("DeleteProduct/{id}")]
-        public async Task<ActionResult> DeleteProduct(int id)
+        [HttpDelete("DeleteProductOfSuppliers/{id}")]
+        public async Task<ActionResult> DeleteProductOfSuppliers(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var result = await _inventoryService.DeleteProduct(id);
+            var result = await _inventoryService.DeleteProductOfSuppliers(id);
             return Ok(result);
         }
 

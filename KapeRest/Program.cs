@@ -25,6 +25,9 @@ using KapeRest.Application.Interfaces.Admin.Supplier;
 using KapeRest.Application.Services.Admin.Supplier;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers;
 using DotNetEnv;
+using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
+using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
+using KapeRest.Application.Services.Admin.CreateMenuItem;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,6 +131,9 @@ builder.Services.AddScoped<AddProductService>();
 
 builder.Services.AddScoped<ISupplier, AddSupplierRepo>();
 builder.Services.AddScoped<AddSupplierService>();
+
+builder.Services.AddScoped<IMenuItem, MenuItemRepo>();
+builder.Services.AddScoped<MenuItemService>();
 #endregion
 
 var app = builder.Build();
