@@ -10,6 +10,6 @@ namespace KapeRest.Application.Interfaces.Admin.CreateMenuItem
 {
     public interface IMenuItem
     {
-        Task<MenuItem> CreateMenuItem(string currentUser, string role, CreateMenuItemDTO dto);
+        Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto);
     }
 }

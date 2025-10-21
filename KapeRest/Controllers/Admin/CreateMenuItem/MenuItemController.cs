@@ -25,7 +25,7 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
 
             var result = await _menuItemService.CreateMenuItem(dto);
 
-            return Ok(new {  result.Id, result.Name,result.Price, Message = "Menu item created successfully and stock deducted." });
+            return Ok(new {  result.Id, result.ItemName,result.Price, Message = "Menu item created successfully and stock deducted." });
 
         }
 

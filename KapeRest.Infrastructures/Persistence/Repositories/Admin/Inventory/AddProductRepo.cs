@@ -98,7 +98,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             {
                 User = currentUser,
                 Role = role,
-                Category = "Inventory",
+                Category = "Inventory", 
                 Action = "Updated",
                 AffectedEntity = product.ProductName,
                 Description = $"Updated product {product.ProductName}",

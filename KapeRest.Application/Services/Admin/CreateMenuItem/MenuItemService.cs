@@ -22,10 +22,10 @@ namespace KapeRest.Application.Services.Admin.CreateMenuItem
 
         public async Task<MenuItem> CreateMenuItem(CreateMenuItemDTO newItem)
         {
-            var currentActiveUser = _currentUser.Email;
-            var role = _currentUser.Role;
+            string user = _currentUser.Email;
+            string role = _currentUser.Role;
 
-            return await _menuItem.CreateMenuItem(currentActiveUser, role, newItem);
+            return await _menuItem.CreateMenuItemAsync(user, role, newItem);
         }
 
 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Application.DTOs.Admin.CreateMenuItem
 {
-    public class MenuItemIngredientDTO
+    public class MenuItemProductDTO
     {
         public int ProductId { get; set; }
-        public int Quantity { get; set; }
+        public int QuantityUsed { get; set; }
     }
 }

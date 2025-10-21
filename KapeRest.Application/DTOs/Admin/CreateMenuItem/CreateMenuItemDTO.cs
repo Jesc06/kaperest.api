@@ -10,6 +10,6 @@ namespace KapeRest.Application.DTOs.Admin.CreateMenuItem
     {
         public string ItemName { get; set; }
         public decimal Price { get; set; }
-        public List<MenuItemIngredientDTO> Ingredients { get; set; }
+        public List<MenuItemProductDTO> Products { get; set; } = new();
     }
 }

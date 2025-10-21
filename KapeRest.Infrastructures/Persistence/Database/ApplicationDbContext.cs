@@ -38,7 +38,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
 
             modelBuilder.Entity<MenuItemProduct>()
                 .HasOne(mp => mp.MenuItem)
-                .WithMany(m => m.Products)
+                .WithMany(m => m.MenuItemProducts)
                 .HasForeignKey(mp => mp.MenuItemId);
 
             modelBuilder.Entity<MenuItemProduct>()

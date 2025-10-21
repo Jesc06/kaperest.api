@@ -21,54 +21,38 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             _context = context;
         }
 
-
-
-        public async Task<MenuItem> CreateMenuItem(string currentUser, string role, CreateMenuItemDTO dto)
+        public async Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto)
         {
-            // Create entity
             var menuItem = new MenuItem
             {
-                Name = dto.ItemName,
+                ItemName = dto.ItemName,
                 Price = dto.Price
             };
 
-            // Validate & Deduct
-            var productIds = dto.Ingredients.Select(i => i.ProductId).ToList();
-            var products = await _context.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
-
-            if (products.Count != dto.Ingredients.Count)
-                throw new Exception("One or more ingredient products not found.");
-
-            foreach (var ingredient in dto.Ingredients)
+            foreach (var productDto in dto.Products)
             {
-                var product = products.First(p => p.Id == ingredient.ProductId);
-                if (product.Stock < ingredient.Quantity)
-                    throw new Exception($"Not enough stock for {product.ProductName}");
+                var product = await _context.Products.FindAsync(productDto.ProductId);
+                if (product == null)
+                    throw new Exception($"Product ID {productDto.ProductId} not found.");
 
-                product.Stock -= ingredient.Quantity;
+                if (product.Stock < productDto.QuantityUsed)
+                    throw new Exception($"Not enough stock for product: {product.ProductName}");
+                    
+                if (product.Stock <= 0)
+                    throw new Exception("No available stock");
 
-                // Log action
-                _context.AuditLog.Add(new AuditLogEntities
+                product.Stock -= productDto.QuantityUsed;
+
+                menuItem.MenuItemProducts.Add(new MenuItemProduct
                 {
-                    User = currentUser,
-                    Role = role,
-                    Category = "Inventory",
-                    Action = "Deduct",
-                    AffectedEntity = product.ProductName,
-                    Description = $"Used {ingredient.Quantity} of {product.ProductName} for {menuItem.Name}",
-                    Date = DateTime.Now
-                });
-
-                _context.MenuItemProducts.Add(new MenuItemProduct
-                {
-                    MenuItem = menuItem,
-                    Product = product,
-                    Quantity = ingredient.Quantity
+                    ProductId = product.Id,
+                    Quantity = productDto.QuantityUsed
                 });
             }
 
             _context.MenuItems.Add(menuItem);
             await _context.SaveChangesAsync();
+
             return menuItem;
         }
 

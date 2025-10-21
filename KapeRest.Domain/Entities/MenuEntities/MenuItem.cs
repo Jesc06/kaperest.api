@@ -9,10 +9,8 @@ namespace KapeRest.Domain.Entities.MenuEntities
     public class MenuItem
     {
         public int Id { get; set; }
-        public string Name { get; set; }       // e.g., Milk Tea
+        public string ItemName { get; set; } = string.Empty;
         public decimal Price { get; set; }
-
-        // Map products used for this item
-        public ICollection<MenuItemProduct> Products { get; set; }
+        public ICollection<MenuItemProduct> MenuItemProducts { get; set; } = new List<MenuItemProduct>();
     }
 }
