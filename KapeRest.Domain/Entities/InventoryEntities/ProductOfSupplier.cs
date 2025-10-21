@@ -1,9 +1,10 @@
-﻿using System;
+﻿using KapeRest.Domain.Entities.MenuEntities;
+using KapeRest.Domain.Entities.SupplierEntities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KapeRest.Domain.Entities.SupplierEntities;
 
 namespace KapeRest.Domain.Entities.InventoryEntities
 {
@@ -22,5 +23,7 @@ namespace KapeRest.Domain.Entities.InventoryEntities
         // Relation
         public int SupplierId { get; set; }
         public AddSupplier Supplier { get; set; }
+
+        public ICollection<MenuItemProduct> MenuItemProducts { get; set; }
     }
 }

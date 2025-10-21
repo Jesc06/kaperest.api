@@ -28,6 +28,9 @@ using DotNetEnv;
 using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
 using KapeRest.Application.Services.Admin.CreateMenuItem;
+using KapeRest.Application.Interfaces.Users.Buy;
+using KapeRest.Infrastructures.Persistence.Repositories.Users.Buy;
+using KapeRest.Application.Services.Users.Buy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +42,7 @@ Env.Load();
 #region --Identity--
 var connectionString = Environment.GetEnvironmentVariable("KapeRest_DB");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<Users, IdentityRole>(options =>
+builder.Services.AddIdentity<UsersIdentity, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
@@ -134,6 +137,9 @@ builder.Services.AddScoped<AddSupplierService>();
 
 builder.Services.AddScoped<IMenuItem, MenuItemRepo>();
 builder.Services.AddScoped<MenuItemService>();
+
+builder.Services.AddScoped<IBuy, BuyRepo>();
+builder.Services.AddScoped<BuyService>();
 #endregion
 
 var app = builder.Build();
@@ -156,7 +162,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Users>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UsersIdentity>>();
     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
     await AdminSeededAccount.AdminAccount(roleManager, userManager, config);

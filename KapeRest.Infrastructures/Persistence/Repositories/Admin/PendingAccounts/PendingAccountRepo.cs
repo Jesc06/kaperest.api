@@ -18,8 +18,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
     public class PendingAccountRepo : IpendingAccount
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<Users> _userManager;
-        public PendingAccountRepo(ApplicationDbContext context, UserManager<Users> userManager)
+        private readonly UserManager<UsersIdentity> _userManager;
+        public PendingAccountRepo(ApplicationDbContext context, UserManager<UsersIdentity> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -46,7 +46,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                User = pending.Email,
+                Username = pending.Email,
                 Role = pending.Role,
                 Category = "Authentication",
                 Action = "Pending Account",
@@ -67,7 +67,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             if(pending.Status is not "Pending")
                 throw new Exception("Account already proceed");
 
-            var user = new Users
+            var user = new UsersIdentity
             {
                 FirstName = pending.FirstName,
                 MiddleName = pending.MiddleName,
@@ -86,7 +86,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                User = username,
+                Username = username,
                 Role = role,
                 Category = "Authentication",
                 Action = "Approved Account",
@@ -106,7 +106,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                User = username,
+                Username = username,
                 Role = role,
                 Category = "Authentication",
                 Action = "Rejected Account",

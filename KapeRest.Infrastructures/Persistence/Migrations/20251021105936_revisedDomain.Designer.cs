@@ -4,6 +4,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251021105936_revisedDomain")]
+    partial class revisedDomain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace KapeRest.Infrastructures.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("User")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -104,10 +107,6 @@ namespace KapeRest.Infrastructures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ItemName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -115,39 +114,9 @@ namespace KapeRest.Infrastructures.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte[]>("image")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("MenuItems");
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItemProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MenuItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductOfSupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantityUsed")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MenuItemId");
-
-                    b.HasIndex("ProductOfSupplierId");
-
-                    b.ToTable("MenuItemProducts");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>
@@ -273,7 +242,7 @@ namespace KapeRest.Infrastructures.Migrations
                     b.ToTable("SupplierTransactionHistories");
                 });
 
-            modelBuilder.Entity("KapeRest.Infrastructures.Persistence.Database.UsersIdentity", b =>
+            modelBuilder.Entity("KapeRest.Infrastructures.Persistence.Database.Users", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -500,25 +469,6 @@ namespace KapeRest.Infrastructures.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItemProduct", b =>
-                {
-                    b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
-                        .WithMany("MenuItemProducts")
-                        .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", "Product")
-                        .WithMany("MenuItemProducts")
-                        .HasForeignKey("ProductOfSupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MenuItem");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("KapeRest.Domain.Entities.SupplierEntities.SupplierTransactionHistory", b =>
                 {
                     b.HasOne("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", "Supplier")
@@ -541,7 +491,7 @@ namespace KapeRest.Infrastructures.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.UsersIdentity", null)
+                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -550,7 +500,7 @@ namespace KapeRest.Infrastructures.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.UsersIdentity", null)
+                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -565,7 +515,7 @@ namespace KapeRest.Infrastructures.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.UsersIdentity", null)
+                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -574,21 +524,11 @@ namespace KapeRest.Infrastructures.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.UsersIdentity", null)
+                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", b =>
-                {
-                    b.Navigation("MenuItemProducts");
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItem", b =>
-                {
-                    b.Navigation("MenuItemProducts");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", b =>

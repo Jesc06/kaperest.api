@@ -9,7 +9,7 @@ namespace KapeRest.Domain.Entities.AuditLogEntities
     public class AuditLogEntities
     {
         public int Id { get; set; }
-        public string User { get; set; }
+        public string Username { get; set; }
         public string Role { get; set; }
         public string Category { get; set; }//Supplier,Product,Login
         public string Action { get; set; }//Add,Delete,Deliver

@@ -11,6 +11,8 @@ namespace KapeRest.Domain.Entities.MenuEntities
         public int Id { get; set; }
         public string ItemName { get; set; } = string.Empty;
         public decimal Price { get; set; }
-        public ICollection<MenuItemProduct> MenuItemProducts { get; set; } = new List<MenuItemProduct>();
+        public string Description { get; set; }
+        public byte[] image { get; set; }
+        public ICollection<MenuItemProduct> MenuItemProducts { get; set; }
     }
 }

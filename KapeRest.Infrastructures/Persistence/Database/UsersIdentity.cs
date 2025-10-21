@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {
-    public class Users : IdentityUser
+    public class UsersIdentity : IdentityUser
     {
         public string FirstName { get; set; }
         public string MiddleName { get; set; }  

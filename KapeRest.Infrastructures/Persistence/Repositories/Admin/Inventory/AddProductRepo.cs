@@ -57,7 +57,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                User = currentUser,
+                Username = currentUser,
                 Role = role,
                 Category = "Inventory",
                 Action = "Added",
@@ -96,7 +96,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                User = currentUser,
+                Username = currentUser,
                 Role = role,
                 Category = "Inventory", 
                 Action = "Updated",
@@ -132,7 +132,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                User = currentUser,
+                Username = currentUser,
                 Role  = role,
                 Category = "Inventory",
                 Action = "Deleted",

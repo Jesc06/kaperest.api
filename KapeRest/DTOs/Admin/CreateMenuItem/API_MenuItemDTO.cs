@@ -1,9 +1,14 @@
-﻿namespace KapeRest.DTOs.Admin.CreateMenuItem
+﻿using KapeRest.Application.DTOs.Admin.CreateMenuItem;
+
+namespace KapeRest.DTOs.Admin.CreateMenuItem
 {
     public class API_MenuItemDTO
     {
-        public string Name { get; set; }
-        public int price { get; set; }
-        public List<API_IngredientDTO> Ingredients { get; set; } = new();
+        public string ItemName { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public string Description { get; set; }
+        public IFormFile image  { get; set; }
+
+        public List<ProductQuantityDTO> Products { get; set; }
     }
 }

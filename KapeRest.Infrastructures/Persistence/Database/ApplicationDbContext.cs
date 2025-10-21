@@ -13,7 +13,7 @@ using KapeRest.Domain.Entities.MenuEntities;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {
-    public class ApplicationDbContext : IdentityDbContext<Users>
+    public class ApplicationDbContext : IdentityDbContext<UsersIdentity>
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
@@ -34,18 +34,16 @@ namespace KapeRest.Infrastructures.Persistence.Database
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<MenuItemProduct>()
-                .HasKey(mp => new { mp.MenuItemId, mp.ProductId });
-
-            modelBuilder.Entity<MenuItemProduct>()
                 .HasOne(mp => mp.MenuItem)
                 .WithMany(m => m.MenuItemProducts)
                 .HasForeignKey(mp => mp.MenuItemId);
 
             modelBuilder.Entity<MenuItemProduct>()
                 .HasOne(mp => mp.Product)
-                .WithMany()
-                .HasForeignKey(mp => mp.ProductId);
+                .WithMany(p => p.MenuItemProducts)
+                .HasForeignKey(mp => mp.ProductOfSupplierId);
         }
+
         #endregion
 
     }

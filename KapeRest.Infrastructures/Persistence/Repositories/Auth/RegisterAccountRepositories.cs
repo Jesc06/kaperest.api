@@ -19,15 +19,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
 {
     public class RegisterAccountRepositories : IAccounts
     {
-        private readonly UserManager<Users> _userManager;
-        private readonly SignInManager<Users> _signInManager;
+        private readonly UserManager<UsersIdentity> _userManager;
+        private readonly SignInManager<UsersIdentity> _signInManager;
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _config;
         private readonly IJwtService _jwtService;
         private readonly RoleManager<IdentityRole> _roleManager;
         public RegisterAccountRepositories(
-                UserManager<Users> userManager,
-                SignInManager<Users> signInManager,
+                UserManager<UsersIdentity> userManager,
+                SignInManager<UsersIdentity> signInManager,
                 ApplicationDbContext context,
                 RoleManager<IdentityRole> roleManager,
                 IConfiguration config,
@@ -44,7 +44,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
 
         public async Task<bool> RegisterAccount(RegisterAccountDTO register)
         {
-            var users = new Users
+            var users = new UsersIdentity
             {
                 FirstName = register.FirstName,
                 MiddleName = register.MiddleName,

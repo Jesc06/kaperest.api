@@ -26,29 +26,13 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             var menuItem = new MenuItem
             {
                 ItemName = dto.ItemName,
-                Price = dto.Price
-            };
-
-            foreach (var productDto in dto.Products)
-            {
-                var product = await _context.Products.FindAsync(productDto.ProductId);
-                if (product == null)
-                    throw new Exception($"Product ID {productDto.ProductId} not found.");
-
-                if (product.Stock < productDto.QuantityUsed)
-                    throw new Exception($"Not enough stock for product: {product.ProductName}");
-                    
-                if (product.Stock <= 0)
-                    throw new Exception("No available stock");
-
-                product.Stock -= productDto.QuantityUsed;
-
-                menuItem.MenuItemProducts.Add(new MenuItemProduct
+                Price = dto.Price,
+                MenuItemProducts = dto.Products.Select(p => new MenuItemProduct
                 {
-                    ProductId = product.Id,
-                    Quantity = productDto.QuantityUsed
-                });
-            }
+                    Id = p.ProductId,
+                    QuantityUsed = p.QuantityUsed
+                }).ToList()
+            };
 
             _context.MenuItems.Add(menuItem);
             await _context.SaveChangesAsync();

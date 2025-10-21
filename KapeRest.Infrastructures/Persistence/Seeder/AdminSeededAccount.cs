@@ -13,7 +13,7 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
     public class AdminSeededAccount
     {
         public static async Task AdminAccount(RoleManager<IdentityRole> roleManager, 
-                                              UserManager<Users> userManager, IConfiguration configuration)
+                                              UserManager<UsersIdentity> userManager, IConfiguration configuration)
         {
             string[] roles = { "Admin", "Staff", "Cashier" };
 
@@ -32,7 +32,7 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
             var findUser = await userManager.FindByEmailAsync(AdminEmail);  
             if(findUser is null)
             {
-                var createUser = new Users
+                var createUser = new UsersIdentity
                 {
                     UserName = AdminEmail,
                     Email = AdminEmail,
