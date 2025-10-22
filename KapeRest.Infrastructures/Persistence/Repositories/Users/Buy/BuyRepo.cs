@@ -22,9 +22,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
         public async Task<bool> BuyMenuItem(int menuItemId)
         {
             var menuItem = await _context.MenuItems
-        .Include(m => m.MenuItemProducts)
-        .ThenInclude(mp => mp.Product)
-        .FirstOrDefaultAsync(m => m.Id == menuItemId);
+            .Include(m => m.MenuItemProducts)
+            .ThenInclude(mp => mp.Product)
+            .FirstOrDefaultAsync(m => m.Id == menuItemId);
 
             if (menuItem == null) throw new Exception("menuItem not found");
 

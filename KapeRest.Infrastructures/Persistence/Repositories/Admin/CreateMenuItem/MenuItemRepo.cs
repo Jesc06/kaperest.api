@@ -27,12 +27,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             {
                 ItemName = dto.ItemName,
                 Price = dto.Price,
+                image = dto.image,
+                Description = dto.Description,
                 MenuItemProducts = dto.Products.Select(p => new MenuItemProduct
                 {
                     Id = p.ProductId,
                     QuantityUsed = p.QuantityUsed
                 }).ToList()
-            };
+            };  
 
             _context.MenuItems.Add(menuItem);
             await _context.SaveChangesAsync();

@@ -41,6 +41,7 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
                Price = dto.Price,
                Description = dto.Description,
                image = imageData,
+               Products = dto.Products  
             };
 
             var result = await _menuItemService.CreateMenuItem(response);
