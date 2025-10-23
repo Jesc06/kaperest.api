@@ -13,6 +13,6 @@ namespace KapeRest.Domain.Entities.MenuEntities
         public decimal Price { get; set; }
         public string Description { get; set; }
         public byte[] image { get; set; }
-        public ICollection<MenuItemProduct> MenuItemProducts { get; set; }
+        public ICollection<MenuItemProduct> MenuItemProducts { get; set; } = new List<MenuItemProduct>();
     }
 }

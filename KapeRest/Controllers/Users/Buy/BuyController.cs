@@ -16,12 +16,12 @@ namespace KapeRest.Controllers.Users.Buy
         }
 
         [HttpPost("Buy")]
-        public async Task<ActionResult> Buy(int id)
+        public async Task<ActionResult> Buy(int menuId)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _buyService.BuyItem(id);
+            var result = await _buyService.BuyItem(menuId);
             return Ok(result);
         }
 

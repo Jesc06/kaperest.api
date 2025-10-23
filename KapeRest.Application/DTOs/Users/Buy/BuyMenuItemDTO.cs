@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Application.DTOs.Users.Buy
 {
-    public class BuyDTO
+    public class BuyMenuItemDTO
     {
         public int MenuItemId { get; set; }
-        public int Quantity { get; set; }
+        public int QuantitySold { get; set; }
 
     }
 }

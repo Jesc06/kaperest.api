@@ -12,7 +12,6 @@ namespace KapeRest.Application.DTOs.Admin.CreateMenuItem
         public decimal Price { get; set; }
         public string Description { get; set; }
         public byte[] image { get; set; }
-
-        public List<ProductQuantityDTO> Products { get; set; }
+        public List<ProductQuantityDTO> Products { get; set; } = new();
     }
 }

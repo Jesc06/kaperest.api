@@ -1,0 +1,18 @@
+﻿Notes ni sir cabrera
+
+1. dapat may transaction history kapag bumili
+2. discount for senior
+3. expiration ng product
+4. sales report ano yung mabenta at hindi
+
+
+
+issue: kapag nag createitem hindi nag lilink sa menuitemproduct na table means ang posible
+problem is nasa db context builder or sa mismong code ng create menu item repo or nasa entitites
+
+
+
+Extra Idea revision: sa products dapat lagyan ko ng quantity bali
+yung stocks dun ay general measurements ng product for example
+grams,kilo,liters tapos yung quantity ay siya yung number of dami nung kilo or liters or grams
+parang sa stocks is 4 liters tapos limang 4 liters sa quantity

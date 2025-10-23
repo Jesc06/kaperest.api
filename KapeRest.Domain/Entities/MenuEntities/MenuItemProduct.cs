@@ -9,14 +9,12 @@ namespace KapeRest.Domain.Entities.MenuEntities
 {
     public class MenuItemProduct
     {
-        public int Id { get; set; }
-
         public int MenuItemId { get; set; }
         public MenuItem MenuItem { get; set; }
 
         public int ProductOfSupplierId { get; set; }
-        public ProductOfSupplier Product { get; set; }
+        public ProductOfSupplier ProductOfSupplier { get; set; }
 
-        public int QuantityUsed { get; set; } 
+        public int QuantityUsed { get; set; }
     }
 }

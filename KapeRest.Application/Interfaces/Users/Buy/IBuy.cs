@@ -9,6 +9,6 @@ namespace KapeRest.Application.Interfaces.Users.Buy
 {
     public interface IBuy
     {
-        Task<bool> BuyMenuItem(int id);
+        Task<(bool Success, string Message, object? Data)> BuyMenuItemAsync(int menuItemId);
     }
 }

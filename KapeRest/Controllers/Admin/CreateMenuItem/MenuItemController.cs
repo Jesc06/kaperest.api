@@ -24,31 +24,33 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
         [HttpPost("CreateMenuItems")]
         public async Task<ActionResult> CreateMenuItems([FromForm]API_MenuItemDTO dto)
         {
-            if(!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (dto == null)
+                return BadRequest("The dto field is required.");
 
-            if(dto.image == null || dto.image.Length == 0)
-                return BadRequest();
-
-
-            using var ms = new MemoryStream();
-            await dto.image.CopyToAsync(ms); 
-            byte[] imageData = ms.ToArray();
-
-            var response = new CreateMenuItemDTO
+            byte[] imageBytes = null;
+            if (dto.image != null)
             {
-               ItemName = dto.ItemName,
-               Price = dto.Price,
-               Description = dto.Description,
-               image = imageData,
-               Products = dto.Products  
+                using (var ms = new MemoryStream())
+                {
+                    await dto.image.CopyToAsync(ms);
+                    imageBytes = ms.ToArray();
+                }
+            }
+
+            var createDto = new CreateMenuItemDTO
+            {
+                ItemName = dto.ItemName,
+                Price = dto.Price,
+                Description = dto.Description,
+                image = imageBytes,
+                Products = dto.Products
             };
 
-            var result = await _menuItemService.CreateMenuItem(response);
-
-            return Ok(new {  result.Id, result.ItemName,result.Price, result.image, Message = "Menu item created successfully," });
+            var result = await _menuItemService.CreateMenuItem(createDto);
+            return Ok(result);
 
         }
+
 
     }
 }

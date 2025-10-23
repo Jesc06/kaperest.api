@@ -18,27 +18,47 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
         {
             _context = context;
         }
-         
-        public async Task<bool> BuyMenuItem(int menuItemId)
+
+        public async Task<(bool Success, string Message, object? Data)> BuyMenuItemAsync(int menuItemId)
         {
             var menuItem = await _context.MenuItems
-            .Include(m => m.MenuItemProducts)
-            .ThenInclude(mp => mp.Product)
-            .FirstOrDefaultAsync(m => m.Id == menuItemId);
+       .Include(mi => mi.MenuItemProducts)
+       .ThenInclude(mip => mip.ProductOfSupplier)
+       .FirstOrDefaultAsync(mi => mi.Id == menuItemId);
 
-            if (menuItem == null) throw new Exception("menuItem not found");
+            if (menuItem == null)
+                return (false, "Menu item not found.", null);
 
-            foreach (var mp in menuItem.MenuItemProducts)
+            if (menuItem.MenuItemProducts == null || !menuItem.MenuItemProducts.Any())
+                return (false, "No products linked to this menu item.", null);
+
+            foreach (var mip in menuItem.MenuItemProducts)
             {
-                if (mp.Product.Stock < mp.QuantityUsed)
-                    throw new Exception("stock is not enough");
+                var product = mip.ProductOfSupplier;
 
-                mp.Product.Stock -= mp.QuantityUsed;
+                if (product == null)
+                    continue;
+
+                if (product.Stock < mip.QuantityUsed)
+                    return (false, $"Not enough stock for {product.ProductName}.", null);
+
+                // 🧠 Make sure product is tracked before modifying
+                _context.Attach(product);
+
+                product.Stock -= mip.QuantityUsed;
             }
 
             await _context.SaveChangesAsync();
 
-            return true;
+            return (true, $"Successfully bought {menuItem.ItemName}. Stock deducted.", new
+            {
+                MenuItem = menuItem.ItemName,
+                UpdatedProducts = menuItem.MenuItemProducts.Select(m => new
+                {
+                    m.ProductOfSupplier.ProductName,
+                    m.ProductOfSupplier.Stock
+                })
+            });
         }
 
 

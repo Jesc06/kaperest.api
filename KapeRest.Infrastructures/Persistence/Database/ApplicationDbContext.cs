@@ -34,15 +34,21 @@ namespace KapeRest.Infrastructures.Persistence.Database
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<MenuItemProduct>()
-                .HasOne(mp => mp.MenuItem)
-                .WithMany(m => m.MenuItemProducts)
-                .HasForeignKey(mp => mp.MenuItemId);
+                .HasKey(mp => new { mp.MenuItemId, mp.ProductOfSupplierId });
 
             modelBuilder.Entity<MenuItemProduct>()
-                .HasOne(mp => mp.Product)
+                .HasOne(mp => mp.MenuItem)
+                .WithMany(m => m.MenuItemProducts)
+                .HasForeignKey(mp => mp.MenuItemId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MenuItemProduct>()
+                .HasOne(mp => mp.ProductOfSupplier)
                 .WithMany(p => p.MenuItemProducts)
-                .HasForeignKey(mp => mp.ProductOfSupplierId);
+                .HasForeignKey(mp => mp.ProductOfSupplierId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
+
 
         #endregion
 
