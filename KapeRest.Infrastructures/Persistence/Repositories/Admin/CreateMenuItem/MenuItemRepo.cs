@@ -28,16 +28,32 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 ItemName = dto.ItemName,
                 Price = dto.Price,
                 Description = dto.Description,
-                image = dto.image,
-                MenuItemProducts = dto.Products.Select(p => new MenuItemProduct
-                {
-                    ProductOfSupplierId = p.ProductId,
-                    QuantityUsed = p.QuantityUsed
-                }).ToList()
+                image = dto.image
             };
 
             _context.MenuItems.Add(menuItem);
             await _context.SaveChangesAsync();
+
+            if (dto.Products != null && dto.Products.Any())
+            {
+                foreach (var p in dto.Products)
+                {
+                    var link = new MenuItemProduct
+                    {
+                        MenuItemId = menuItem.Id,
+                        ProductOfSupplierId = p.ProductId,
+                        QuantityUsed = p.QuantityUsed
+                    };
+
+                    _context.MenuItemProducts.Add(link);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                Console.WriteLine("⚠️ dto.Products is null or empty!");
+            }
 
             return menuItem;
         }

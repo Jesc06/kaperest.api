@@ -46,7 +46,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
                 .HasOne(mp => mp.ProductOfSupplier)
                 .WithMany(p => p.MenuItemProducts)
                 .HasForeignKey(mp => mp.ProductOfSupplierId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
 
