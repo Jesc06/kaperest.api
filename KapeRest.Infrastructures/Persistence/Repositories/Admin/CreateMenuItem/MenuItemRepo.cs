@@ -28,7 +28,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 ItemName = dto.ItemName,
                 Price = dto.Price,
                 Description = dto.Description,
-                image = dto.image
+                ImagePath = dto.image
             };
 
             _context.MenuItems.Add(menuItem);
@@ -44,15 +44,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                         ProductOfSupplierId = p.ProductId,
                         QuantityUsed = p.QuantityUsed
                     };
-
                     _context.MenuItemProducts.Add(link);
                 }
 
                 await _context.SaveChangesAsync();
-            }
-            else
-            {
-                Console.WriteLine("⚠️ dto.Products is null or empty!");
             }
 
             return menuItem;
