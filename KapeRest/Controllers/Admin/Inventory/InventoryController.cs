@@ -27,9 +27,9 @@ namespace KapeRest.Controllers.Admin.Inventory
             var productDTO = new CreateProductDTO
             {
                 ProductName = addProduct.ProductName,
-                Category = addProduct.Category,
-                Price = addProduct.Price,
-                Stock = addProduct.Stock,
+                CostPrice = addProduct.CostPrice,
+                Stocks = addProduct.Stock,
+                Units = addProduct.Units,
                 SupplierId = addProduct.SupplierId,
             };
             var response = await _inventoryService.AddProductOfSuppliers(productDTO);
@@ -47,9 +47,9 @@ namespace KapeRest.Controllers.Admin.Inventory
             {
                 Id = update.Id,
                 ProductName = update.ProductName,
-                Category = update.Category,
-                Price = update.Price,
-                Stock = update.Stock,
+                Prices = update.Prices,
+                Stocks = update.Stocks,
+                Units = update.Units,
             };
 
             var response = await _inventoryService.UpdateProductOfSuppliers(updatedProduct);
