@@ -19,13 +19,6 @@ namespace KapeRest.Infrastructures.Persistence.Database
 
         public DbSet<PendingUserAccount> PendingUserAccount { get; set; }
 
-        #region--Inventory DbSets --
-
-        public DbSet<AddSupplier> Suppliers { get; set; }
-        public DbSet<SupplierTransactionHistory> SupplierTransactionHistories { get; set; }
-        public DbSet<AuditLogEntities> AuditLog { get; set; }
-
-        public DbSet<ProductOfSupplier> Products { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<MenuItemProduct> MenuItemProducts { get; set; }
 
@@ -34,20 +27,25 @@ namespace KapeRest.Infrastructures.Persistence.Database
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<MenuItemProduct>()
-                .HasKey(mp => new { mp.MenuItemId, mp.ProductOfSupplierId });
+                .HasKey(mip => new { mip.MenuItemId, mip.ProductOfSupplierId });
 
             modelBuilder.Entity<MenuItemProduct>()
-                .HasOne(mp => mp.MenuItem)
-                .WithMany(m => m.MenuItemProducts)
-                .HasForeignKey(mp => mp.MenuItemId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(mip => mip.MenuItem)
+                .WithMany(mi => mi.MenuItemProducts)
+                .HasForeignKey(mip => mip.MenuItemId);
 
             modelBuilder.Entity<MenuItemProduct>()
-                .HasOne(mp => mp.ProductOfSupplier)
-                .WithMany(p => p.MenuItemProducts)
-                .HasForeignKey(mp => mp.ProductOfSupplierId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(mip => mip.ProductOfSupplier)
+                .WithMany()
+                .HasForeignKey(mip => mip.ProductOfSupplierId);
         }
+
+        #region--Inventory DbSets --
+        public DbSet<AddSupplier> Suppliers { get; set; }
+        public DbSet<SupplierTransactionHistory> SupplierTransactionHistories { get; set; }
+        public DbSet<AuditLogEntities> AuditLog { get; set; }
+
+        public DbSet<ProductOfSupplier> Products { get; set; }
 
 
         #endregion

@@ -9,6 +9,6 @@ namespace KapeRest.DTOs.Admin.CreateMenuItem
         public string Description { get; set; }
         public IFormFile image { get; set; }
 
-        public List<ProductQuantityDTO>? Products { get; set; } = new();
+        public List<MenuItemProductDTO>? Products { get; set; } = new();
     }
 }

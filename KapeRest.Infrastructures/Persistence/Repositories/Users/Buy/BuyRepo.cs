@@ -1,4 +1,5 @@
-﻿using KapeRest.Application.DTOs.Users.Buy;
+﻿using Azure.Core;
+using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Interfaces.Users.Buy;
 using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -19,23 +20,35 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
             _context = context;
         }
 
-        public async Task<bool> BuyMenuItemAsync(int menuItemId)
+        public async Task<string> BuyMenuItemAsync(BuyMenuItemDTO buy)
         {
             var menuItem = await _context.MenuItems
-               .Include(m => m.MenuItemProducts)
-               .ThenInclude(mp => mp.ProductOfSupplier)
-               .FirstOrDefaultAsync(m => m.Id == menuItemId);
+                .Include(m => m.MenuItemProducts)
+                    .ThenInclude(mp => mp.ProductOfSupplier)
+                .FirstOrDefaultAsync(m => m.Id == buy.MenuItemId);
 
-            if (menuItem == null) return false;
+            if (menuItem == null)
+                return "Menu item not found";
 
-            foreach (var mp in menuItem.MenuItemProducts)
+            //Deduct stock from each related product
+            foreach (var itemProduct in menuItem.MenuItemProducts)
             {
-                mp.ProductOfSupplier.Stock -= mp.QuantityUsed;
+                var product = itemProduct.ProductOfSupplier;
+                var totalToDeduct = itemProduct.QuantityUsed * buy.Quantity;
+
+                if (product.Stock < totalToDeduct)
+                {
+                    return $"Not enough stock for product '{product.ProductName}'. Available: {product.Stock}, needed: {totalToDeduct}";
+                }
+
+                product.Stock -= totalToDeduct;
             }
 
             await _context.SaveChangesAsync();
-            return true;
+
+            return "Purchase successful";
         }
+
 
 
     }

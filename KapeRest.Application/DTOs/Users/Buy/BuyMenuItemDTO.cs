@@ -9,7 +9,7 @@ namespace KapeRest.Application.DTOs.Users.Buy
     public class BuyMenuItemDTO
     {
         public int MenuItemId { get; set; }
-        public int QuantitySold { get; set; }
+        public int Quantity { get; set; }
 
     }
 }

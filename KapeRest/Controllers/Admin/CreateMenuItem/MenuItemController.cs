@@ -22,66 +22,11 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
             _menuItemService = menuItemService;
         }
 
-        [HttpPost("CreateMenuItems")]
-        public async Task<ActionResult> CreateMenuItems([FromForm]API_MenuItemDTO dto)
+        [HttpPost]
+        public async Task<IActionResult> CreateMenuItem([FromBody] CreateMenuItemDTO dto)
         {
-            if (dto == null)
-                return BadRequest("The dto field is required.");
-
-            string imagePath = null;
-
-            // ✅ Save image in local folder
-            if (dto.image != null)
-            {
-                var fileName = $"{Guid.NewGuid()}_{dto.image.FileName}";
-                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
-
-                var fullPath = Path.Combine(folderPath, fileName);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    await dto.image.CopyToAsync(stream);
-                }
-
-                imagePath = $"uploads/{fileName}";
-            }
-
-            // ✅ Deserialize Products (manual for FromForm)
-            var products = new List<ProductQuantityDTO>();
-            if (Request.Form.ContainsKey("Products"))
-            {
-                try
-                {
-                    var jsonProducts = Request.Form["Products"];
-                    products = JsonSerializer.Deserialize<List<ProductQuantityDTO>>(jsonProducts);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"❌ Failed to deserialize products: {ex.Message}");
-                }
-            }
-
-            // ✅ Create DTO for Service
-            var createDto = new CreateMenuItemDTO
-            {
-                ItemName = dto.ItemName,
-                Price = dto.Price,
-                Description = dto.Description,
-                image = imagePath,
-                Products = products
-            };
-
-            var result = await _menuItemService.CreateMenuItem(createDto);
-
-            return Ok(new
-            {
-                Message = "✅ Menu Item created successfully!",
-                MenuItem = result,
-                LinkedProducts = products.Count
-            });
-
+            var result = await _menuItemService.CreateMenuItem(dto);
+            return Ok(result);
         }
 
 

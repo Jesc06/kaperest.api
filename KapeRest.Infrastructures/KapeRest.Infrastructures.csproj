@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Persistence\Migrations\" />
     <Folder Include="Persistence\Repositories\Admin\AuditLog\" />
   </ItemGroup>
 
