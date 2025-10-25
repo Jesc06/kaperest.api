@@ -1,6 +1,5 @@
 ﻿using KapeRest.Application.DTOs.Admin.PendingAccount;
 using KapeRest.Application.Services.Admin.PendingAcc;
-using KapeRest.DTOs.Admin.PendingAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,21 +19,12 @@ namespace KapeRest.Controllers.Admin.PendingAccount
         }
 
         [HttpPost("RegisterPendingAccount")]
-        public async Task<ActionResult> RegisterPendingAccount(API_PendingAccount pending)
+        public async Task<ActionResult> RegisterPendingAccount(PendingAccDTO pending)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var pendingAccDTO = new PendingAccDTO
-            {
-                FirstName = pending.FirstName,
-                MiddleName = pending.MiddleName,
-                LastName = pending.LastName,
-                Email = pending.Email,
-                Password = pending.Password,
-                Role = pending.Role,
-            };
-            await _pendingAccService.RegisterPending(pendingAccDTO);
+            await _pendingAccService.RegisterPending(pending);
             return Ok("Successfully pending your account");
         }
 

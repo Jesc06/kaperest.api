@@ -1,8 +1,6 @@
 ﻿using KapeRest.Application.DTOs.Auth;
 using KapeRest.Application.DTOs.Jwt;
 using KapeRest.Application.Services.Auth;
-using KapeRest.DTOs.Auth;
-using KapeRest.DTOs.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -23,18 +21,12 @@ namespace KapeRest.Controllers.Auth
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<JwtTokenDTO>> Login([FromBody]API_LoginDTO login)
+        public async Task<ActionResult<CreateJwtTokenDTO>> Login([FromBody]LoginDTO login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var loginAccountDTO = new LoginDTO
-            {
-                Email = login.Email,
-                Password = login.Password
-            };
-
-            var result = await _accountService.Login(loginAccountDTO);
+            var result = await _accountService.Login(login);
 
             var tokenDTO = new CreateJwtTokenDTO
             {
@@ -51,23 +43,17 @@ namespace KapeRest.Controllers.Auth
 
 
         [HttpPost("RefreshToken")]
-        public async Task<ActionResult<JwtRefreshResponseDTO>> RefreshToken([FromBody]JwtRefreshToken refreshToken)
+        public async Task<ActionResult<JwtRefreshResponseDTO>> RefreshToken([FromBody]JwtRefreshRequestDTO refreshToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var tokenRequest = new JwtRefreshRequestDTO
-            {
-                Token = refreshToken.Token,
-                RefreshToken = refreshToken.RefreshToken
-            };
-            var result = await _accountService.TokenRefresh(tokenRequest);
+            var result = await _accountService.TokenRefresh(refreshToken);
             if (result is null)
                 return Unauthorized(new { message = "Invalid or expired refresh token" });
 
             return Ok(result);
         }
-
 
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
@@ -77,19 +63,12 @@ namespace KapeRest.Controllers.Auth
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<ActionResult>ChangePassword(API_ChangePass pass)
+        public async Task<ActionResult>ChangePassword(ChangePassDTO pass)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var changePassDTO = new ChangePassDTO
-            {
-                Email = pass.Email,
-                CurrentPassword = pass.CurrentPassword,
-                NewPassword = pass.NewPassword
-            };
-
-            await _accountService.ChangePassword(changePassDTO);
+            await _accountService.ChangePassword(pass);
             return Ok("Password changed successfully.");
         }
 

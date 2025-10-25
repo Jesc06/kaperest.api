@@ -36,12 +36,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
                 var product = itemProduct.ProductOfSupplier;
                 var totalToDeduct = itemProduct.QuantityUsed * buy.Quantity;
 
-                if (product.Stock < totalToDeduct)
+                if (product.Stocks < totalToDeduct)
                 {
-                    return $"Not enough stock for product '{product.ProductName}'. Available: {product.Stock}, needed: {totalToDeduct}";
+                    return $"Not enough stock for product '{product.ProductName}'. Available: {product.Stocks}, needed: {totalToDeduct}";
                 }
 
-                product.Stock -= totalToDeduct;
+                product.Stocks -= totalToDeduct;
             }
 
             await _context.SaveChangesAsync();

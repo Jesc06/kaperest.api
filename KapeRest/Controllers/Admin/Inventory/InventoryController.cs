@@ -1,7 +1,6 @@
 ﻿using KapeRest.Application.DTOs.Admin.Inventory;
 using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Domain.Entities.InventoryEntities;
-using KapeRest.DTOs.Admin.Inventory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,40 +18,22 @@ namespace KapeRest.Controllers.Admin.Inventory
 
 
         [HttpPost("AddProductsOfSuppliers")]
-        public async Task<ActionResult> AddProductOfSuppliers(API_CreateProductDTO addProduct)
+        public async Task<ActionResult> AddProductOfSuppliers(CreateProductDTO addProduct)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var productDTO = new CreateProductDTO
-            {
-                ProductName = addProduct.ProductName,
-                CostPrice = addProduct.CostPrice,
-                Stocks = addProduct.Stock,
-                Units = addProduct.Units,
-                SupplierId = addProduct.SupplierId,
-            };
-            var response = await _inventoryService.AddProductOfSuppliers(productDTO);
+            var response = await _inventoryService.AddProductOfSuppliers(addProduct);
             return Ok(response);
         }
 
 
         [HttpPut("UpdateProductOfSuppliers")]
-        public async Task<ActionResult> UpdateProductOfSuppliers(API_UpdateProductDTO update) 
+        public async Task<ActionResult> UpdateProductOfSuppliers(UpdateProductDTO update) 
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var updatedProduct = new UpdateProductDTO
-            {
-                Id = update.Id,
-                ProductName = update.ProductName,
-                Prices = update.Prices,
-                Stocks = update.Stocks,
-                Units = update.Units,
-            };
-
-            var response = await _inventoryService.UpdateProductOfSuppliers(updatedProduct);
+            var response = await _inventoryService.UpdateProductOfSuppliers(update);
             return Ok(response);
         }
 

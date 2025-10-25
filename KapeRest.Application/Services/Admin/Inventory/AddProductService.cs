@@ -20,7 +20,7 @@ namespace KapeRest.Application.Services.Admin.Inventory
             _inventory = inventory;
             _currentUser = currentUser;
         }
-        public async Task<ProductResponseDTO> AddProductOfSuppliers(CreateProductDTO add)
+        public async Task<string> AddProductOfSuppliers(CreateProductDTO add)
         {
             var currentActiveUser = _currentUser.Email;
             var role = _currentUser.Role;
@@ -31,13 +31,14 @@ namespace KapeRest.Application.Services.Admin.Inventory
             return await _inventory.AddProductOfSuppliers(currentActiveUser,role, add);
         }
 
-        public async Task<ProductResponseDTO> UpdateProductOfSuppliers (UpdateProductDTO update)
+        public async Task<string> UpdateProductOfSuppliers (UpdateProductDTO update)
         {
             var currentActiveUser = _currentUser.Email;
             var role = _currentUser.Role;
 
             if (string.IsNullOrEmpty(currentActiveUser))
                 throw new UnauthorizedAccessException("User is not authenticated.");
+
             return await _inventory.UpdateProductOfSuppliers(currentActiveUser,role, update);
         }
 

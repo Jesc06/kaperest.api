@@ -22,7 +22,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             _context = context;
         }
 
-        public async Task<ProductResponseDTO> AddProductOfSuppliers(string currentUser,string role,CreateProductDTO addProduct)
+        public async Task<string> AddProductOfSuppliers(string currentUser,string role,CreateProductDTO addProduct)
         {
           var supplier = await _context.Suppliers
                .Include(s => s.TransactionHistories)
@@ -34,9 +34,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
           var add = new ProductOfSupplier
           {
             ProductName = addProduct.ProductName,
-            Category = addProduct.Category,
-            Price = addProduct.Price,
-            Stock = addProduct.Stock,
+            CostPrice = addProduct.CostPrice,
+            Stocks = addProduct.Stocks,
+            Units = addProduct.Units,
             SupplierId = addProduct.SupplierId,
           };
           
@@ -48,9 +48,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
              Action = "Added",
              SupplierId = supplier.Id,
              ProductName = addProduct.ProductName,
-             Price = addProduct.Price.ToString("C"),
-             QuantityDelivered = addProduct.Stock,
-             TotalCost = addProduct.Price * addProduct.Stock,
+             Price = addProduct.CostPrice.ToString("C"),
+             QuantityDelivered = addProduct.Stocks,
+             TotalCost = addProduct.CostPrice * addProduct.Stocks,
              TransactionDate = DateTime.Now
           });
 
@@ -66,21 +66,11 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             });
 
             await _context.SaveChangesAsync();
-       
-          var response = new ProductResponseDTO
-          {
-            Id = add.Id,
-            ProductName = add.ProductName,
-            Category = add.Category,
-            Price = add.Price,
-            Stock = add.Stock,
-            SupplierName = supplier.SupplierName,
-          };
           
-          return response;
+          return "Successfully added products";
         }
 
-        public async Task<ProductResponseDTO> UpdateProductOfSuppliers(string currentUser,string role,UpdateProductDTO update)
+        public async Task<string> UpdateProductOfSuppliers(string currentUser,string role,UpdateProductDTO update)
         {
           
             var product = await _context.Products.FindAsync(update.Id);
@@ -89,9 +79,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
   
             // Update basic info
             product.ProductName = update.ProductName ?? product.ProductName;
-            product.Category = update.Category ?? product.Category;
-            product.Price = update.Price ?? product.Price;
-            product.Stock = update.Stock ?? product.Stock;
+            product.CostPrice = update.Prices ?? product.CostPrice;
+            product.Stocks = update.Stocks ?? product.Stocks;
+            product.Units = update.Units ?? product.Units;
 
             _context.AuditLog.Add(new AuditLogEntities
             {
@@ -108,17 +98,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 
             var supplier = await _context.Suppliers.FindAsync(product.SupplierId);
 
-            var response = new ProductResponseDTO
-            {
-                Id = product.Id,
-                ProductName = product.ProductName,
-                Category = product.Category,
-                Price = product.Price,
-                Stock = product.Stock,
-                SupplierName = supplier?.SupplierName,
-            };
-
-            return response;
+            return "Successfully updated products";
         }
 
         public async Task<bool> DeleteProductOfSuppliers(string currentUser,string role, int productId)

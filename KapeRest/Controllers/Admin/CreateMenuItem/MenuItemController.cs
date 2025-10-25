@@ -2,7 +2,6 @@
 using KapeRest.Domain.Entities.MenuEntities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using KapeRest.DTOs.Admin.CreateMenuItem;
 using KapeRest.Application.DTOs.Admin.CreateMenuItem;
 using Microsoft.AspNetCore.Http;
 using System.IO;

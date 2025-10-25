@@ -10,8 +10,8 @@ namespace KapeRest.Application.DTOs.Admin.Inventory
     {
         public int Id { get; set; }
         public string? ProductName { get; set; }
-        public string? Category { get; set; }
-        public decimal? Price { get; set; }
-        public int? Stock { get; set; }
+        public decimal? Prices { get; set; }
+        public int? Stocks { get; set; }
+        public string? Units { get; set; }
     }
 }
