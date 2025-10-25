@@ -21,7 +21,7 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
             _menuItemService = menuItemService;
         }
 
-        [HttpPost("AddMenuItem")]
+        [HttpPost("CreateMenuItem")]
         public async Task<IActionResult> CreateMenuItem([FromBody] CreateMenuItemDTO dto)
         {
             var result = await _menuItemService.CreateMenuItem(dto);
