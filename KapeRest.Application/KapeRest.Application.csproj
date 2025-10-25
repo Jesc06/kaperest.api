@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KapeRest.Domain\KapeRest.Domain.csproj" />
+    <ProjectReference Include="..\KapeRest.Domain\KapeRest.Core.csproj" />
   </ItemGroup>
 
 </Project>

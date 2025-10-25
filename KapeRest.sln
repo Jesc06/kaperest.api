@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapeRest", "KapeRest\KapeRest.csproj", "{09065F6A-99B4-459A-9B83-8F22B501F687}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapeRest.Api", "KapeRest\KapeRest.Api.csproj", "{09065F6A-99B4-459A-9B83-8F22B501F687}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapeRest.Application", "KapeRest.Application\KapeRest.Application.csproj", "{47999246-764D-4DAE-8847-A1F63CB3AEB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapeRest.Infrastructures", "KapeRest.Infrastructures\KapeRest.Infrastructures.csproj", "{4EF35325-CA30-4B83-BE13-D3183EC6B62F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapeRest.Infrastructure", "KapeRest.Infrastructures\KapeRest.Infrastructure.csproj", "{4EF35325-CA30-4B83-BE13-D3183EC6B62F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapeRest.Domain", "KapeRest.Domain\KapeRest.Domain.csproj", "{34F7CE15-B58D-446E-A338-F8D4126FAC02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapeRest.Core", "KapeRest.Domain\KapeRest.Core.csproj", "{34F7CE15-B58D-446E-A338-F8D4126FAC02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
