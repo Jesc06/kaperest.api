@@ -25,4 +25,8 @@
     <ProjectReference Include="..\KapeRest.Infrastructure\KapeRest.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
 </Project>
