@@ -2,18 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>KapeRest.Application</AssemblyName>
+    <RootNamespace>KapeRest.Application</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Admin\AuditLog\" />
-    <Folder Include="Interfaces\Admin\AuditLog\" />
-    <Folder Include="Services\Admin\AuditLog\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\KapeRest.Domain\KapeRest.Core.csproj" />
+    <ProjectReference Include="..\KapeRest.Core\KapeRest.Core.csproj" />
   </ItemGroup>
 
 </Project>
