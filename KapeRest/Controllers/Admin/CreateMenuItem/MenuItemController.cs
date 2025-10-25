@@ -7,6 +7,8 @@ using KapeRest.Application.DTOs.Admin.CreateMenuItem;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
+using System.Text.Json;
+
 
 
 namespace KapeRest.Controllers.Admin.CreateMenuItem
@@ -21,34 +23,11 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
             _menuItemService = menuItemService;
         }
 
-        [HttpPost("CreateMenuItems")]
-        public async Task<ActionResult> CreateMenuItems([FromForm]API_MenuItemDTO dto)
+        [HttpPost]
+        public async Task<IActionResult> CreateMenuItem([FromBody] CreateMenuItemDTO dto)
         {
-            if (dto == null)
-                return BadRequest("The dto field is required.");
-
-            byte[] imageBytes = null;
-            if (dto.image != null)
-            {
-                using (var ms = new MemoryStream())
-                {
-                    await dto.image.CopyToAsync(ms);
-                    imageBytes = ms.ToArray();
-                }
-            }
-
-            var createDto = new CreateMenuItemDTO
-            {
-                ItemName = dto.ItemName,
-                Price = dto.Price,
-                Description = dto.Description,
-                image = imageBytes,
-                Products = dto.Products
-            };
-
-            var result = await _menuItemService.CreateMenuItem(createDto);
+            var result = await _menuItemService.CreateMenuItem(dto);
             return Ok(result);
-
         }
 
 

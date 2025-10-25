@@ -1,4 +1,5 @@
-﻿using KapeRest.Application.DTOs.Users.Buy;
+﻿using Azure.Core;
+using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Interfaces.Users.Buy;
 using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -19,46 +20,34 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
             _context = context;
         }
 
-        public async Task<(bool Success, string Message, object? Data)> BuyMenuItemAsync(int menuItemId)
+        public async Task<string> BuyMenuItemAsync(BuyMenuItemDTO buy)
         {
             var menuItem = await _context.MenuItems
-       .Include(mi => mi.MenuItemProducts)
-       .ThenInclude(mip => mip.ProductOfSupplier)
-       .FirstOrDefaultAsync(mi => mi.Id == menuItemId);
+                .Include(m => m.MenuItemProducts)
+                    .ThenInclude(mp => mp.ProductOfSupplier)
+                .FirstOrDefaultAsync(m => m.Id == buy.MenuItemId);
 
             if (menuItem == null)
-                return (false, "Menu item not found.", null);
+                return "Menu item not found";
 
-            if (menuItem.MenuItemProducts == null || !menuItem.MenuItemProducts.Any())
-                return (false, "No products linked to this menu item.", null);
-
-            foreach (var mip in menuItem.MenuItemProducts)
+            //Deduct stock from each related product
+            foreach (var itemProduct in menuItem.MenuItemProducts)
             {
-                var product = mip.ProductOfSupplier;
+                var product = itemProduct.ProductOfSupplier;
+                var totalToDeduct = itemProduct.QuantityUsed * buy.Quantity;
 
-                if (product == null)
-                    continue;
+                if (product.Stock < totalToDeduct)
+                {
+                    return $"Not enough stock for product '{product.ProductName}'. Available: {product.Stock}, needed: {totalToDeduct}";
+                }
 
-                if (product.Stock < mip.QuantityUsed)
-                    return (false, $"Not enough stock for {product.ProductName}.", null);
-
-                // 🧠 Make sure product is tracked before modifying
-                _context.Attach(product);
-
-                product.Stock -= mip.QuantityUsed;
+                product.Stock -= totalToDeduct;
             }
 
             await _context.SaveChangesAsync();
 
-            return (true, $"Successfully bought {menuItem.ItemName}. Stock deducted.", new
-            {
-                MenuItem = menuItem.ItemName,
-                UpdatedProducts = menuItem.MenuItemProducts.Select(m => new
-                {
-                    m.ProductOfSupplier.ProductName,
-                    m.ProductOfSupplier.Stock
-                })
-            });
+            return "Purchase successful";
+
         }
 
 

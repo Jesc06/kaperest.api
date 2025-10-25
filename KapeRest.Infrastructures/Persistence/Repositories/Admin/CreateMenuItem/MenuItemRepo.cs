@@ -21,20 +21,26 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             _context = context;
         }
 
+
         public async Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto)
         {
             var menuItem = new MenuItem
             {
-                ItemName = dto.ItemName,
+                Item_name = dto.Item_name,
                 Price = dto.Price,
                 Description = dto.Description,
-                image = dto.image,
-                MenuItemProducts = dto.Products.Select(p => new MenuItemProduct
-                {
-                    ProductOfSupplierId = p.ProductId,
-                    QuantityUsed = p.QuantityUsed
-                }).ToList()
+                Image = dto.Image
             };
+
+            // Auto-link menu item to its products
+            foreach (var product in dto.Products)
+            {
+                menuItem.MenuItemProducts.Add(new MenuItemProduct
+                {
+                    ProductOfSupplierId = product.ProductOfSupplierId,
+                    QuantityUsed = product.QuantityUsed
+                });
+            }
 
             _context.MenuItems.Add(menuItem);
             await _context.SaveChangesAsync();

@@ -16,9 +16,9 @@ namespace KapeRest.Application.Services.Users.Buy
             _buy = buy;
         }
 
-        public async Task<(bool Success, string Message, object? Data)> BuyItem(int menuId)
+        public async Task<string> BuyItem(BuyMenuItemDTO buy)
         {
-            return await _buy.BuyMenuItemAsync(menuId);
+            return await _buy.BuyMenuItemAsync(buy);
         }
 
     }

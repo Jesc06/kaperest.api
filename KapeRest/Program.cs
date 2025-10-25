@@ -1,12 +1,25 @@
-using KapeRest.Application.Interfaces.Auth;
+using DotNetEnv;
+using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
+using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
+using KapeRest.Application.Interfaces.Admin.Supplier;
+using KapeRest.Application.Interfaces.Auth;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.Jwt;
-using KapeRest.Application.Services.Auth;
+using KapeRest.Application.Interfaces.Users.Buy;
+using KapeRest.Application.Services.Admin.CreateMenuItem;
+using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Application.Services.Admin.PendingAcc;
+using KapeRest.Application.Services.Admin.Supplier;
+using KapeRest.Application.Services.Auth;
+using KapeRest.Application.Services.Users.Buy;
 using KapeRest.Infrastructures.Persistence.Database;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
+using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
+using KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccounts;
+using KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers;
+using KapeRest.Infrastructures.Persistence.Repositories.Users.Buy;
 using KapeRest.Infrastructures.Persistence.Seeder;
 using KapeRest.Infrastructures.Services.CurrentUserService;
 using KapeRest.Infrastructures.Services.JwtService; 
@@ -18,19 +31,7 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using KapeRest.Application.Interfaces.Admin.Inventory;
-using KapeRest.Application.Services.Admin.Inventory;
-using KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory;
-using KapeRest.Application.Interfaces.Admin.Supplier;
-using KapeRest.Application.Services.Admin.Supplier;
-using KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers;
-using DotNetEnv;
-using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
-using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
-using KapeRest.Application.Services.Admin.CreateMenuItem;
-using KapeRest.Application.Interfaces.Users.Buy;
-using KapeRest.Infrastructures.Persistence.Repositories.Users.Buy;
-using KapeRest.Application.Services.Users.Buy;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -141,6 +142,16 @@ builder.Services.AddScoped<MenuItemService>();
 builder.Services.AddScoped<IBuy, BuyRepo>();
 builder.Services.AddScoped<BuyService>();
 #endregion
+
+#region --Serialization Cycle
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        opt.JsonSerializerOptions.WriteIndented = true;
+    });
+#endregion
+
 
 var app = builder.Build();
 
