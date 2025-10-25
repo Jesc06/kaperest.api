@@ -4,7 +4,6 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251025030346_littleup")]
-    partial class littleup
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,7 +112,7 @@ namespace KapeRest.Infrastructures.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Item_name")
+                    b.Property<string>("ItemName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -135,12 +132,17 @@ namespace KapeRest.Infrastructures.Migrations
                     b.Property<int>("ProductOfSupplierId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductOfSupplierId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("QuantityUsed")
                         .HasColumnType("int");
 
                     b.HasKey("MenuItemId", "ProductOfSupplierId");
 
                     b.HasIndex("ProductOfSupplierId");
+
+                    b.HasIndex("ProductOfSupplierId1");
 
                     b.ToTable("MenuItemProducts");
                 });
@@ -504,10 +506,14 @@ namespace KapeRest.Infrastructures.Migrations
                         .IsRequired();
 
                     b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", "ProductOfSupplier")
-                        .WithMany("MenuItemProducts")
+                        .WithMany()
                         .HasForeignKey("ProductOfSupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", null)
+                        .WithMany("MenuItemProducts")
+                        .HasForeignKey("ProductOfSupplierId1");
 
                     b.Navigation("MenuItem");
 

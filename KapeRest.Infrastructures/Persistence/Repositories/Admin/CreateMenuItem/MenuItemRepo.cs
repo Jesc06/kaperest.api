@@ -26,7 +26,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
         {
             var menuItem = new MenuItem
             {
-                Item_name = dto.Item_name,
+                ItemName = dto.Item_name,
                 Price = dto.Price,
                 Description = dto.Description,
                 Image = dto.Image

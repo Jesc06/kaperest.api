@@ -9,7 +9,7 @@ namespace KapeRest.Domain.Entities.MenuEntities
     public class MenuItem
     {
         public int Id { get; set; }
-        public string Item_name { get; set; }
+        public string ItemName { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }

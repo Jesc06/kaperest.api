@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251025031845_little")]
-    partial class little
+    [Migration("20251025053415_startUP")]
+    partial class startUP
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,7 @@ namespace KapeRest.Infrastructures.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Item_name")
+                    b.Property<string>("ItemName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

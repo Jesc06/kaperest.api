@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace KapeRest.Infrastructures.Migrations
 {
     /// <inheritdoc />
-    public partial class addedAllFIles : Migration
+    public partial class startUP : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -80,7 +80,7 @@ namespace KapeRest.Infrastructures.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Item_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -290,7 +290,8 @@ namespace KapeRest.Infrastructures.Migrations
                 {
                     MenuItemId = table.Column<int>(type: "int", nullable: false),
                     ProductOfSupplierId = table.Column<int>(type: "int", nullable: false),
-                    QuantityUsed = table.Column<int>(type: "int", nullable: false)
+                    QuantityUsed = table.Column<int>(type: "int", nullable: false),
+                    ProductOfSupplierId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -306,7 +307,12 @@ namespace KapeRest.Infrastructures.Migrations
                         column: x => x.ProductOfSupplierId,
                         principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MenuItemProducts_Products_ProductOfSupplierId1",
+                        column: x => x.ProductOfSupplierId1,
+                        principalTable: "Products",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -352,6 +358,11 @@ namespace KapeRest.Infrastructures.Migrations
                 name: "IX_MenuItemProducts_ProductOfSupplierId",
                 table: "MenuItemProducts",
                 column: "ProductOfSupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MenuItemProducts_ProductOfSupplierId1",
+                table: "MenuItemProducts",
+                column: "ProductOfSupplierId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_SupplierId",
