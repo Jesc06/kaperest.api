@@ -110,6 +110,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
                     s.Email,
                     s.Address,
                     s.TransactionDate,
+                    ProductOfSupplier = s.Products.Select(p => new
+                    {
+                        p.ProductName,
+                        p.Units,
+                    }),
+
                 }).ToListAsync();
             return suppliers;
         }
