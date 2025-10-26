@@ -11,5 +11,7 @@ namespace KapeRest.Application.Interfaces.Admin.CreateMenuItem
     public interface IMenuItem
     {
         Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto);
+        Task<MenuItem> UpdateMenuItemAsync(int menuItemId, UpdateMenuItemDTO dto);
+        Task<string> DeleteMenuItem(int id);
     }
 }

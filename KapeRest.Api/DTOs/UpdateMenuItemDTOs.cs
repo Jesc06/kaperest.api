@@ -1,8 +1,6 @@
-﻿using KapeRest.Application.DTOs.Admin.CreateMenuItem;
-
-namespace KapeRest.Api.DTOs
+﻿namespace KapeRest.Api.DTOs
 {
-    public class CreateMenuItemDTOs
+    public class UpdateMenuItemDTOs
     {
         public string Item_name { get; set; }
         public decimal Price { get; set; }

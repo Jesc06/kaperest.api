@@ -28,6 +28,15 @@ namespace KapeRest.Application.Services.Admin.CreateMenuItem
             return await _menuItem.CreateMenuItemAsync(user, role, newItem);
         }
 
+        public async Task<MenuItem> UpdateMenuItem(int menuItemId, UpdateMenuItemDTO updatedItem)
+        {
+            return await _menuItem.UpdateMenuItemAsync(menuItemId, updatedItem);
+        }
+
+        public async Task<string> DeleteMenuItem(int id)
+        {
+            return await _menuItem.DeleteMenuItem(id);
+        }
 
     }
 }
