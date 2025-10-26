@@ -12,7 +12,11 @@ namespace KapeRest.Domain.Entities.MenuEntities
         public string ItemName { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
+<<<<<<< HEAD
         public string Image { get; set; }
+=======
+        public byte[] Image { get; set; }
+>>>>>>> 046385f (updated)
 
         // Navigation Property
         public ICollection<MenuItemProduct> MenuItemProducts { get; set; } = new List<MenuItemProduct>();
