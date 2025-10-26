@@ -85,6 +85,13 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
             return Ok(result);
         }
 
+        [HttpGet("GetAllMenuItem")]
+        public async Task<IActionResult> GetAllMenuItem()
+        {
+            var result = await _menuItemService.GetAllMenuItem();
+            return Ok(result);
+        }
+
 
     }
 }

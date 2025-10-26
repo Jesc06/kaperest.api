@@ -5,6 +5,7 @@ using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,8 +76,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
 
             return menuItem;
         }
-
-
         public async Task<string> DeleteMenuItem(int id)
         {
             var menuItem = await _context.MenuItems
@@ -91,6 +90,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             await _context.SaveChangesAsync();
 
             return "Successfully deleted menu item";
+        }
+
+        public async Task<ICollection> GetAllMenuItem()
+        {
+            var menuItems = await _context.MenuItems
+                .Include(m => m.MenuItemProducts)
+                .ToListAsync();
+            return menuItems;
         }
 
 

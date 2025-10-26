@@ -3,6 +3,7 @@ using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Domain.Entities.MenuEntities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,6 +37,11 @@ namespace KapeRest.Application.Services.Admin.CreateMenuItem
         public async Task<string> DeleteMenuItem(int id)
         {
             return await _menuItem.DeleteMenuItem(id);
+        }
+
+        public async Task<ICollection> GetAllMenuItem()
+        {
+            return await _menuItem.GetAllMenuItem();
         }
 
     }

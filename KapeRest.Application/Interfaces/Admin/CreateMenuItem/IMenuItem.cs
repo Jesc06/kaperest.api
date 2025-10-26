@@ -1,6 +1,7 @@
 ﻿using KapeRest.Application.DTOs.Admin.CreateMenuItem;
 using KapeRest.Domain.Entities.MenuEntities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace KapeRest.Application.Interfaces.Admin.CreateMenuItem
         Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto);
         Task<MenuItem> UpdateMenuItemAsync(int menuItemId, UpdateMenuItemDTO dto);
         Task<string> DeleteMenuItem(int id);
+        Task<ICollection> GetAllMenuItem();
     }
 }
