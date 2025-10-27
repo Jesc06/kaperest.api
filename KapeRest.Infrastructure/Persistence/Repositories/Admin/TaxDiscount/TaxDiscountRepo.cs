@@ -3,7 +3,9 @@ using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Core.Entities.Tax_Rate;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +46,25 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
             }
             return "failed to update";
         }
+
+        public async Task<ICollection> GetAllTaxAndDiscount()
+        {
+            var taxAndDiscounts = await _context.TaxAndRate.ToListAsync();
+            return taxAndDiscounts;
+        }
+
+        public async Task<string> DeleteTaxAndDiscount(int id)
+        {
+            var taxAndDiscounts = await _context.TaxAndRate.FindAsync(id);
+            if(taxAndDiscounts is null)
+                return "Tax and Discount not found";
+
+            _context.TaxAndRate.Remove(taxAndDiscounts);
+            await _context.SaveChangesAsync();
+            return "Successfully Deleted";
+        }
+
+
 
     }
 }

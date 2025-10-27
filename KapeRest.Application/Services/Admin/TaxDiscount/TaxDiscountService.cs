@@ -2,6 +2,7 @@
 using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Core.Entities.Tax_Rate;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,17 @@ namespace KapeRest.Application.Services.Admin.TaxDiscount
         {
             return await _taxDiscount.UpdateTaxDiscount(dto);
         }
+
+        public async Task<ICollection> GetAllTaxAndDiscount()
+        {
+            return await _taxDiscount.GetAllTaxAndDiscount();
+        }
+
+        public async Task<string> DeleteTaxAndDiscount(int id)
+        {
+            return await _taxDiscount.DeleteTaxAndDiscount(id);
+        }
+
 
     }
 }

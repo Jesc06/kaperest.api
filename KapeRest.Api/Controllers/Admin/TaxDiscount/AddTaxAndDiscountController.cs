@@ -29,5 +29,19 @@ namespace KapeRest.Api.Controllers.Admin.TaxDiscount
             return Ok(update);
         }
 
+        [HttpGet("GetAllTaxAndDiscount")]
+        public async Task<ActionResult> GetAllTaxAndDiscount()
+        {
+            var getAll = await _taxDiscountService.GetAllTaxAndDiscount();
+            return Ok(getAll);
+        }
+
+        [HttpDelete("DeleteTaxAndDiscount")]
+        public async Task<ActionResult> DeleteTaxAndDiscount(int id)
+        {
+            var delete = await _taxDiscountService.DeleteTaxAndDiscount(id);
+            return Ok(delete);
+        }
+
     }
 }
