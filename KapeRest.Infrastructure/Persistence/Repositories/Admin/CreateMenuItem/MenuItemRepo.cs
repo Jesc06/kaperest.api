@@ -47,11 +47,11 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             return menuItem;
         }
 
-        public async Task<MenuItem> UpdateMenuItemAsync(int menuItemId, UpdateMenuItemDTO dto)
+        public async Task<MenuItem> UpdateMenuItemAsync(UpdateMenuItemDTO dto)
         {
             var menuItem = await _context.MenuItems
                 .Include(m => m.MenuItemProducts) 
-                .FirstOrDefaultAsync(m => m.Id == menuItemId);
+                .FirstOrDefaultAsync(m => m.Id == dto.Id);
 
             if (menuItem == null)
                 throw new KeyNotFoundException("Menu item not found");

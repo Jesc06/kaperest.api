@@ -54,7 +54,7 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
         }
 
         [HttpPut("UpdateMenuItem")]
-        public async Task<IActionResult> UpdateMenuItem(int menuItemId, [FromForm] UpdateMenuItemDTOs dto)
+        public async Task<IActionResult> UpdateMenuItem([FromForm]UpdateMenuItemDTOs dto)
         {
             if (dto.Image == null || dto.Image.Length == 0)
             {
@@ -74,7 +74,7 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
                 Image = ms.ToArray(),
                 Products = products
             };
-            var result = await _menuItemService.UpdateMenuItem(menuItemId, appDTO);
+            var result = await _menuItemService.UpdateMenuItem(appDTO);
             return Ok(result);
         }
 

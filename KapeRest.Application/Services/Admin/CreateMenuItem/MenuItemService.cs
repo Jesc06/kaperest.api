@@ -29,9 +29,9 @@ namespace KapeRest.Application.Services.Admin.CreateMenuItem
             return await _menuItem.CreateMenuItemAsync(user, role, newItem);
         }
 
-        public async Task<MenuItem> UpdateMenuItem(int menuItemId, UpdateMenuItemDTO updatedItem)
+        public async Task<MenuItem> UpdateMenuItem(UpdateMenuItemDTO updatedItem)
         {
-            return await _menuItem.UpdateMenuItemAsync(menuItemId, updatedItem);
+            return await _menuItem.UpdateMenuItemAsync(updatedItem);
         }
 
         public async Task<string> DeleteMenuItem(int id)
