@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace KapeRest.Infrastructures.Migrations
+namespace KapeRest.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class startUP : Migration
+    public partial class addedIsBoolInMenuItem : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -83,7 +83,8 @@ namespace KapeRest.Infrastructures.Migrations
                     ItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,6 +127,21 @@ namespace KapeRest.Infrastructures.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TaxAndRate",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SettingName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaxAndRate", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -241,9 +257,9 @@ namespace KapeRest.Infrastructures.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Stock = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Stocks = table.Column<int>(type: "int", nullable: false),
+                    Units = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CostPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -404,6 +420,9 @@ namespace KapeRest.Infrastructures.Migrations
 
             migrationBuilder.DropTable(
                 name: "SupplierTransactionHistories");
+
+            migrationBuilder.DropTable(
+                name: "TaxAndRate");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

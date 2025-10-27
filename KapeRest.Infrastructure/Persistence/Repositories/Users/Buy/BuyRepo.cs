@@ -38,9 +38,16 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
 
                 if (product.Stocks < totalToDeduct)
                 {
+                    var IsAvailable = _context.MenuItems.FirstOrDefault(m => m.Id == buy.MenuItemId);
+                    IsAvailable.IsAvailable = "Not yet";
+                    _context.MenuItems.Update(IsAvailable);
+                    await _context.SaveChangesAsync();
                     return $"Not enough stock for product '{product.ProductName}'. Available: {product.Stocks}, needed: {totalToDeduct}";
                 }
-
+                var Available = _context.MenuItems.FirstOrDefault(m => m.Id == buy.MenuItemId);
+                Available.IsAvailable = "Yes";
+                _context.MenuItems.Update(Available);
+                await _context.SaveChangesAsync();
                 product.Stocks -= totalToDeduct;
             }
 
