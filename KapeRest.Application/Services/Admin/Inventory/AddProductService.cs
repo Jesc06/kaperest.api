@@ -2,6 +2,7 @@
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO.Pipes;
 using System.Linq;
@@ -53,6 +54,10 @@ namespace KapeRest.Application.Services.Admin.Inventory
             return await _inventory.DeleteProductOfSuppliers(currentActiveUser,role, id);
         }
 
+        public async Task<ICollection> GetAllProducts()
+        {
+            return await _inventory.GetAllProducts();
+        }
 
     }
 }

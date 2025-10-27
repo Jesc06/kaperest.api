@@ -10,6 +10,7 @@ using KapeRest.Domain.Entities.InventoryEntities;
 using KapeRest.Domain.Entities.SupplierEntities;
 using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.MenuEntities;
+using KapeRest.Core.Entities.Tax_Rate;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {
@@ -18,7 +19,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<PendingUserAccount> PendingUserAccount { get; set; }
-
+        public DbSet<TaxAndRate> TaxAndRate { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<MenuItemProduct> MenuItemProducts { get; set; }
 

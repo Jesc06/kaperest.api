@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace KapeRest.Application.Interfaces.Admin.Inventory
         Task<string> AddProductOfSuppliers(string currentUser,string role,CreateProductDTO addProduct);
         Task<string> UpdateProductOfSuppliers(string currentUser,string role,UpdateProductDTO update);
         Task<bool> DeleteProductOfSuppliers(string currentUser,string role,int productId);
+        Task<ICollection> GetAllProducts();
     }
 }

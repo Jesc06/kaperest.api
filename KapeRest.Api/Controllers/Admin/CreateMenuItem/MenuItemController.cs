@@ -53,6 +53,45 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
             return Ok(result);
         }
 
+        [HttpPut("UpdateMenuItem")]
+        public async Task<IActionResult> UpdateMenuItem([FromForm]UpdateMenuItemDTOs dto)
+        {
+            if (dto.Image == null || dto.Image.Length == 0)
+            {
+                throw new Exception("Image cannot be null");
+            }
+            using var ms = new MemoryStream();
+            await dto.Image.CopyToAsync(ms);
+
+            var products = string.IsNullOrEmpty(dto.ProductsJson)
+                ? new List<MenuItemProductDTO>()
+                : JsonSerializer.Deserialize<List<MenuItemProductDTO>>(dto.ProductsJson);
+            var appDTO = new UpdateMenuItemDTO
+            {
+                Item_name = dto.Item_name,
+                Price = dto.Price,
+                Description = dto.Description,
+                Image = ms.ToArray(),
+                Products = products
+            };
+            var result = await _menuItemService.UpdateMenuItem(appDTO);
+            return Ok(result);
+        }
+
+        [HttpDelete("DeleteMenuItem")]
+        public async Task<ActionResult> DeleteMenuItem(int id)
+        {
+            var result = await _menuItemService.DeleteMenuItem(id);
+            return Ok(result);
+        }
+
+        [HttpGet("GetAllMenuItem")]
+        public async Task<IActionResult> GetAllMenuItem()
+        {
+            var result = await _menuItemService.GetAllMenuItem();
+            return Ok(result);
+        }
+
 
     }
 }

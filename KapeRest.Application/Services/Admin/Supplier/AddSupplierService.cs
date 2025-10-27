@@ -2,6 +2,7 @@
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.Supplier;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,11 @@ namespace KapeRest.Application.Services.Admin.Supplier
         public async Task<bool> DeleteSupplier(int supplierId)
         {
             return await _supplier.DeleteSupplier(supplierId);
+        }
+
+        public async Task<ICollection> GetAllSuppliers()
+        {
+            return await _supplier.GetAllSupplier();
         }
 
     }

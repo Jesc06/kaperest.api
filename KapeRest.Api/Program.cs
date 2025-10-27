@@ -3,6 +3,7 @@ using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Application.Interfaces.Admin.Supplier;
+using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Application.Interfaces.Auth;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.Jwt;
@@ -11,8 +12,10 @@ using KapeRest.Application.Services.Admin.CreateMenuItem;
 using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Application.Services.Admin.PendingAcc;
 using KapeRest.Application.Services.Admin.Supplier;
+using KapeRest.Application.Services.Admin.TaxDiscount;
 using KapeRest.Application.Services.Auth;
 using KapeRest.Application.Services.Users.Buy;
+using KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount;
 using KapeRest.Infrastructures.Persistence.Database;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
@@ -141,6 +144,9 @@ builder.Services.AddScoped<MenuItemService>();
 
 builder.Services.AddScoped<IBuy, BuyRepo>();
 builder.Services.AddScoped<BuyService>();
+
+builder.Services.AddScoped<ITaxDiscount, TaxDiscountRepo>();
+builder.Services.AddScoped<TaxDiscountService>();
 #endregion
 
 #region --Serialization Cycle

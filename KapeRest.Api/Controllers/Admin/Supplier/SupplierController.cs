@@ -54,5 +54,12 @@ namespace KapeRest.Controllers.Admin.Supplier
             return Ok(new { Message = "Supplier deleted successfully." });
         }
 
+        [HttpGet("GetAllSuppliers")]
+        public async Task<ActionResult> GetAllSuppliers()
+        {
+            var suppliers = await _supplierService.GetAllSuppliers();
+            return Ok(suppliers);
+        }
+
     }
 }

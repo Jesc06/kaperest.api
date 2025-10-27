@@ -9,8 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-=======
     <Compile Remove="wwwroot\**" />
     <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="wwwroot\**" />
@@ -18,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
->>>>>>> 046385f (updated)
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="JWT" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
@@ -35,11 +32,4 @@
     <ProjectReference Include="..\KapeRest.Infrastructure\KapeRest.Infrastructure.csproj" />
   </ItemGroup>
 
-<<<<<<< HEAD
-  <ItemGroup>
-    <Folder Include="wwwroot\uploads\" />
-  </ItemGroup>
-
-=======
->>>>>>> 046385f (updated)
 </Project>

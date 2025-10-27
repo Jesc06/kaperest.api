@@ -3,7 +3,9 @@ using KapeRest.Application.Interfaces.Admin.Supplier;
 using KapeRest.Domain.Entities.InventoryEntities;
 using KapeRest.Domain.Entities.SupplierEntities;
 using KapeRest.Infrastructures.Persistence.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -97,7 +99,26 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             return true;
         }
 
+        public async Task<ICollection> GetAllSupplier()
+        {
+            var suppliers = await _context.Suppliers
+                .Select(s => new
+                {
+                    s.SupplierName,
+                    s.ContactPerson,
+                    s.PhoneNumber,
+                    s.Email,
+                    s.Address,
+                    s.TransactionDate,
+                    ProductOfSupplier = s.Products.Select(p => new
+                    {
+                        p.ProductName,
+                        p.Units,
+                    }),
 
+                }).ToListAsync();
+            return suppliers;
+        }
 
 
     }

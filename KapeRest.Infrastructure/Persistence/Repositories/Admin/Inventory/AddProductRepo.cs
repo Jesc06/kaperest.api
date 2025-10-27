@@ -6,6 +6,7 @@ using KapeRest.Domain.Entities.SupplierEntities;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -77,7 +78,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             if (product == null)
                 throw new Exception("Product not found.");
   
-            // Update basic info
             product.ProductName = update.ProductName ?? product.ProductName;
             product.CostPrice = update.Prices ?? product.CostPrice;
             product.Stocks = update.Stocks ?? product.Stocks;
@@ -123,6 +123,21 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<ICollection> GetAllProducts()
+        {
+            var products = await _context.Products
+                 .Select(p => new
+                 {
+                    p.ProductName,
+                    p.Stocks,
+                    p.Units,
+                    p.CostPrice,
+                    p.TransactionDate,
+                    p.Supplier.SupplierName,
+                 }).ToListAsync();
+            return products;
         }
 
 
