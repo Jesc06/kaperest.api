@@ -29,7 +29,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                .Include(s => s.TransactionHistories)
                .FirstOrDefaultAsync(s => s.Id == addProduct.SupplierId);
 
-            if (supplier is null)
+            if (supplier is null)   
                 throw new Exception("Supplier does not exist.");
 
           var add = new ProductOfSupplier

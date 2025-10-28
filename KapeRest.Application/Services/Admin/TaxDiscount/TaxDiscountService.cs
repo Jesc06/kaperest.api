@@ -18,7 +18,7 @@ namespace KapeRest.Application.Services.Admin.TaxDiscount
             _taxDiscount = taxDiscount;
         }
 
-        public async Task<TaxAndRate> TaxAndDiscount(TaxDiscountDTO dto)
+        public async Task<Tax> TaxAndDiscount(TaxDiscountDTO dto)
         {
             return await _taxDiscount.TaxDiscountAsync(dto);
         }

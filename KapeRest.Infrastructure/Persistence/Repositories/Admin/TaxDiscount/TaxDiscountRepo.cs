@@ -20,25 +20,25 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
         {
             _context = context;
         }
-        public async Task<TaxAndRate> TaxDiscountAsync(TaxDiscountDTO dto)
+        public async Task<Tax> TaxDiscountAsync(TaxDiscountDTO dto)
         {
-            var rate = new TaxAndRate
+            var rate = new Tax
             {
-                SettingName = dto.SettingName,
+                TaxRate = dto.SettingName,
                 Value = dto.Value,
                 Description = dto.Description
             };
-            _context.TaxAndRate.Add(rate);
+            _context.Tax.Add(rate);
             await _context.SaveChangesAsync();
             return rate;
         }
 
         public async Task<string> UpdateTaxDiscount(UpdateTaxDiscountDTO dto)
         {
-            var taxDiscount = await _context.TaxAndRate.FirstOrDefaultAsync(t => t.Id == dto.Id);
+            var taxDiscount = await _context.Tax.FirstOrDefaultAsync(t => t.Id == dto.Id);
             if(taxDiscount is not null)
             {
-                taxDiscount.SettingName = dto.SettingName;
+                taxDiscount.TaxRate = dto.SettingName;
                 taxDiscount.Value = dto.Value;
                 taxDiscount.Description = dto.Description;
                 await _context.SaveChangesAsync();
@@ -49,17 +49,17 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
 
         public async Task<ICollection> GetAllTaxAndDiscount()
         {
-            var taxAndDiscounts = await _context.TaxAndRate.ToListAsync();
+            var taxAndDiscounts = await _context.Tax.ToListAsync();
             return taxAndDiscounts;
         }
 
         public async Task<string> DeleteTaxAndDiscount(int id)
         {
-            var taxAndDiscounts = await _context.TaxAndRate.FindAsync(id);
+            var taxAndDiscounts = await _context.Tax.FindAsync(id);
             if(taxAndDiscounts is null)
                 return "Tax and Discount not found";
 
-            _context.TaxAndRate.Remove(taxAndDiscounts);
+            _context.Tax.Remove(taxAndDiscounts);
             await _context.SaveChangesAsync();
             return "Successfully Deleted";
         }

@@ -11,7 +11,7 @@ namespace KapeRest.Application.Interfaces.Admin.TaxDiscount
 {
     public interface ITaxDiscount
     {
-        Task<TaxAndRate> TaxDiscountAsync(TaxDiscountDTO dto);
+        Task<Tax> TaxDiscountAsync(TaxDiscountDTO dto);
         Task<string> UpdateTaxDiscount(UpdateTaxDiscountDTO dto);
         Task<ICollection> GetAllTaxAndDiscount();
         Task<string> DeleteTaxAndDiscount(int id);

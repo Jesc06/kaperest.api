@@ -19,7 +19,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<PendingUserAccount> PendingUserAccount { get; set; }
-        public DbSet<TaxAndRate> TaxAndRate { get; set; }
+        public DbSet<Tax> Tax { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<MenuItemProduct> MenuItemProducts { get; set; }
 
