@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccounts
 {
     public class PendingAccountRepo : IpendingAccount
@@ -28,19 +27,24 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
         public async Task RegisterPending(PendingAccDTO pending)
         {
             var alreadyExists = await _context.PendingUserAccount.FirstOrDefaultAsync(x => x.Email == pending.Email);
+
                 if(alreadyExists is not null)
                     throw new Exception("A pending account with this email already exists.");
 
-                var pendingUser = new PendingUserAccount
-                {
-                    FirstName = pending.FirstName,
-                    MiddleName = pending.MiddleName,
-                    LastName = pending.LastName,
-                    Email = pending.Email,
-                    Password = pending.Password,
-                    Role = pending.Role,
-                    Status = "Pending",
-                };
+            if (pending.Role == "Cashier" && pending.BranchId == null)
+                throw new Exception("Cashier account must select a branch.");
+
+            var pendingUser = new PendingUserAccount
+            {
+                FirstName = pending.FirstName,
+                MiddleName = pending.MiddleName,
+                LastName = pending.LastName,
+                Email = pending.Email,
+                Password = pending.Password,
+                Role = pending.Role,
+                Status = "Pending",
+                BranchId = pending.BranchId
+            };
 
             _context.PendingUserAccount.Add(pendingUser);
 

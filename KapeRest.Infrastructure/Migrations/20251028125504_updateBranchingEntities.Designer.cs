@@ -4,6 +4,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251028125504_updateBranchingEntities")]
+    partial class updateBranchingEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,6 +231,9 @@ namespace KapeRest.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BranchEntitiesId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
@@ -264,7 +270,7 @@ namespace KapeRest.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchEntitiesId");
 
                     b.ToTable("PendingUserAccount");
                 });
@@ -603,12 +609,9 @@ namespace KapeRest.Infrastructure.Migrations
 
             modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>
                 {
-                    b.HasOne("KapeRest.Core.Entities.Branch.BranchEntities", "Branch")
+                    b.HasOne("KapeRest.Core.Entities.Branch.BranchEntities", null)
                         .WithMany("PendingAccounts")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Branch");
+                        .HasForeignKey("BranchEntitiesId");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.SupplierEntities.SupplierTransactionHistory", b =>

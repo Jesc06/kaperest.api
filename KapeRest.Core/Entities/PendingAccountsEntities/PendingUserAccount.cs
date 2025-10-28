@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KapeRest.Core.Entities.Branch;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,8 @@ namespace KapeRest.Domain.Entities.PendingAccounts
         public string Role { get; set; } = "User";
         public string Status { get; set; } = "Pending"; 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public int? BranchId { get; set; }   // foreign key
+        public BranchEntities? Branch { get; set; }   // navigation (optional but helpful)
     }
 }
