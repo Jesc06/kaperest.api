@@ -6,6 +6,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -24,15 +25,24 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             _userManager = userManager;
         }
 
-        public async Task RegisterPending(PendingAccDTO pending)
+        public async Task<string> RegisterPending(PendingAccDTO pending)
         {
             var alreadyExists = await _context.PendingUserAccount.FirstOrDefaultAsync(x => x.Email == pending.Email);
 
-                if(alreadyExists is not null)
-                    throw new Exception("A pending account with this email already exists.");
+            if(alreadyExists is not null)
+               return "A pending account with this email already exists.";
 
-            if (pending.Role == "Cashier" && pending.BranchId == null)
-                throw new Exception("Cashier account must select a branch.");
+            if(pending.Role == "Cashier")
+            {
+                var findExistence = await _context.Branches.FirstOrDefaultAsync(f => f.Id == pending.BranchId);
+                if (findExistence is null)
+                    return "branch is not exist";
+            }
+            else
+            {
+                pending.BranchId = null;
+            }
+           
 
             var pendingUser = new PendingUserAccount
             {
@@ -59,7 +69,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 Date = DateTime.Now
             });
 
-            await _context.SaveChangesAsync();  
+            await _context.SaveChangesAsync();
+
+            return "Successfully registered pending accounts!";
         }
 
         public async Task ApprovePendingAccount(int id, string username, string role)
@@ -123,9 +135,25 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<PendingUserAccount>> GetPendingAccounts()
+        public async Task<ICollection> GetPendingAccounts()
         {
-            var list = await _context.PendingUserAccount.ToListAsync();
+            var list = await _context.PendingUserAccount
+            .Include(p => p.Branch)
+            .Select(f => new
+            {
+                f.Id,
+                f.FirstName,
+                f.LastName,
+                f.Email,
+                f.Role,
+                f.Status,
+                Branch = new
+                {
+                    f.Branch.BranchName,
+                    f.Branch.Location
+                }
+            }).ToListAsync();
+
             return list;
         }
 

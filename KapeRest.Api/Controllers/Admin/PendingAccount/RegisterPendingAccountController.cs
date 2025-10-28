@@ -24,8 +24,8 @@ namespace KapeRest.Controllers.Admin.PendingAccount
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await _pendingAccService.RegisterPending(pending);
-            return Ok("Successfully pending your account");
+            var result = await _pendingAccService.RegisterPending(pending);
+            return Ok(result);
         }
 
         [HttpPost("ApprovePendingAccount/{id}")]

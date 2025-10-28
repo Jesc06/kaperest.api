@@ -3,6 +3,7 @@ using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Domain.Entities.PendingAccounts;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,9 @@ namespace KapeRest.Application.Services.Admin.PendingAcc
             _currentUser = currentUser;
         }
 
-        public async Task RegisterPending(PendingAccDTO pending)
+        public async Task<string> RegisterPending(PendingAccDTO pending)
         {
-            await _pendingAccount.RegisterPending(pending);
+            return await _pendingAccount.RegisterPending(pending);
         }
 
         public async Task ApprovePendingAccount(int id)
@@ -39,7 +40,7 @@ namespace KapeRest.Application.Services.Admin.PendingAcc
             await _pendingAccount.RejectPendingAccount(id,username,role);
         }
 
-        public async Task<List<PendingUserAccount>> GetPendingAccounts()
+        public async Task<ICollection> GetPendingAccounts()
         {
             return await _pendingAccount.GetPendingAccounts();
         }
