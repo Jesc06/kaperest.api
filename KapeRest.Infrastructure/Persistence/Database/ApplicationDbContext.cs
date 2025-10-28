@@ -46,10 +46,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public DbSet<AddSupplier> Suppliers { get; set; }
         public DbSet<SupplierTransactionHistory> SupplierTransactionHistories { get; set; }
         public DbSet<AuditLogEntities> AuditLog { get; set; }
-
         public DbSet<ProductOfSupplier> Products { get; set; }
-
-
         #endregion
 
     }

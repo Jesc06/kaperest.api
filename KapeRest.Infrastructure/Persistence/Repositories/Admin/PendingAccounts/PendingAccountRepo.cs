@@ -39,7 +39,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                     Email = pending.Email,
                     Password = pending.Password,
                     Role = pending.Role,
-                    Status = "Pending"
+                    Status = "Pending",
                 };
 
             _context.PendingUserAccount.Add(pendingUser);
