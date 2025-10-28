@@ -2,6 +2,7 @@
 using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Core.Entities.Tax_Rate;
 using KapeRest.Infrastructures.Persistence.Database;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -20,7 +21,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
         {
             _context = context;
         }
-        public async Task<Tax> TaxDiscountAsync(TaxDiscountDTO dto)
+        #region --Tax--
+        public async Task<Tax> AddTax(TaxDiscountDTO dto)
         {
             var rate = new Tax
             {
@@ -33,7 +35,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
             return rate;
         }
 
-        public async Task<string> UpdateTaxDiscount(UpdateTaxDiscountDTO dto)
+        public async Task<string> UpdateTax(UpdateTaxDiscountDTO dto)
         {
             var taxDiscount = await _context.Tax.FirstOrDefaultAsync(t => t.Id == dto.Id);
             if(taxDiscount is not null)
@@ -47,13 +49,13 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
             return "failed to update";
         }
 
-        public async Task<ICollection> GetAllTaxAndDiscount()
+        public async Task<ICollection> GetAllTax()
         {
             var taxAndDiscounts = await _context.Tax.ToListAsync();
             return taxAndDiscounts;
         }
 
-        public async Task<string> DeleteTaxAndDiscount(int id)
+        public async Task<string> DeleteTax(int id)
         {
             var taxAndDiscounts = await _context.Tax.FindAsync(id);
             if(taxAndDiscounts is null)
@@ -63,6 +65,50 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
             await _context.SaveChangesAsync();
             return "Successfully Deleted";
         }
+        #endregion
+
+        #region --Discount--
+        public async Task<Discount> AddDiscount(TaxDiscountDTO dto)
+        {
+            var rate = new Discount
+            {
+                TaxRate = dto.SettingName,
+                Value = dto.Value,
+                Description = dto.Description
+            };
+            _context.Discount.Add(rate);
+            await _context.SaveChangesAsync();
+            return rate;
+        }
+        public async Task<string> UpdateDiscount(UpdateTaxDiscountDTO dto)
+        {
+            var taxDiscount = await _context.Discount.FirstOrDefaultAsync(t => t.Id == dto.Id);
+            if (taxDiscount is not null)
+            {
+                taxDiscount.TaxRate = dto.SettingName;
+                taxDiscount.Value = dto.Value;
+                taxDiscount.Description = dto.Description;
+                await _context.SaveChangesAsync();
+                return "Successfully Updated";
+            }
+            return "failed to update";
+        }
+        public async Task<ICollection> GetAllDiscounts()
+        {
+            var taxAndDiscounts = await _context.Discount.ToListAsync();
+            return taxAndDiscounts;
+        }
+        public async Task<string> DeleteDiscount(int id)
+        {
+            var taxAndDiscounts = await _context.Discount.FindAsync(id);
+            if (taxAndDiscounts is null)
+                return "Tax and Discount not found";
+
+            _context.Discount.Remove(taxAndDiscounts);
+            await _context.SaveChangesAsync();
+            return "Successfully Deleted";
+        }
+        #endregion
 
 
 

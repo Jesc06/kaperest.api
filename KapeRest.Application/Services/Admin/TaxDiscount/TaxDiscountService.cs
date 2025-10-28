@@ -17,27 +17,43 @@ namespace KapeRest.Application.Services.Admin.TaxDiscount
         {
             _taxDiscount = taxDiscount;
         }
-
-        public async Task<Tax> TaxAndDiscount(TaxDiscountDTO dto)
+        #region --Tax--
+        public async Task<Tax> AddTax(TaxDiscountDTO dto)
         {
-            return await _taxDiscount.TaxDiscountAsync(dto);
+            return await _taxDiscount.AddTax(dto);
         }
-
-        public async Task<string> UpdateTaxDiscount(UpdateTaxDiscountDTO dto)
+        public async Task<string> UpdateTax(UpdateTaxDiscountDTO dto)
         {
-            return await _taxDiscount.UpdateTaxDiscount(dto);
+            return await _taxDiscount.UpdateTax(dto);
         }
-
-        public async Task<ICollection> GetAllTaxAndDiscount()
+        public async Task<ICollection> GetAllTax()
         {
-            return await _taxDiscount.GetAllTaxAndDiscount();
+            return await _taxDiscount.GetAllTax();
         }
-
-        public async Task<string> DeleteTaxAndDiscount(int id)
+        public async Task<string> DeleteTax(int id)
         {
-            return await _taxDiscount.DeleteTaxAndDiscount(id);
+            return await _taxDiscount.DeleteTax(id);
         }
+        #endregion
 
+        #region --Discount--
+        public async Task<Discount> AddDiscount(TaxDiscountDTO dto)
+        {
+            return await _taxDiscount.AddDiscount(dto);
+        }
+        public async Task<string> UpdateDiscount(UpdateTaxDiscountDTO dto)
+        {
+            return await _taxDiscount.UpdateDiscount(dto);
+        }
+        public async Task<ICollection> GetAllDiscount()
+        {
+            return await _taxDiscount.GetAllDiscounts();
+        }
+        public async Task<string> DeleteDiscount(int id)
+        {
+            return await _taxDiscount.DeleteDiscount(id);
+        }
+        #endregion
 
     }
 }
