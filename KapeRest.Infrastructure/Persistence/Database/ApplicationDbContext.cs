@@ -47,6 +47,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
 
         #region--Accounts--
         public DbSet<PendingUserAccount> PendingUserAccount { get; set; }
+        public DbSet<UsersIdentity> UsersIdentity { get; set; }
         #endregion
 
         #region--Inventory DbSets --

@@ -10,6 +10,10 @@ namespace KapeRest.Application.DTOs.Users.Buy
     {
         public int MenuItemId { get; set; }
         public int Quantity { get; set; }
+        public string CashierId { get; set; } = string.Empty;
+        public decimal DiscountPercent { get; set; } = 0;
+        public decimal Tax { get; set; }
+        public string PaymentMethod { get; set; } = "Cash";
 
     }
 }
