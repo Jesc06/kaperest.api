@@ -23,17 +23,20 @@ Role-based authentication with secure account lifecycle handling.
 #### • Point of Sale (POS)  
 Fast, responsive interface for seamless transaction processing.
 
+#### • Payment Integration (Gcash)  
+Supports secure **Gcash** transactions for cashless and contactless payments.
+
+#### • Branch-Based Cashier System  
+Each cashier account is tied to a specific branch, ensuring accurate **sales tracking per branch** and centralized analytics for admins.
+
+#### • Real-Time Sales Notification  
+Instant alerts for completed transactions, allowing managers to monitor ongoing sales activity across branches in real time.
+
 #### • Inventory Management  
 Real-time stock tracking with low-stock alerts and automatic updates.
 
 #### • Supplier Management  
-Centralized supplier database with order tracking and purchase logs.
-
-#### • Payment Integration (Gcash)  
-Enables cashless transactions through secure **Gcash** payment gateway integration.
-
-#### • Real-Time Sales Notification  
-Instant notifications for every completed transaction — empowering managers to monitor sales activity live.
+Centralized supplier database with order tracking and purchase history.
 
 #### • Sales & Analytics  
 Generates detailed daily, weekly, and monthly reports for data-driven decision-making.
@@ -43,6 +46,7 @@ Comprehensive sales record access with options for reprint and audit.
 
 #### • System Configuration  
 Fully customizable parameters including taxes, discounts, and operational settings.
+
 ---
 
 ## Technology Stack
