@@ -73,9 +73,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             }
 
             await _context.SaveChangesAsync();
-
             return menuItem;
         }
+
         public async Task<string> DeleteMenuItem(int id)
         {
             var menuItem = await _context.MenuItems

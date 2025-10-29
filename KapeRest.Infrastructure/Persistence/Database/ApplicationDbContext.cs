@@ -49,7 +49,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
             .WithMany(b => b.PendingAccounts)
             .HasForeignKey(p => p.BranchId)
             .OnDelete(DeleteBehavior.Restrict);
-            }
+        }
 
         #region--Inventory DbSets --
         public DbSet<AddSupplier> Suppliers { get; set; }

@@ -47,8 +47,8 @@ namespace KapeRest.Controllers.Admin.PendingAccount
         {
             var pending = await _pendingAccService.GetPendingAccounts();
             return Ok(pending);
-
         }
+
 
     }
 

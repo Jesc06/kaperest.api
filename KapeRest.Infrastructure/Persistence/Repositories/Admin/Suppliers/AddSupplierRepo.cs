@@ -20,7 +20,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
         {
             _context = context;
         }
-
+        
         public async Task<SupplierResponseDTO> AddSupplier(CreateSupplierDTO addSupplier)
         {
             var supplier = new AddSupplier
@@ -53,7 +53,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             return response;
         }
 
-
         public async Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update)
         {
             var product = await _context.Suppliers.FindAsync(update.Id);
@@ -82,21 +81,19 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             };
 
             return response;
-
         }
 
-
-        public async Task<bool> DeleteSupplier(int productId)
+        public async Task<string> DeleteSupplier(int productId)
         {
             var product = await _context.Suppliers.FindAsync(productId);
             if (product == null)
-                throw new Exception("Product not found.");
+                return "Product not found.";
 
             _context.Suppliers.Remove(product);
 
             await _context.SaveChangesAsync();
 
-            return true;
+            return "Successfully deleted";
         }
 
         public async Task<ICollection> GetAllSupplier()

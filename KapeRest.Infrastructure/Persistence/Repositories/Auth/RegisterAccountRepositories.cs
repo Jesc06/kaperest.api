@@ -42,7 +42,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             _jwtService = jwtService;
         }
 
-        public async Task<bool> RegisterAccount(RegisterAccountDTO register)
+        public async Task<string> RegisterAccount(RegisterAccountDTO register)
         {
             var users = new UsersIdentity
             {
@@ -56,12 +56,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             if (registerUser.Succeeded)
             {
                 if(register.Roles.Equals("Admin",StringComparison.InvariantCultureIgnoreCase))
-                    throw new Exception("Cannot assign Admin role during registration.");
+                    return "Cannot assign Admin role during registration.";
 
                 await _userManager.AddToRoleAsync(users, register.Roles);
-                return true;
+                return "Successfully registered account!";
             }
-            return false;
+            return "Failed to registered account";
         }
 
         public async Task<CreateJwtTokenDTO> Login(LoginDTO login)

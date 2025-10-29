@@ -19,7 +19,7 @@ namespace KapeRest.Application.Services.Auth
             _accountRepository = accountRepository;
             _currentUser = currentUser;
         }
-        public async Task<bool> RegisterAccountService(RegisterAccountDTO register)
+        public async Task<string> RegisterAccountService(RegisterAccountDTO register)
         {
             return await _accountRepository.RegisterAccount(register);
         }

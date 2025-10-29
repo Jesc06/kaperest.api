@@ -43,7 +43,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 pending.BranchId = null;
             }
            
-
             var pendingUser = new PendingUserAccount
             {
                 FirstName = pending.FirstName,
@@ -74,11 +73,11 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             return "Successfully registered pending accounts!";
         }
 
-        public async Task ApprovePendingAccount(int id, string username, string role)
+        public async Task<string> ApprovePendingAccount(int id, string username, string role)
         {
             var pending = await _context.PendingUserAccount.FindAsync(id);
             if (pending == null)
-                throw new Exception("Pending account not found.");
+                return "Pending account not found.";
             
             if(pending.Status is not "Pending")
                 throw new Exception("Account already proceed");
@@ -94,7 +93,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
 
             var result = await _userManager.CreateAsync(user, pending.Password);
             if(!result.Succeeded)
-                throw new Exception("Failed to create user account. already exist username");
+                return "Failed to create user account. already exist username";
 
             await _userManager.AddToRoleAsync(user, pending.Role);
 
@@ -111,14 +110,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 Date = DateTime.Now
             });
 
-            await _context.SaveChangesAsync();  
+            await _context.SaveChangesAsync();
+            return "Successfully approved!";
         }
 
-        public async Task RejectPendingAccount(int id, string username, string role)
+        public async Task<string> RejectPendingAccount(int id, string username, string role)
         {
             var pending = await _context.PendingUserAccount.FindAsync(id);
             if (pending == null)
-                throw new Exception("Pending account not found.");
+                return "Pending account not found.";
 
             _context.AuditLog.Add(new AuditLogEntities
             {
@@ -133,6 +133,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
 
             _context.PendingUserAccount.Remove(pending);
             await _context.SaveChangesAsync();
+            return "Successfully rejected account!";
         }
 
         public async Task<ICollection> GetPendingAccounts()

@@ -27,7 +27,7 @@ namespace KapeRest.Application.Services.Admin.Supplier
             return await _supplier.UpdateSupplier(update);
         }
 
-        public async Task<bool> DeleteSupplier(int supplierId)
+        public async Task<string> DeleteSupplier(int supplierId)
         {
             return await _supplier.DeleteSupplier(supplierId);
         }

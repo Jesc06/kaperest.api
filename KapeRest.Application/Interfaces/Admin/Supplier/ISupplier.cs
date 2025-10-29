@@ -13,7 +13,7 @@ namespace KapeRest.Application.Interfaces.Admin.Supplier
     {
         Task<SupplierResponseDTO> AddSupplier(CreateSupplierDTO addSupplier);
         Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update);
-        Task<bool> DeleteSupplier(int productId);
+        Task<string> DeleteSupplier(int productId);
         Task<ICollection> GetAllSupplier();
     }
 }

@@ -10,7 +10,7 @@ namespace KapeRest.Application.Interfaces.Auth
 {
     public interface IAccounts
     {
-        Task<bool> RegisterAccount(RegisterAccountDTO register);
+        Task<string> RegisterAccount(RegisterAccountDTO register);
         Task<CreateJwtTokenDTO> Login(LoginDTO login);
         Task Logout(string email);
         Task<bool> ChangePassword(ChangePassDTO changePassDTO);

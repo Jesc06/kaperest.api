@@ -30,7 +30,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                .FirstOrDefaultAsync(s => s.Id == addProduct.SupplierId);
 
             if (supplier is null)   
-                throw new Exception("Supplier does not exist.");
+                return "Supplier does not exist.";
 
           var add = new ProductOfSupplier
           {
@@ -76,7 +76,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
           
             var product = await _context.Products.FindAsync(update.Id);
             if (product == null)
-                throw new Exception("Product not found.");
+                return "Product not found.";
   
             product.ProductName = update.ProductName ?? product.ProductName;
             product.CostPrice = update.Prices ?? product.CostPrice;

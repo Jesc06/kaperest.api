@@ -12,8 +12,8 @@ namespace KapeRest.Application.Interfaces.Admin.PendingAcc
     public interface IpendingAccount
     {
         Task<string> RegisterPending(PendingAccDTO pending);
-        Task ApprovePendingAccount(int id, string username, string role);
-        Task RejectPendingAccount(int id, string username, string role);
+        Task<string> ApprovePendingAccount(int id, string username, string role);
+        Task<string> RejectPendingAccount(int id, string username, string role);
         Task<ICollection> GetPendingAccounts();
     }
 }

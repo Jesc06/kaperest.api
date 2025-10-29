@@ -49,7 +49,7 @@ namespace KapeRest.Controllers.Admin.Supplier
         public async Task<ActionResult> DeleteSupplier(int Id)
         {
             var result = await _supplierService.DeleteSupplier(Id);
-            if (!result)
+            if (result is not null)
                 return NotFound(new { Message = "Supplier not found or could not be deleted." });
             return Ok(new { Message = "Supplier deleted successfully." });
         }

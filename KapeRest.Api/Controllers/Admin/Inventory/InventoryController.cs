@@ -27,7 +27,6 @@ namespace KapeRest.Controllers.Admin.Inventory
             return Ok(response);
         }
 
-
         [HttpPut("UpdateProductOfSuppliers")]
         public async Task<ActionResult> UpdateProductOfSuppliers(UpdateProductDTO update) 
         {
