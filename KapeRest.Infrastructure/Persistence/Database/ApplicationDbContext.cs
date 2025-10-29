@@ -12,19 +12,13 @@ using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Core.Entities.Tax_Rate;
 using KapeRest.Core.Entities.Branch;
+using KapeRest.Core.Entities.SalesTransaction;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {
     public class ApplicationDbContext : IdentityDbContext<UsersIdentity>
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
-
-        public DbSet<PendingUserAccount> PendingUserAccount { get; set; }
-        public DbSet<Tax> Tax { get; set; }
-        public DbSet<Discount> Discount { get; set; }
-        public DbSet<MenuItem> MenuItems { get; set; }
-        public DbSet<MenuItemProduct> MenuItemProducts { get; set; }
-        public DbSet<BranchEntities> Branches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,11 +45,30 @@ namespace KapeRest.Infrastructures.Persistence.Database
             .OnDelete(DeleteBehavior.Restrict);
         }
 
+        #region--Accounts--
+        public DbSet<PendingUserAccount> PendingUserAccount { get; set; }
+        #endregion
+
         #region--Inventory DbSets --
         public DbSet<AddSupplier> Suppliers { get; set; }
         public DbSet<SupplierTransactionHistory> SupplierTransactionHistories { get; set; }
-        public DbSet<AuditLogEntities> AuditLog { get; set; }
         public DbSet<ProductOfSupplier> Products { get; set; }
+        public DbSet<MenuItem> MenuItems { get; set; }
+        public DbSet<MenuItemProduct> MenuItemProducts { get; set; }
+        #endregion
+
+        #region--Sales Transaction--
+        public DbSet<SalesTransactionEntities> SalesTransaction { get; set; }
+        #endregion
+
+        #region--Auditlogs--
+        public DbSet<AuditLogEntities> AuditLog { get; set; }
+        #endregion
+
+        #region--Branches,Tax,Discounts--
+        public DbSet<Tax> Tax { get; set; }
+        public DbSet<Discount> Discount { get; set; }
+        public DbSet<BranchEntities> Branches { get; set; }
         #endregion
 
     }
