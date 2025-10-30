@@ -89,6 +89,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 LastName = pending.LastName,
                 UserName = pending.Email,
                 Email = pending.Email,
+                BranchId = pending.BranchId
             };
 
             var result = await _userManager.CreateAsync(user, pending.Password);
