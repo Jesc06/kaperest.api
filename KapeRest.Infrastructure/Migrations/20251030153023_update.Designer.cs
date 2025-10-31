@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251027132645_addedIsBoolInMenuItem")]
-    partial class addedIsBoolInMenuItem
+    [Migration("20251030153023_update")]
+    partial class update
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,78 @@ namespace KapeRest.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("KapeRest.Core.Entities.Tax_Rate.TaxAndRate", b =>
+            modelBuilder.Entity("KapeRest.Core.Entities.Branch.BranchEntities", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BranchName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Branches");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CashierId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsHold")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiptNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Tax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CashierId");
+
+                    b.ToTable("SalesTransaction");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.Tax_Rate.Discount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,7 +108,7 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SettingName")
+                    b.Property<string>("TaxRate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -46,7 +117,31 @@ namespace KapeRest.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaxAndRate");
+                    b.ToTable("Discount");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.Tax_Rate.Tax", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaxRate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tax");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.AuditLogEntities.AuditLogEntities", b =>
@@ -139,8 +234,9 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
+                    b.Property<string>("IsAvailable")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ItemName")
                         .IsRequired()
@@ -185,6 +281,9 @@ namespace KapeRest.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -217,6 +316,8 @@ namespace KapeRest.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
 
                     b.ToTable("PendingUserAccount");
                 });
@@ -308,6 +409,9 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -371,6 +475,8 @@ namespace KapeRest.Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -516,6 +622,20 @@ namespace KapeRest.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", b =>
+                {
+                    b.HasOne("KapeRest.Core.Entities.Branch.BranchEntities", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KapeRest.Infrastructures.Persistence.Database.UsersIdentity", null)
+                        .WithMany()
+                        .HasForeignKey("CashierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", b =>
                 {
                     b.HasOne("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", "Supplier")
@@ -550,6 +670,16 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Navigation("ProductOfSupplier");
                 });
 
+            modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>
+                {
+                    b.HasOne("KapeRest.Core.Entities.Branch.BranchEntities", "Branch")
+                        .WithMany("PendingAccounts")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Branch");
+                });
+
             modelBuilder.Entity("KapeRest.Domain.Entities.SupplierEntities.SupplierTransactionHistory", b =>
                 {
                     b.HasOne("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", "Supplier")
@@ -559,6 +689,15 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("KapeRest.Infrastructures.Persistence.Database.UsersIdentity", b =>
+                {
+                    b.HasOne("KapeRest.Core.Entities.Branch.BranchEntities", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId");
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -610,6 +749,11 @@ namespace KapeRest.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.Branch.BranchEntities", b =>
+                {
+                    b.Navigation("PendingAccounts");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", b =>

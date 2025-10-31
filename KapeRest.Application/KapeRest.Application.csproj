@@ -12,8 +12,4 @@
     <ProjectReference Include="..\KapeRest.Core\KapeRest.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Users\Sales\" />
-  </ItemGroup>
-
 </Project>

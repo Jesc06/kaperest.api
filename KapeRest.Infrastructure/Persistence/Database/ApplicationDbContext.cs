@@ -24,6 +24,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
         {
             base.OnModelCreating(modelBuilder);
 
+            // Many-to-many for MenuItemProduct
             modelBuilder.Entity<MenuItemProduct>()
                 .HasKey(mip => new { mip.MenuItemId, mip.ProductOfSupplierId });
 
@@ -37,13 +38,31 @@ namespace KapeRest.Infrastructures.Persistence.Database
                 .WithMany()
                 .HasForeignKey(mip => mip.ProductOfSupplierId);
 
-            //for branch relationship
+            // Branch relationship
             modelBuilder.Entity<PendingUserAccount>()
-            .HasOne(p => p.Branch)
-            .WithMany(b => b.PendingAccounts)
-            .HasForeignKey(p => p.BranchId)
-            .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(p => p.Branch)
+                .WithMany(b => b.PendingAccounts)
+                .HasForeignKey(p => p.BranchId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relationship for sales, branch, and cashier
+            modelBuilder.Entity<SalesTransactionEntities>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.HasOne<UsersIdentity>()
+                    .WithMany()
+                    .HasForeignKey(x => x.CashierId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne<BranchEntities>()
+                  .WithMany()
+                  .HasForeignKey(x => x.BranchId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            });
         }
+
 
         #region--Accounts--
         public DbSet<PendingUserAccount> PendingUserAccount { get; set; }

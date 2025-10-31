@@ -13,7 +13,7 @@ namespace KapeRest.Core.Entities.SalesTransaction
         public DateTime DateTime { get; set; } = DateTime.Now;
 
         public string CashierId { get; set; } = string.Empty;  
-        public int BranchId { get; set; }                    
+        public int? BranchId { get; set; }                    
 
         public decimal Subtotal { get; set; }
         public decimal Tax { get; set; }

@@ -9,6 +9,7 @@ using KapeRest.Application.Interfaces.Auth;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.Jwt;
 using KapeRest.Application.Interfaces.Users.Buy;
+using KapeRest.Application.Interfaces.Users.Sales;
 using KapeRest.Application.Services.Admin.Branch;
 using KapeRest.Application.Services.Admin.CreateMenuItem;
 using KapeRest.Application.Services.Admin.Inventory;
@@ -17,8 +18,11 @@ using KapeRest.Application.Services.Admin.Supplier;
 using KapeRest.Application.Services.Admin.TaxDiscount;
 using KapeRest.Application.Services.Auth;
 using KapeRest.Application.Services.Users.Buy;
+using KapeRest.Application.Services.Users.Sales;
+using KapeRest.Infrastructure.DependencyInjection;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount;
+using KapeRest.Infrastructure.Persistence.Repositories.Users.Sales;
 using KapeRest.Infrastructures.Persistence.Database;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
@@ -43,6 +47,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSevices();
 
 Env.Load();
 
@@ -122,37 +127,6 @@ builder.Services.AddAuthentication(options =>
 
     });
 builder.Services.AddAuthorization();
-#endregion
-
-#region --Dependency Injection--
-builder.Services.AddScoped<IAccounts, RegisterAccountRepositories>();
-builder.Services.AddScoped<AccountService>();
-
-builder.Services.AddScoped<IJwtService, GenerateTokenService>();
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUser, CurrentUserService>();
-
-builder.Services.AddScoped<IpendingAccount, PendingAccountRepo>();
-builder.Services.AddScoped<PendingAccService>();
-
-builder.Services.AddScoped<IInventory, AddProductRepo>();
-builder.Services.AddScoped<AddProductService>();
-
-builder.Services.AddScoped<ISupplier, AddSupplierRepo>();
-builder.Services.AddScoped<AddSupplierService>();
-
-builder.Services.AddScoped<IMenuItem, MenuItemRepo>();
-builder.Services.AddScoped<MenuItemService>();
-
-builder.Services.AddScoped<IBuy, BuyRepo>();
-builder.Services.AddScoped<BuyService>();
-
-builder.Services.AddScoped<ITaxDiscount, TaxDiscountRepo>();
-builder.Services.AddScoped<TaxDiscountService>();
-
-builder.Services.AddScoped<IBranch, BranchRepo>();
-builder.Services.AddScoped<BranchService>();
 #endregion
 
 #region --Serialization Cycle

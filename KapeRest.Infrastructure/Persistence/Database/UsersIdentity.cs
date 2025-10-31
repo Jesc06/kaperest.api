@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using KapeRest.Core.Entities.Branch;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,9 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public string FirstName { get; set; }
         public string MiddleName { get; set; }  
         public string LastName { get; set; }
+
         public int? BranchId { get; set; }
+        public BranchEntities? Branch { get; set; }
 
         //Jwt refresh token properties
         public string? RefreshTokenHash { get; set; }
