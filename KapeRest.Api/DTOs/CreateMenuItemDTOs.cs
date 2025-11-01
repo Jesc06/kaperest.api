@@ -8,6 +8,7 @@ namespace KapeRest.Api.DTOs
         public decimal Price { get; set; }
         public string Description { get; set; }
         public IFormFile? Image { get; set; }
+        public string IsAvailable { get; set; } 
         public string ProductsJson { get; set; }
     }
 }

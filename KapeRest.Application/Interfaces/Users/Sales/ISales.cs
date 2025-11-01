@@ -11,6 +11,6 @@ namespace KapeRest.Application.Interfaces.Users.Sales
 {
     public interface ISales
     {
-        Task<IEnumerable<SalesTransactionEntities>> GetSalesByCashiers(SalesDTO sales);
+        Task<ICollection> GetSalesByCashiers(SalesDTO sales);
     }
 }

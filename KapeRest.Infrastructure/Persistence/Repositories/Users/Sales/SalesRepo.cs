@@ -23,15 +23,28 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
             _userManager = userManager;
         }
 
-        public async Task<IEnumerable<SalesTransactionEntities>> GetSalesByCashiers(SalesDTO sales)
+        public async Task<ICollection> GetSalesByCashiers(SalesDTO sales)
         {
             var cashier = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == sales.cashierId);
             if (cashier == null)
                 throw new Exception("Cashier not found.");
 
-            return await _context.SalesTransaction
-                .Where(x => x.CashierId == cashier.Id && x.BranchId == cashier.BranchId)
-                .ToListAsync();
+            var data = await (from s in _context.SalesTransaction
+                              join u in _context.UsersIdentity on s.CashierId equals u.Id
+                              where s.CashierId == sales.cashierId && s.BranchId == u.BranchId
+                              select new
+                              {
+                                  s.Id,
+                                  CashierName = u.UserName,
+                                  BranchName = u.Branch != null ? u.Branch.BranchName : "N/A",
+                                  s.ReceiptNumber,
+                                  s.DateTime,
+                                  s.Subtotal,
+                                  s.Tax,
+                                  s.Discount,
+                                  s.Total
+                              }).ToListAsync();
+            return data;
         }
 
     }

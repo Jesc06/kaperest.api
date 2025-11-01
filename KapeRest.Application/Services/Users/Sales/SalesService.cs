@@ -18,7 +18,7 @@ namespace KapeRest.Application.Services.Users.Sales
             _salesRepo = salesRepo;
         }
 
-        public async Task<IEnumerable<SalesTransactionEntities>> GetSalesByCashiers(SalesDTO sales)
+        public async Task<ICollection> GetSalesByCashiers(SalesDTO sales)
         {
             return await _salesRepo.GetSalesByCashiers(sales);
         }

@@ -28,7 +28,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 ItemName = dto.Item_name,
                 Price = dto.Price,
                 Description = dto.Description,
-                Image = dto.Image
+                Image = dto.Image,
+                IsAvailable = dto.IsAvailable
             };
 
             // Auto-link menu item to its products
@@ -60,6 +61,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             menuItem.Price = dto.Price;
             menuItem.Description = dto.Description;
             menuItem.Image = dto.Image;
+            menuItem.IsAvailable = dto.IsAvailable;
 
             menuItem.MenuItemProducts.Clear();
 

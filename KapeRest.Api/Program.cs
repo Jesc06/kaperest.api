@@ -45,7 +45,12 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+     .AddJsonOptions(opt =>
+     {
+         opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+         opt.JsonSerializerOptions.WriteIndented = true;
+     });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSevices();
 
@@ -128,16 +133,6 @@ builder.Services.AddAuthentication(options =>
     });
 builder.Services.AddAuthorization();
 #endregion
-
-#region --Serialization Cycle
-builder.Services.AddControllers()
-    .AddJsonOptions(opt =>
-    {
-        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        opt.JsonSerializerOptions.WriteIndented = true;
-    });
-#endregion
-
 
 var app = builder.Build();
 
