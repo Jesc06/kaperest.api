@@ -7,10 +7,10 @@ namespace KapeRest.Api.Controllers.Users.Sales
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SalesController : ControllerBase
+    public class SalesByCashiersAccountController : ControllerBase
     {
         private readonly SalesService _salesService;
-        public SalesController(SalesService salesService)
+        public SalesByCashiersAccountController(SalesService salesService)
         {
             _salesService = salesService;
         }

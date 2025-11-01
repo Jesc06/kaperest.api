@@ -47,5 +47,29 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
             return data;
         }
 
+        public async Task<ICollection> GetSalesByAdmin()
+        {
+            var sales = await (from s in _context.SalesTransaction
+                              join u in _context.UsersIdentity on s.CashierId equals u.Id
+                              join b in _context.Branches on u.BranchId equals b.Id into branchJoin
+                              from bj in branchJoin.DefaultIfEmpty()
+                              select new
+                              {
+                                  s.Id,
+                                  CashierName = u.UserName,
+                                  BranchName = bj != null ? bj.BranchName : "N/A",
+                                  s.ReceiptNumber,
+                                  s.DateTime,
+                                  s.Subtotal,
+                                  s.Tax,
+                                  s.Discount,
+                                  s.Total
+                              }).ToListAsync();
+
+            return sales;
+        }
+
+
+
     }
 }

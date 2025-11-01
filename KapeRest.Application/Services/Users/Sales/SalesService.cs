@@ -22,6 +22,10 @@ namespace KapeRest.Application.Services.Users.Sales
         {
             return await _salesRepo.GetSalesByCashiers(sales);
         }
+        public async Task<ICollection> GetSalesByAdmin()
+        {
+            return await _salesRepo.GetSalesByAdmin();
+        }
 
     }
 }
