@@ -71,7 +71,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
                 Tax = tax,
                 Discount = discount,
                 Total = total,
-                PaymentMethod = buy.PaymentMethod ?? "Cash"
+                PaymentMethod = buy.PaymentMethod ?? "Cash",
+                Status = "Completed",
             };
 
             _context.SalesTransaction.Add(sale);
@@ -129,8 +130,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
         public async Task<string> ResumeHoldAsync(int saleId)
         {
             var sale = await _context.SalesTransaction
-           .Include(s => s.BranchId)
-           .FirstOrDefaultAsync(s => s.Id == saleId);
+             .FirstOrDefaultAsync(s => s.Id == saleId);
 
             if (sale == null) return "Hold not found";
             if (sale.Status != "Hold") return "Already finalized";

@@ -42,7 +42,7 @@ namespace KapeRest.Controllers.Users.Buy
         }
 
         [HttpPost("CancelHold{saleId}")]
-        public async Task<ActionResult> CancelHold([FromQuery] int saleId)
+        public async Task<ActionResult> CancelHold(int saleId)
         {
             var result = await _buyService.CancelHoldAsync(saleId); 
             return Ok(result);
