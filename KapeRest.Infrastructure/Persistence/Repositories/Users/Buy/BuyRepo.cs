@@ -80,6 +80,98 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
             return $"Purchase successful (Receipt #{sale.ReceiptNumber})\nSubtotal:{subtotal}\nTax:{tax}\nDiscount:{discount}\nTotal:{total}";
         }
 
+        
+        public async Task<string> HoldTransaction(BuyMenuItemDTO buy) {
+            var cashier = await _context.UsersIdentity
+                    .FirstOrDefaultAsync(u => u.Id == buy.CashierId);
+
+            if (cashier == null)
+                return "Cashier not found";
+
+            var menuItem = await _context.MenuItems.FirstOrDefaultAsync(m => m.Id == buy.MenuItemId);
+            if (menuItem == null)
+                return "Menu item not found";
+
+            var subtotal = menuItem.Price * buy.Quantity;
+            var tax = subtotal * (buy.Tax / 100m);
+            var discount = subtotal * (buy.DiscountPercent / 100m);
+            var total = subtotal + tax - discount;
+
+            var transaction = new SalesTransactionEntities
+            {
+                CashierId = cashier.Id,
+                BranchId = cashier.BranchId ?? 0,
+                Subtotal = subtotal,
+                Tax = tax,
+                Discount = discount,
+                Total = total,
+                PaymentMethod = buy.PaymentMethod ?? "Cash",
+                Status = "Hold"
+            };
+
+            _context.SalesTransaction.Add(transaction);
+            await _context.SaveChangesAsync();
+
+            // Save item details
+            var saleItem = new SalesItemEntities
+            {
+                SalesTransactionId = transaction.Id,
+                MenuItemId = menuItem.Id,
+                Quantity = buy.Quantity,
+                UnitPrice = menuItem.Price
+            };
+            _context.SalesItems.Add(saleItem);
+            await _context.SaveChangesAsync();
+
+            return $"Transaction held (Hold #{transaction.Id})";
+        }
+
+        public async Task<string> ResumeHoldAsync(int saleId)
+        {
+            var sale = await _context.SalesTransaction
+           .Include(s => s.BranchId)
+           .FirstOrDefaultAsync(s => s.Id == saleId);
+
+            if (sale == null) return "Hold not found";
+            if (sale.Status != "Hold") return "Already finalized";
+
+            var saleItems = await _context.SalesItems
+                .Where(i => i.SalesTransactionId == sale.Id)
+                .Include(i => i.MenuItem)
+                    .ThenInclude(m => m.MenuItemProducts)
+                    .ThenInclude(mp => mp.ProductOfSupplier)
+                .ToListAsync();
+
+            // Deduct stocks now that payment is confirmed
+            foreach (var item in saleItems)
+            {
+                foreach (var prod in item.MenuItem.MenuItemProducts)
+                {
+                    var totalToDeduct = prod.QuantityUsed * item.Quantity;
+                    if (prod.ProductOfSupplier.Stocks < totalToDeduct)
+                        return $"Not enough stock for {prod.ProductOfSupplier.ProductName}";
+                    prod.ProductOfSupplier.Stocks -= totalToDeduct;
+                }
+            }
+
+            sale.Status = "Completed";
+            await _context.SaveChangesAsync();
+
+            return $"Hold transaction #{sale.Id} finalized successfully.";
+        }
+
+
+        public async Task<string> CancelHoldAsync(int saleId)
+        {
+            var sale = await _context.SalesTransaction.FirstOrDefaultAsync(s => s.Id == saleId);
+            if (sale == null) return "Hold not found";
+
+            sale.Status = "Canceled";
+            await _context.SaveChangesAsync();
+
+            return $"Hold transaction #{sale.Id} canceled.";
+        }
+
 
 
     }

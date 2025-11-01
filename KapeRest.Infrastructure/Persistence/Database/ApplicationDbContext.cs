@@ -79,6 +79,7 @@ namespace KapeRest.Infrastructures.Persistence.Database
 
         #region--Sales Transaction--
         public DbSet<SalesTransactionEntities> SalesTransaction { get; set; }
+        public DbSet<SalesItemEntities> SalesItems { get; set; }
         #endregion
 
         #region--Auditlogs--

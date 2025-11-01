@@ -15,9 +15,9 @@ namespace KapeRest.Api.Controllers.Users.Sales
         }
 
         [HttpPost("GetSalesByAdmin")]
-        public async Task<IActionResult> GetSalesByAdmin()
+        public async Task<IActionResult> GetSalesByAdmin([FromQuery] bool includeHold = false)
         {
-            var sales = await _salesService.GetSalesByAdmin();
+            var sales = await _salesService.GetSalesByAdmin(includeHold);
             return Ok(sales);
         }
 

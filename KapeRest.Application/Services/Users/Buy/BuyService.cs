@@ -20,5 +20,20 @@ namespace KapeRest.Application.Services.Users.Buy
             return await _buy.BuyMenuItemAsync(buy);
         }
 
+        public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
+        {
+            return await _buy.HoldTransaction(buy);
+        }
+        public async Task<string> ResumeHoldAsync(int saleId)
+        {
+            return await _buy.ResumeHoldAsync(saleId);
+        }
+
+        public async Task<string> CancelHoldAsync(int saleId)
+        {
+            return await _buy.CancelHoldAsync(saleId);
+        }
+
+
     }
 }

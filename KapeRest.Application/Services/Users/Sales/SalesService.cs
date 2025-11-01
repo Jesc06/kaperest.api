@@ -22,9 +22,9 @@ namespace KapeRest.Application.Services.Users.Sales
         {
             return await _salesRepo.GetSalesByCashiers(sales);
         }
-        public async Task<ICollection> GetSalesByAdmin()
+        public async Task<ICollection> GetSalesByAdmin(bool includeHold)
         {
-            return await _salesRepo.GetSalesByAdmin();
+            return await _salesRepo.GetSalesByAdmin(includeHold);
         }
 
     }

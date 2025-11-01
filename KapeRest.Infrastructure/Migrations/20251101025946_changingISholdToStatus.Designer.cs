@@ -4,6 +4,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101025946_changingISholdToStatus")]
+    partial class changingISholdToStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,33 +44,6 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Branches");
-                });
-
-            modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesItemEntities", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MenuItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SalesTransactionId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SalesTransactionId");
-
-                    b.ToTable("SalesItems");
                 });
 
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", b =>
@@ -645,17 +621,6 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesItemEntities", b =>
-                {
-                    b.HasOne("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", "SalesTransaction")
-                        .WithMany()
-                        .HasForeignKey("SalesTransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SalesTransaction");
                 });
 
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", b =>

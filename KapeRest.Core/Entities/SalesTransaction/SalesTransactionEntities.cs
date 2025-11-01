@@ -21,6 +21,6 @@ namespace KapeRest.Core.Entities.SalesTransaction
         public decimal Total { get; set; }
 
         public string PaymentMethod { get; set; } = "Cash";   
-        public bool IsHold { get; set; } = false;
+        public string Status { get; set; }
     }
 }
