@@ -75,13 +75,15 @@ namespace KapeRest.Infrastructure.DependencyInjection
             services.AddScoped<IBranch, BranchRepo>();
             services.AddScoped<BranchService>();
 
-            services.AddScoped<ISales, SalesRepo>();
-            services.AddScoped<SalesService>();
+            services.AddScoped<ICashierSalesReport, CashierSalesReportRepository>();
+            services.AddScoped<CashierSalesReportService>();
 
             //pdf
             services.AddScoped<IPdfService, PdfService>();
-            
             services.AddScoped<GenerateSalesReportUseCase>();
+
+            services.AddScoped<IAdminSalesReport, AdminSalesReportsRepository>();
+            services.AddScoped<AdminSalesReportService>();
 
             #endregion
             return services;

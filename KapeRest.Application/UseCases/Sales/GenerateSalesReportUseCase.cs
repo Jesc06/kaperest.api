@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace KapeRest.Application.UseCases.Sales
 {
     public class GenerateSalesReportUseCase
-    {
+    {/*
         private readonly ISales _sales;
         private readonly IPdfService _pdfService;
         public GenerateSalesReportUseCase(ISales sales, IPdfService pdfService)
@@ -22,7 +22,7 @@ namespace KapeRest.Application.UseCases.Sales
             var sales = await _sales.GetSalesByCashiers(cashierId);
             return _pdfService.GenerateSalesReport(sales, logopath);
         }
-
+        */
 
 
     }

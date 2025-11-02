@@ -8,25 +8,39 @@ namespace KapeRest.Api.Controllers.Users.Sales
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SalesByCashiersAccountController : ControllerBase
+    public class CashierSalesReportController : ControllerBase
     {
-        private readonly SalesService _salesService;
+        private readonly CashierSalesReportService _salesService;
         private readonly GenerateSalesReportUseCase _generateSalesReportUseCase;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public SalesByCashiersAccountController(SalesService salesService, GenerateSalesReportUseCase generateSalesReportUseCase, IWebHostEnvironment webHostEnvironment)
+        public CashierSalesReportController(CashierSalesReportService salesService, GenerateSalesReportUseCase generateSalesReportUseCase, IWebHostEnvironment webHostEnvironment)
         {
             _salesService = salesService;
             _generateSalesReportUseCase = generateSalesReportUseCase;
             _webHostEnvironment = webHostEnvironment;
         }
 
-        [HttpPost("GetSalesByCashiers")]
-        public async Task<IActionResult> GetSalesByCashiers([FromBody]string salesCashierId)
+        [HttpGet("CashierDailySales")]
+        public async Task<ActionResult> GetCashierDailySalesReport(string cashierId)
         {
-            var sales = await _salesService.GetSalesByCashiers(salesCashierId);
-            return Ok(sales);
+            var result = await _salesService.DailyReport(cashierId);
+            return Ok(result);
+        }
+        [HttpGet("CashierWeeklySales")]
+        public async Task<ActionResult> GetCashierWeeklySalesReport(string cashierId)
+        {
+            var result = await _salesService.WeeklyReport(cashierId);
+            return Ok(result);
+        }
+        [HttpGet("CashierMonthlySales")]
+        public async Task<ActionResult> GetCashierMonthlySalesReport(string cashierId)
+        {
+            var result = await _salesService.MonthlyReport(cashierId);
+            return Ok(result);
         }
 
+
+        /*
         [HttpGet("CashierReports")]
         public async Task<ActionResult>GetSalesReport(string cashierId)
         {
@@ -34,7 +48,7 @@ namespace KapeRest.Api.Controllers.Users.Sales
            var result = await _generateSalesReportUseCase.ExecuteAsync(cashierId, logopath);
             return File(result, "application/pdf", "SalesReport.pdf");
         }
-
+        */
 
     }
 }
