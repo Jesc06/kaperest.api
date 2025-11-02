@@ -49,8 +49,11 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
                               select new SalesReportDTO
                               {
                                   Id = s.Id,
-                                  CashierName = u.UserName,
+                                  Username = u.UserName,
+                                  FullName = $"{u.FirstName} {u.MiddleName} {u.LastName}",
+                                  Email = u.Email,
                                   BranchName = bj != null ? bj.BranchName : "N/A",
+                                  BranchLocation = bj != null ? bj.Location : "N/A",
                                   ReceiptNumber = s.ReceiptNumber,
                                   DateTime = s.DateTime,
                                   Subtotal = s.Subtotal,

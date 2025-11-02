@@ -9,8 +9,11 @@ namespace KapeRest.Application.DTOs.Users.Sales
     public class SalesReportDTO
     {
         public int Id { get; set; }
-        public string CashierName { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string BranchName { get; set; } = string.Empty;
+        public string BranchLocation { get; set; } = string.Empty;
         public string ReceiptNumber { get; set; } = string.Empty;
         public DateTime DateTime { get; set; }
         public decimal Subtotal { get; set; }
