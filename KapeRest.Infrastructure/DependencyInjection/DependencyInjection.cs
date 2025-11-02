@@ -85,6 +85,9 @@ namespace KapeRest.Infrastructure.DependencyInjection
             services.AddScoped<IAdminSalesReport, AdminSalesReportsRepository>();
             services.AddScoped<AdminSalesReportService>();
 
+            services.AddScoped<IOverallSales, OverAllSalesRepository>();
+            services.AddScoped<OverAllSalesService>();
+
             #endregion
             return services;
         }

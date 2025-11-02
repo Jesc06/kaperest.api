@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KapeRest.Application.DTOs.Users.Sales
+namespace KapeRest.Application.Interfaces.GeneratePdf
 {
-    public class SalesDTO
+    public interface ISalesPdf
     {
-        public string cashierId { get; set; } = string.Empty;
+        byte[] GeneratePdf<T>(T document);
     }
 }
