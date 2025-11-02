@@ -23,17 +23,17 @@ namespace KapeRest.Application.UseCases.Sales
         public async Task<byte[]> AdminDailySalesReport(string logopath)
         {
             var sales = await _AdminsalesReport.GetDailySalesReportAsync();
-            return _pdfService.GenerateSalesReport(sales, logopath);
+            return _pdfService.GenerateSalesReport(sales, logopath, "Admin");
         }
         public async Task<byte[]> AdminWeeklySalesReport(string logopath)
         {
             var sales = await _AdminsalesReport.GetWeeklySalesReportAsync();
-            return _pdfService.GenerateSalesReport(sales, logopath);
+            return _pdfService.GenerateSalesReport(sales, logopath, "Admin");
         }
         public async Task<byte[]> AdminMonthlySalesReport(string logopath)
         {
             var sales = await _AdminsalesReport.GetMonthlySalesReportAsync();
-            return _pdfService.GenerateSalesReport(sales, logopath);
+            return _pdfService.GenerateSalesReport(sales, logopath, "Admin");
         }
         #endregion
 
@@ -41,17 +41,17 @@ namespace KapeRest.Application.UseCases.Sales
         public async Task<byte[]> CashierDailySalesReport(string cashierId, string logopath)
         {
             var sales = await _cashierSalesReport.GetDailySalesReportByCashierAsync(cashierId);
-            return _pdfService.GenerateSalesReport(sales, logopath);
+            return _pdfService.GenerateSalesReport(sales, logopath, "Cashier");
         }
         public async Task<byte[]> CashierWeeklySalesReport(string cashierId, string logopath)
         {
             var sales = await _cashierSalesReport.GetWeeklySalesReportByCashierAsync(cashierId);
-            return _pdfService.GenerateSalesReport(sales, logopath);
+            return _pdfService.GenerateSalesReport(sales, logopath, "Cashier");
         }
         public async Task<byte[]> CashierMonthlySalesReport(string cashierId, string logopath)
         {
             var sales = await _cashierSalesReport.GetMonthlySalesReportByCashierAsync(cashierId);
-            return _pdfService.GenerateSalesReport(sales, logopath);
+            return _pdfService.GenerateSalesReport(sales, logopath, "Cashier");
         }
         #endregion
 

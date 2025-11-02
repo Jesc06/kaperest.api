@@ -9,6 +9,6 @@ namespace KapeRest.Application.Interfaces.PdfService
 {
     public interface IPdfService
     {
-        byte[] GenerateSalesReport(IEnumerable<SalesReportDTO> sales, string logopath);
+        byte[] GenerateSalesReport(IEnumerable<SalesReportDTO> sales, string logopath, string roles);
     }
 }

@@ -5,6 +5,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace KapeRest.Infrastructure.Services.PdfServices
@@ -16,7 +17,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
             QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        public byte[] GenerateSalesReport(IEnumerable<SalesReportDTO> sales, string logopath)
+        public byte[] GenerateSalesReport(IEnumerable<SalesReportDTO> sales, string logopath, string roles)
         {
             var totalSales = sales.Sum(s => s.Total);
             var totalTransactions = sales.Count();
@@ -29,16 +30,12 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                     page.Margin(40);
                     page.PageColor(Colors.White);
                     page.DefaultTextStyle(x => x.FontSize(11).FontFamily(Fonts.SegoeUI));
-
-
-                    //header
+                    #region--header--
                     page.Header().Row(row =>
                     {
-                        // Logo (replace with your actual logo path)
                         if (System.IO.File.Exists(logopath))
                             row.ConstantItem(70).Height(70).Image(logopath, ImageScaling.FitArea);
 
-                        // Company Info
                         row.RelativeItem().Column(column =>
                         {
                             column.Item().Text("KapeRest")
@@ -50,22 +47,15 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                             column.Item().Text($"{DateTime.Now:MMMM dd, yyyy hh:mm tt}")
                                 .FontSize(10).FontColor(Colors.Grey.Darken2);
                         });
-
-                        // Optional Accent
-                        row.ConstantItem(100).AlignRight().Height(30)
-                            .Background(Colors.Brown.Medium).AlignMiddle()
-                            .Text("KapeRest Cashiers Sales")
-                            .FontColor(Colors.White).AlignCenter().FontSize(10);
                     });
-
+                    #endregion--End header--
                     page.Content().PaddingVertical(20).Column(column =>
                     {
-                        // Report Title
-                        column.Item().AlignCenter().Text("Sales Report by Cashier")
+                        column.Item().AlignCenter().Text($"Sales Report by {roles}")
                             .FontSize(18).SemiBold().FontColor(Colors.Brown.Medium);
                         column.Item().PaddingBottom(10);
 
-                        // Table
+                        #region--Table--
                         column.Item().Border(1).BorderColor(Colors.Grey.Lighten2)
                             .Padding(10)
                             .Table(table =>
@@ -80,7 +70,6 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                                     columns.RelativeColumn(1);
                                     columns.RelativeColumn(1);
                                 });
-
                                 // Header Styling
                                 table.Header(header =>
                                 {
@@ -97,7 +86,6 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                                     header.Cell().Element(HeaderStyle).Text("Total");
                                     header.Cell().Element(HeaderStyle).Text("Status");
                                 });
-
                                 // Rows
                                 int index = 1;
                                 foreach (var s in sales)
@@ -111,12 +99,13 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                                     table.Cell().Element(CellStyle).Text(s.BranchName);
                                     table.Cell().Element(CellStyle).Text(s.ReceiptNumber);
                                     table.Cell().Element(CellStyle).Text(s.DateTime.ToString("MMM dd, yyyy"));
-                                    table.Cell().Element(CellStyle).Text($"{s.Total:C}");
+                                    table.Cell().Element(CellStyle).Text($"{s.Total.ToString("C", new CultureInfo("en-PH"))}");//Ph currency format
                                     table.Cell().Element(CellStyle).Text(s.Status);
                                 }
                             });
+                        #endregion--End Table--
 
-                        // Summary
+                        #region--Overall Summary--
                         column.Item().PaddingTop(15)
                             .Row(row =>
                             {
@@ -125,13 +114,12 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                                     .FontColor(Colors.Grey.Darken1);
 
                                 row.RelativeItem().AlignRight()
-                                    .Text($"Total Sales: {totalSales:C}")
+                                    .Text($"Total Sales: {totalSales.ToString("C", new CultureInfo("en-PH"))}")//Ph currency format
                                     .FontSize(13).SemiBold()
                                     .FontColor(Colors.Brown.Medium);
                             });
+                        #endregion--End Overall Summary--
                     });
-
-                    // Footer
                     page.Footer()
                         .AlignCenter()
                         .Text("© 2025 KapeRest Café — All Rights Reserved")

@@ -5,27 +5,24 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
 {
-    public class CashierSalesReportRepository : ICashierSalesReport 
+    public class CashierSalesReportRepository : ICashierSalesReport
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<UsersIdentity> _userManager;
+
         public CashierSalesReportRepository(ApplicationDbContext context, UserManager<UsersIdentity> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        #region --Sales Reports Per Cashier (Based on Philippine Local Time)--
-
-
+        #region -- Helper Methods --
         private static DateTime GetPhilippineNow() =>
             TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
                 TimeZoneInfo.FindSystemTimeZoneById("Asia/Manila"));
@@ -39,21 +36,16 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
             );
         }
 
-
-        //Daily per cashier
-        public async Task<ICollection<SalesReportDTO>> GetDailySalesReportByCashierAsync(string cashierId)
+        private async Task<ICollection<SalesReportDTO>> GetSalesReportByCashierInRangeAsync(string cashierId, DateTime startUtc, DateTime endUtc)
         {
-            var phNow = GetPhilippineNow();
-            var startOfDay = new DateTime(phNow.Year, phNow.Month, phNow.Day, 0, 0, 0);
-            var endOfDay = startOfDay.AddDays(1);
-            var (startUtc, endUtc) = GetUtcRange(startOfDay, endOfDay);
-
             var data = await (from s in _context.SalesTransaction
                               join u in _context.UsersIdentity on s.CashierId equals u.Id
                               join b in _context.Branches on u.BranchId equals b.Id into branchJoin
                               from bj in branchJoin.DefaultIfEmpty()
                               where s.CashierId == cashierId &&
-                                    s.DateTime >= startUtc && s.DateTime < endUtc
+                                    s.DateTime >= startUtc &&
+                                    s.DateTime < endUtc &&
+                                    s.Status == "Completed" 
                               select new SalesReportDTO
                               {
                                   Id = s.Id,
@@ -70,8 +62,20 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
 
             return data;
         }
+        #endregion
 
-        //Weekly per cashier
+
+        #region -- Sales Reports Per Cashier (Based on Philippine Local Time) --
+        public async Task<ICollection<SalesReportDTO>> GetDailySalesReportByCashierAsync(string cashierId)
+        {
+            var phNow = GetPhilippineNow();
+            var startOfDay = new DateTime(phNow.Year, phNow.Month, phNow.Day, 0, 0, 0);
+            var endOfDay = startOfDay.AddDays(1);
+            var (startUtc, endUtc) = GetUtcRange(startOfDay, endOfDay);
+
+            return await GetSalesReportByCashierInRangeAsync(cashierId, startUtc, endUtc);
+        }
+
         public async Task<ICollection<SalesReportDTO>> GetWeeklySalesReportByCashierAsync(string cashierId)
         {
             var phNow = GetPhilippineNow();
@@ -80,30 +84,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
             var endOfWeek = startOfWeek.AddDays(7);
             var (startUtc, endUtc) = GetUtcRange(startOfWeek, endOfWeek);
 
-            var data = await (from s in _context.SalesTransaction
-                              join u in _context.UsersIdentity on s.CashierId equals u.Id
-                              join b in _context.Branches on u.BranchId equals b.Id into branchJoin
-                              from bj in branchJoin.DefaultIfEmpty()
-                              where s.CashierId == cashierId &&
-                                    s.DateTime >= startUtc && s.DateTime < endUtc
-                              select new SalesReportDTO
-                              {
-                                  Id = s.Id,
-                                  CashierName = u.UserName,
-                                  BranchName = bj != null ? bj.BranchName : "N/A",
-                                  ReceiptNumber = s.ReceiptNumber,
-                                  DateTime = s.DateTime,
-                                  Subtotal = s.Subtotal,
-                                  Tax = s.Tax,
-                                  Discount = s.Discount,
-                                  Total = s.Total,
-                                  Status = s.Status
-                              }).ToListAsync();
-
-            return data;
+            return await GetSalesReportByCashierInRangeAsync(cashierId, startUtc, endUtc);
         }
 
-        //Monthly per cashier
         public async Task<ICollection<SalesReportDTO>> GetMonthlySalesReportByCashierAsync(string cashierId)
         {
             var phNow = GetPhilippineNow();
@@ -111,33 +94,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
             var endOfMonth = startOfMonth.AddMonths(1);
             var (startUtc, endUtc) = GetUtcRange(startOfMonth, endOfMonth);
 
-            var data = await (from s in _context.SalesTransaction
-                              join u in _context.UsersIdentity on s.CashierId equals u.Id
-                              join b in _context.Branches on u.BranchId equals b.Id into branchJoin
-                              from bj in branchJoin.DefaultIfEmpty()
-                              where s.CashierId == cashierId &&
-                                    s.DateTime >= startUtc && s.DateTime < endUtc
-                              select new SalesReportDTO
-                              {
-                                  Id = s.Id,
-                                  CashierName = u.UserName,
-                                  BranchName = bj != null ? bj.BranchName : "N/A",
-                                  ReceiptNumber = s.ReceiptNumber,
-                                  DateTime = s.DateTime,
-                                  Subtotal = s.Subtotal,
-                                  Tax = s.Tax,
-                                  Discount = s.Discount,
-                                  Total = s.Total,
-                                  Status = s.Status
-                              }).ToListAsync();
-
-            return data;
+            return await GetSalesReportByCashierInRangeAsync(cashierId, startUtc, endUtc);
         }
 
         #endregion
-
-
-
-
     }
 }
