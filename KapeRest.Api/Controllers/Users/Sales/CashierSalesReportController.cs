@@ -40,15 +40,29 @@ namespace KapeRest.Api.Controllers.Users.Sales
         }
 
 
-        /*
-        [HttpGet("CashierReports")]
-        public async Task<ActionResult>GetSalesReport(string cashierId)
+        #region--Generate PDF Report--
+        [HttpGet("CashierGenerateDailyPdfReports")]
+        public async Task<ActionResult> CashierGenerateDailyPdfReports(string cashierId)
         {
             var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
-           var result = await _generateSalesReportUseCase.ExecuteAsync(cashierId, logopath);
-            return File(result, "application/pdf", "SalesReport.pdf");
+            var result = await _generateSalesReportUseCase.CashierDailySalesReport(cashierId, logopath);
+            return File(result, "application/pdf", "CashierDailySalesReport.pdf");
         }
-        */
+        [HttpGet("CashierGenerateWeeklyPdfReports")]
+        public async Task<ActionResult> CashierGenerateWeeklyPdfReports(string cashierId)
+        {
+            var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
+            var result = await _generateSalesReportUseCase.CashierWeeklySalesReport(cashierId, logopath);
+            return File(result, "application/pdf", "CashierWeeklySalesReport.pdf");
+        }
+        [HttpGet("CashierGenerateMonthlyPdfReports")]
+        public async Task<ActionResult> CashierGenerateMonthlyPdfReports(string cashierId)
+        {
+            var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
+            var result = await _generateSalesReportUseCase.CashierMonthlySalesReport(cashierId, logopath);
+            return File(result, "application/pdf", "CashierMonthlySalesReport.pdf");
+        }
+        #endregion
 
     }
 }

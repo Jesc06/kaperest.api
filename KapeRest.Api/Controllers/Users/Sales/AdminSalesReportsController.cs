@@ -1,4 +1,5 @@
 ﻿using KapeRest.Application.Services.Users.Sales;
+using KapeRest.Application.UseCases.Sales;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,15 @@ namespace KapeRest.Api.Controllers.Users.Sales
     public class AdminSalesReportsController : ControllerBase
     {
         private readonly AdminSalesReportService _salesReportService;
-        public AdminSalesReportsController(AdminSalesReportService salesReportService)
+        private readonly GenerateSalesReportUseCase _generateSalesReportUseCase;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AdminSalesReportsController(AdminSalesReportService salesReportService, 
+                                           GenerateSalesReportUseCase generateSalesReportUseCase, 
+                                           IWebHostEnvironment webHostEnvironment)
         {
             _salesReportService = salesReportService;
+            _generateSalesReportUseCase = generateSalesReportUseCase;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("AdminDailyReports")]
@@ -20,20 +27,42 @@ namespace KapeRest.Api.Controllers.Users.Sales
             var result = await _salesReportService.GetDailySaleReport();
             return Ok(result);
         }
-
         [HttpGet("AdminWeeklyReports")]
         public async Task<ActionResult> WeeklyReports()
         {
             var result = await _salesReportService.GetWeeklySaleReport();
             return Ok(result);
         }
-
         [HttpGet("AdminMonthlyReports")]
         public async Task<ActionResult> MonthlyReports()
         {
             var result = await _salesReportService.GetMonthlySaleReport();
             return Ok(result);
         }
+
+        #region--Generate PDF Report--
+        [HttpGet("AdminGenerateDailyPdfReports")]
+        public async Task<ActionResult> AdminGenerateDailyPdfReports()
+        {
+            var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
+            var result = await _generateSalesReportUseCase.AdminDailySalesReport(logopath);
+            return File(result, "application/pdf", "AdminDailySalesReport.pdf");
+        }
+        [HttpGet("AdminGenerateWeeklyPdfReports")]
+        public async Task<ActionResult> AdminGenerateWeeklyPdfReports()
+        {
+            var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
+            var result = await _generateSalesReportUseCase.AdminWeeklySalesReport(logopath);
+            return File(result, "application/pdf", "AdminWeeklySalesReport.pdf");
+        }
+        [HttpGet("AdminGenerateMonthlyPdfReports")]
+        public async Task<ActionResult> AdminGenerateMonthlyPdfReports()
+        {
+            var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
+            var result = await _generateSalesReportUseCase.AdminMonthlySalesReport(logopath);
+            return File(result, "application/pdf", "AdminMonthlySalesReport.pdf");
+        }
+        #endregion
 
 
     }

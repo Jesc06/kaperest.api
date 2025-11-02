@@ -9,21 +9,51 @@ using System.Threading.Tasks;
 namespace KapeRest.Application.UseCases.Sales
 {
     public class GenerateSalesReportUseCase
-    {/*
-        private readonly ISales _sales;
+    {
+        private readonly IAdminSalesReport _AdminsalesReport;
+        private readonly ICashierSalesReport _cashierSalesReport;
         private readonly IPdfService _pdfService;
-        public GenerateSalesReportUseCase(ISales sales, IPdfService pdfService)
+        public GenerateSalesReportUseCase(IAdminSalesReport AdminsalesReport,ICashierSalesReport cashierSalesReport, IPdfService pdfService)
         {
-            _sales = sales;
+            _AdminsalesReport = AdminsalesReport;
+            _cashierSalesReport = cashierSalesReport;
             _pdfService = pdfService;
         }
-        public async Task<byte[]> ExecuteAsync(string cashierId, string logopath)
+        #region--AdminSalesReport-- 
+        public async Task<byte[]> AdminDailySalesReport(string logopath)
         {
-            var sales = await _sales.GetSalesByCashiers(cashierId);
+            var sales = await _AdminsalesReport.GetDailySalesReportAsync();
             return _pdfService.GenerateSalesReport(sales, logopath);
         }
-        */
+        public async Task<byte[]> AdminWeeklySalesReport(string logopath)
+        {
+            var sales = await _AdminsalesReport.GetWeeklySalesReportAsync();
+            return _pdfService.GenerateSalesReport(sales, logopath);
+        }
+        public async Task<byte[]> AdminMonthlySalesReport(string logopath)
+        {
+            var sales = await _AdminsalesReport.GetMonthlySalesReportAsync();
+            return _pdfService.GenerateSalesReport(sales, logopath);
+        }
+        #endregion
 
+        #region--CashierSalesReport--
+        public async Task<byte[]> CashierDailySalesReport(string cashierId, string logopath)
+        {
+            var sales = await _cashierSalesReport.GetDailySalesReportByCashierAsync(cashierId);
+            return _pdfService.GenerateSalesReport(sales, logopath);
+        }
+        public async Task<byte[]> CashierWeeklySalesReport(string cashierId, string logopath)
+        {
+            var sales = await _cashierSalesReport.GetWeeklySalesReportByCashierAsync(cashierId);
+            return _pdfService.GenerateSalesReport(sales, logopath);
+        }
+        public async Task<byte[]> CashierMonthlySalesReport(string cashierId, string logopath)
+        {
+            var sales = await _cashierSalesReport.GetMonthlySalesReportByCashierAsync(cashierId);
+            return _pdfService.GenerateSalesReport(sales, logopath);
+        }
+        #endregion
 
     }
 }
