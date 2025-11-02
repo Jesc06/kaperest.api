@@ -16,7 +16,7 @@ namespace KapeRest.Domain.Entities.SupplierEntities
         public int QuantityDelivered { get; set; }
         public decimal TotalCost { get; set; }
         public string Action { get; set; } = "Active";
-        public DateTime TransactionDate { get; set; } = DateTime.Now;
+        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public string FormattedDate => TransactionDate.ToString("MMMM d, yyyy h:mm tt");
         public AddSupplier Supplier { get; set; }
     }

@@ -15,7 +15,7 @@ namespace KapeRest.Domain.Entities.SupplierEntities
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
-        public DateTime TransactionDate { get; set; } = DateTime.Now;
+        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public string FormattedDate => TransactionDate.ToString("MM/dd/yyyy");
 
         public ICollection<ProductOfSupplier> Products { get; set; } = new List<ProductOfSupplier>();

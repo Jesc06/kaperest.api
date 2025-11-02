@@ -10,7 +10,7 @@ namespace KapeRest.Core.Entities.SalesTransaction
     {
         public int Id { get; set; }
         public string ReceiptNumber { get; set; } = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
-        public DateTime DateTime { get; set; } = DateTime.Now;
+        public DateTime DateTime { get; set; } = DateTime.UtcNow;
 
         public string CashierId { get; set; } = string.Empty;  
         public int? BranchId { get; set; }                    

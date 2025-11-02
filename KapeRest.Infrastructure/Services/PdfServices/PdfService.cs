@@ -31,7 +31,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                     page.DefaultTextStyle(x => x.FontSize(11).FontFamily(Fonts.SegoeUI));
 
 
-                    // ===== HEADER =====
+                    //header
                     page.Header().Row(row =>
                     {
                         // Logo (replace with your actual logo path)
@@ -65,7 +65,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                             .FontSize(18).SemiBold().FontColor(Colors.Brown.Medium);
                         column.Item().PaddingBottom(10);
 
-                        // ===== TABLE =====
+                        // Table
                         column.Item().Border(1).BorderColor(Colors.Grey.Lighten2)
                             .Padding(10)
                             .Table(table =>
@@ -116,7 +116,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                                 }
                             });
 
-                        // ===== SUMMARY =====
+                        // Summary
                         column.Item().PaddingTop(15)
                             .Row(row =>
                             {
@@ -131,7 +131,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                             });
                     });
 
-                    // ===== FOOTER =====
+                    // Footer
                     page.Footer()
                         .AlignCenter()
                         .Text("© 2025 KapeRest Café — All Rights Reserved")

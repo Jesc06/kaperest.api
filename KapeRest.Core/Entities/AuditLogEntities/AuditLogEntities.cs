@@ -15,6 +15,6 @@ namespace KapeRest.Domain.Entities.AuditLogEntities
         public string Action { get; set; }//Add,Delete,Deliver
         public string AffectedEntity { get; set; }//SupplierName or ProductName
         public string? Description { get; set; }//Delivered 50 units of Latte
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; } = DateTime.UtcNow;
     }
 }

@@ -16,7 +16,7 @@ namespace KapeRest.Domain.Entities.InventoryEntities
         public string Units { get; set; }//"ml", "kg", "pcs"
         public decimal CostPrice { get; set; }
 
-        public DateTime TransactionDate { get; set; } = DateTime.Now;
+        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public string FormattedDate => TransactionDate.ToString("MM/dd/yyyy");
 
         // Relation
