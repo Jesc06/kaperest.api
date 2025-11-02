@@ -23,27 +23,27 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Users.Sales
             _userManager = userManager;
         }
 
-        public async Task<ICollection> GetSalesByCashiers(SalesDTO sales)
+        public async Task<ICollection<SalesReportDTO>> GetSalesByCashiers(string cashierId)
         {
-            var cashier = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == sales.cashierId);
+            var cashier = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == cashierId);
             if (cashier == null)
                 throw new Exception("Cashier not found.");
 
             var data = await (from s in _context.SalesTransaction
                               join u in _context.UsersIdentity on s.CashierId equals u.Id
-                              where s.CashierId == sales.cashierId && s.BranchId == u.BranchId
-                              select new
+                              where s.CashierId == cashierId && s.BranchId == u.BranchId
+                              select new SalesReportDTO
                               {
-                                  s.Id,
+                                  Id = s.Id,
                                   CashierName = u.UserName,
                                   BranchName = u.Branch != null ? u.Branch.BranchName : "N/A",
-                                  s.ReceiptNumber,
-                                  s.DateTime,
-                                  s.Subtotal,
-                                  s.Tax,
-                                  s.Discount,
-                                  s.Total,
-                                  s.Status
+                                  ReceiptNumber =  s.ReceiptNumber,
+                                  DateTime = s.DateTime,
+                                  Subtotal = s.Subtotal,
+                                  Tax = s.Tax,
+                                  Discount = s.Discount,
+                                  Total = s.Total,
+                                  Status = s.Status
                               }).ToListAsync();
             return data;
         }

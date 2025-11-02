@@ -7,6 +7,7 @@ using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Application.Interfaces.Auth;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.Jwt;
+using KapeRest.Application.Interfaces.PdfService;
 using KapeRest.Application.Interfaces.Users.Buy;
 using KapeRest.Application.Interfaces.Users.Sales;
 using KapeRest.Application.Services.Admin.Branch;
@@ -18,9 +19,11 @@ using KapeRest.Application.Services.Admin.TaxDiscount;
 using KapeRest.Application.Services.Auth;
 using KapeRest.Application.Services.Users.Buy;
 using KapeRest.Application.Services.Users.Sales;
+using KapeRest.Application.UseCases.Sales;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount;
 using KapeRest.Infrastructure.Persistence.Repositories.Users.Sales;
+using KapeRest.Infrastructure.Services.PdfServices;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory;
@@ -74,6 +77,12 @@ namespace KapeRest.Infrastructure.DependencyInjection
 
             services.AddScoped<ISales, SalesRepo>();
             services.AddScoped<SalesService>();
+
+            //pdf
+            services.AddScoped<IPdfService, PdfService>();
+            
+            services.AddScoped<GenerateSalesReportUseCase>();
+
             #endregion
             return services;
         }

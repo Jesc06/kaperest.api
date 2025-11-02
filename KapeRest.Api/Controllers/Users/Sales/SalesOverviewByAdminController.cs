@@ -21,5 +21,6 @@ namespace KapeRest.Api.Controllers.Users.Sales
             return Ok(sales);
         }
 
+
     }
 }

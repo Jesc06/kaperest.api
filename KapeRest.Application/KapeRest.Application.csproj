@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2025.7.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\KapeRest.Core\KapeRest.Core.csproj" />
   </ItemGroup>
 

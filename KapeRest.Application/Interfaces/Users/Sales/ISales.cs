@@ -11,7 +11,7 @@ namespace KapeRest.Application.Interfaces.Users.Sales
 {
     public interface ISales
     {
-        Task<ICollection> GetSalesByCashiers(SalesDTO sales);
+        Task<ICollection<SalesReportDTO>> GetSalesByCashiers(string cashierId);
         Task<ICollection> GetSalesByAdmin(bool includeHold);
     }
 }

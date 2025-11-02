@@ -18,14 +18,15 @@ namespace KapeRest.Application.Services.Users.Sales
             _salesRepo = salesRepo;
         }
 
-        public async Task<ICollection> GetSalesByCashiers(SalesDTO sales)
+        public async Task<ICollection<SalesReportDTO>> GetSalesByCashiers(string cashierId)
         {
-            return await _salesRepo.GetSalesByCashiers(sales);
+         return await _salesRepo.GetSalesByCashiers(cashierId); 
         }
         public async Task<ICollection> GetSalesByAdmin(bool includeHold)
         {
             return await _salesRepo.GetSalesByAdmin(includeHold);
         }
+
 
     }
 }
