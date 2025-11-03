@@ -42,13 +42,12 @@ namespace KapeRest.Controllers.Users.Buy
             var result = await _buyService.UpdateHeldTransaction(update);
             return Ok(result);
         }
-
         [HttpPost("ResumeTransaction")]
         public async Task<ActionResult> ResumeTransaction([FromQuery] int saleId)
         {
             var result = await _buyService.ResumeHoldAsync(saleId);
             return Ok(result);
-        }
+        } 
         [HttpPost("VoidItem")]
         public async Task<ActionResult> VoidItem([FromQuery] int saleItemId)
         {

@@ -14,6 +14,9 @@ namespace KapeRest.Domain.Entities.MenuEntities
         public string Description { get; set; }
         public string IsAvailable { get; set; }   
         public byte[] Image { get; set; }
+        public string CashierId { get; set; } // link to cashier
+        public int? BranchId { get; set; }    // optional branch
+
         public ICollection<MenuItemProduct> MenuItemProducts { get; set; }
         public MenuItem()
         {

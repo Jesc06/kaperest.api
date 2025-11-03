@@ -34,14 +34,14 @@ namespace KapeRest.Application.Services.Admin.CreateMenuItem
             return await _menuItem.UpdateMenuItemAsync(updatedItem);
         }
 
-        public async Task<string> DeleteMenuItem(int id)
+        public async Task<string> DeleteMenuItem(string cashierId, int id)
         {
-            return await _menuItem.DeleteMenuItem(id);
+            return await _menuItem.DeleteMenuItem(cashierId,id);
         }
 
-        public async Task<ICollection> GetAllMenuItem()
+        public async Task<ICollection> GetAllMenuItem(string cashierId)
         {
-            return await _menuItem.GetAllMenuItem();
+            return await _menuItem.GetAllMenuItem(cashierId);
         }
 
     }

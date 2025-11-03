@@ -13,7 +13,7 @@ namespace KapeRest.Application.Interfaces.Admin.CreateMenuItem
     {
         Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto);
         Task<MenuItem> UpdateMenuItemAsync(UpdateMenuItemDTO dto);
-        Task<string> DeleteMenuItem(int id);
-        Task<ICollection> GetAllMenuItem();
+        Task<string> DeleteMenuItem(string cashierId, int id);
+        Task<ICollection> GetAllMenuItem(string cashierId);
     }
 }

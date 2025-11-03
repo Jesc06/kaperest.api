@@ -46,7 +46,8 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
                 Price = dto.Price,
                 Description = dto.Description,
                 Image = ms.ToArray(),
-                Products = products
+                Products = products,
+                cashierId = dto.cashierId
             };
            
             var result = await _menuItemService.CreateMenuItem(appDTO);
@@ -72,23 +73,24 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
                 Price = dto.Price,
                 Description = dto.Description,
                 Image = ms.ToArray(),
-                Products = products
+                Products = products,
+                cashierId = dto.cashierId,
             };
             var result = await _menuItemService.UpdateMenuItem(appDTO);
             return Ok(result);
         }
 
         [HttpDelete("DeleteMenuItem")]
-        public async Task<ActionResult> DeleteMenuItem(int id)
+        public async Task<ActionResult> DeleteMenuItem(string cashierId, int id)
         {
-            var result = await _menuItemService.DeleteMenuItem(id);
+            var result = await _menuItemService.DeleteMenuItem(cashierId,id);
             return Ok(result);
         }
 
         [HttpGet("GetAllMenuItem")]
-        public async Task<IActionResult> GetAllMenuItem()
+        public async Task<IActionResult> GetAllMenuItem(string cashierId)
         {
-            var result = await _menuItemService.GetAllMenuItem();
+            var result = await _menuItemService.GetAllMenuItem(cashierId);
             return Ok(result);
         }
 

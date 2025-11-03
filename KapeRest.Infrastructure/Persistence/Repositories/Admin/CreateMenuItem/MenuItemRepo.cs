@@ -29,12 +29,20 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 Price = dto.Price,
                 Description = dto.Description,
                 Image = dto.Image,
-                IsAvailable = dto.IsAvailable
+                IsAvailable = dto.IsAvailable,
+                CashierId = dto.cashierId,
+                BranchId = null // or get from cashier repo
             };
 
-            // Auto-link menu item to its products
             foreach (var product in dto.Products)
             {
+                // Only link product if it belongs to this cashier
+                var productExists = await _context.Products
+                    .AnyAsync(p => p.Id == product.ProductOfSupplierId && p.CashierId == dto.cashierId);
+
+                if (!productExists)
+                    throw new Exception($"Product {product.ProductOfSupplierId} does not belong to this cashier");
+
                 menuItem.MenuItemProducts.Add(new MenuItemProduct
                 {
                     ProductOfSupplierId = product.ProductOfSupplierId,
@@ -51,24 +59,36 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
         public async Task<MenuItem> UpdateMenuItemAsync(UpdateMenuItemDTO dto)
         {
             var menuItem = await _context.MenuItems
-                .Include(m => m.MenuItemProducts) 
-                .FirstOrDefaultAsync(m => m.Id == dto.Id);
+        .FirstOrDefaultAsync(m => m.Id == dto.Id && m.CashierId == dto.cashierId);
 
             if (menuItem == null)
-                throw new KeyNotFoundException("Menu item not found");
+                throw new KeyNotFoundException("Menu item not found or does not belong to this cashier");
 
+            // Update fields
             menuItem.ItemName = dto.Item_name;
             menuItem.Price = dto.Price;
             menuItem.Description = dto.Description;
             menuItem.Image = dto.Image;
             menuItem.IsAvailable = dto.IsAvailable;
 
-            menuItem.MenuItemProducts.Clear();
+            // Remove existing MenuItemProducts
+            var existingProducts = _context.MenuItemProducts
+                .Where(mp => mp.MenuItemId == dto.Id);
+            _context.MenuItemProducts.RemoveRange(existingProducts);
 
+            // Add new products
             foreach (var product in dto.Products)
             {
-                menuItem.MenuItemProducts.Add(new MenuItemProduct
+                // Ensure product belongs to this cashier
+                var exists = await _context.Products
+                    .AnyAsync(p => p.Id == product.ProductOfSupplierId && p.CashierId == dto.cashierId);
+
+                if (!exists)
+                    throw new Exception($"Product {product.ProductOfSupplierId} does not belong to this cashier");
+
+                _context.MenuItemProducts.Add(new MenuItemProduct
                 {
+                    MenuItemId = dto.Id,
                     ProductOfSupplierId = product.ProductOfSupplierId,
                     QuantityUsed = product.QuantityUsed
                 });
@@ -78,27 +98,45 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             return menuItem;
         }
 
-        public async Task<string> DeleteMenuItem(int id)
+        public async Task<string> DeleteMenuItem(string cashierId, int id)
         {
             var menuItem = await _context.MenuItems
-                .Include(m => m.MenuItemProducts) 
-                .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == id && m.CashierId == cashierId);
 
             if (menuItem == null)
-                return "Menu item not found";
+                return "Menu item not found or does not belong to this cashier";
+
+            // Delete linked MenuItemProducts
+            var linkedProducts = _context.MenuItemProducts
+                .Where(mp => mp.MenuItemId == id);
+            _context.MenuItemProducts.RemoveRange(linkedProducts);
 
             _context.MenuItems.Remove(menuItem);
-
             await _context.SaveChangesAsync();
 
             return "Successfully deleted menu item";
         }
 
-        public async Task<ICollection> GetAllMenuItem()
+        public async Task<ICollection> GetAllMenuItem(string cashierId)
         {
             var menuItems = await _context.MenuItems
-                .Include(m => m.MenuItemProducts)
+           .Where(m => m.CashierId == cashierId)
+           .ToListAsync();
+
+            // Optional: load MenuItemProducts separately if needed
+            var menuItemIds = menuItems.Select(m => m.Id).ToList();
+            var allProducts = await _context.MenuItemProducts
+                .Where(mp => menuItemIds.Contains(mp.MenuItemId))
                 .ToListAsync();
+
+            // Assign products manually (if you want to return it in one object)
+            foreach (var menuItem in menuItems)
+            {
+                menuItem.MenuItemProducts = allProducts
+                    .Where(mp => mp.MenuItemId == menuItem.Id)
+                    .ToList();
+            }
+
             return menuItems;
         }
 

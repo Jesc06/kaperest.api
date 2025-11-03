@@ -9,6 +9,7 @@ namespace KapeRest.Application.DTOs.Admin.CreateMenuItem
     public class UpdateMenuItemDTO
     {
         public int Id { get; set; }
+        public string cashierId { get; set; }   
         public string Item_name { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }

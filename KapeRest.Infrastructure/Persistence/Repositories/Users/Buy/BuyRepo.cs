@@ -225,7 +225,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
                     cashierProduct.Stocks -= totalToDeduct;
                 }
             }
-
             //Mark sale as completed
             sale.Status = "Completed";
             await _context.SaveChangesAsync();
@@ -237,11 +236,11 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
         public async Task<string> VoidItemAsync(int saleId)
         {
             var sale = await _context.SalesTransaction
-        .Include(s => s.SalesItems)
+            .Include(s => s.SalesItems)
             .ThenInclude(i => i.MenuItem)
-                .ThenInclude(m => m.MenuItemProducts)
-                    .ThenInclude(mp => mp.ProductOfSupplier)
-        .FirstOrDefaultAsync(s => s.Id == saleId);
+            .ThenInclude(m => m.MenuItemProducts)
+            .ThenInclude(mp => mp.ProductOfSupplier)
+            .FirstOrDefaultAsync(s => s.Id == saleId);
 
             if (sale == null)
                 return "Sale not found";
