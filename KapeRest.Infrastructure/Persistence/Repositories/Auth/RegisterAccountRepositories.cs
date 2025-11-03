@@ -8,7 +8,6 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.AspNetCore.Identity;
 using KapeRest.Application.DTOs.Auth;
 using Microsoft.Extensions.Configuration;
-using KapeRest.Application.Interfaces.Jwt;
 using KapeRest.Application.DTOs.Jwt;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

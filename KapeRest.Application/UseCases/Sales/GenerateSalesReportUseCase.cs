@@ -1,5 +1,5 @@
-﻿using KapeRest.Application.Interfaces.PdfService;
-using KapeRest.Application.Interfaces.Users.Sales;
+﻿using KapeRest.Application.Interfaces.Cashiers.Sales;
+using KapeRest.Application.Interfaces.PdfService;
 using System;
 using System.Collections.Generic;
 using System.Linq;

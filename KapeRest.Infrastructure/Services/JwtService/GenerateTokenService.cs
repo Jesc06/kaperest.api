@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KapeRest.Application.Interfaces.Jwt;
 using Microsoft.Extensions.Configuration;
 using KapeRest.Application.DTOs.Jwt;
 using System.Security.Claims;
@@ -12,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Runtime.Intrinsics.Arm;
 using System.Net.Http.Headers;
+using KapeRest.Application.Interfaces.Auth;
 
 namespace KapeRest.Infrastructures.Services.JwtService
 {
