@@ -39,6 +39,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             Stocks = addProduct.Stocks,
             Units = addProduct.Units,
             SupplierId = addProduct.SupplierId,
+            CashierId = addProduct.CashierId,
+            BranchId = addProduct.BranchId,
           };
           
           await _context.Products.AddAsync(add);
