@@ -23,6 +23,9 @@ namespace KapeRest.Domain.Entities.InventoryEntities
         public int SupplierId { get; set; }
         public AddSupplier Supplier { get; set; }
 
+        public string CashierId { get; set; }
+        public int? BranchId { get; set; }
+
         public ICollection<MenuItemProduct> MenuItemProducts { get; set; } = new List<MenuItemProduct>();
     }
 }

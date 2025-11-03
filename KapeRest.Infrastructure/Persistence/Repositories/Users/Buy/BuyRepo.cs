@@ -23,14 +23,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
 
         public async Task<string> BuyMenuItemAsync(BuyMenuItemDTO buy)
         {
-            //Get cashier info
+            // Get cashier info
             var cashier = await _context.UsersIdentity
                 .FirstOrDefaultAsync(u => u.Id == buy.CashierId);
 
             if (cashier == null)
                 return "Cashier not found";
 
-            //Get menu item
+            // Get menu item
             var menuItem = await _context.MenuItems
                 .Include(m => m.MenuItemProducts)
                     .ThenInclude(mp => mp.ProductOfSupplier)
@@ -39,30 +39,35 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
             if (menuItem == null)
                 return "Menu item not found";
 
-            //Deduct stock
+            // Deduct stocks (based on cashier)
             foreach (var itemProduct in menuItem.MenuItemProducts)
             {
-                var product = itemProduct.ProductOfSupplier;
+                //Find the specific cashier’s product stock
+                var product = await _context.Products
+                    .FirstOrDefaultAsync(p =>
+                        p.ProductName == itemProduct.ProductOfSupplier.ProductName &&
+                        p.CashierId == buy.CashierId);
+
+                if (product == null)
+                    return $"No stock found for {itemProduct.ProductOfSupplier.ProductName} for this cashier.";
+
                 var totalToDeduct = itemProduct.QuantityUsed * buy.Quantity;
 
                 if (product.Stocks < totalToDeduct)
-                    return $"Not enough stock for {product.ProductName}";
+                    return $"Not enough stock for {product.ProductName} (Cashier: {cashier.UserName})";
 
                 product.Stocks -= totalToDeduct;
             }
 
-            //Compute totals
+            // Compute totals
             decimal subtotal = menuItem.Price * buy.Quantity;
-
-            // Convert the raw percent values into decimals
             decimal taxRate = buy.Tax / 100m;
             decimal discountRate = buy.DiscountPercent / 100m;
-
             decimal tax = subtotal * taxRate;
             decimal discount = subtotal * discountRate;
             decimal total = subtotal + tax - discount;
 
-            //Save to SalesTransaction (linked to cashier + branch)
+            // Save to SalesTransaction (linked to cashier + branch)
             var sale = new SalesTransactionEntities
             {
                 CashierId = cashier.Id,

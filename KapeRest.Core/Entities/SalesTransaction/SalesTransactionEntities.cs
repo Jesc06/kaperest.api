@@ -15,7 +15,7 @@ namespace KapeRest.Core.Entities.SalesTransaction
         public string CashierId { get; set; } = string.Empty;  
         public int? BranchId { get; set; }                    
 
-        public decimal Subtotal { get; set; }
+        public decimal Subtotal { get; set; }                   
         public decimal Tax { get; set; }
         public decimal Discount { get; set; }
         public decimal Total { get; set; }

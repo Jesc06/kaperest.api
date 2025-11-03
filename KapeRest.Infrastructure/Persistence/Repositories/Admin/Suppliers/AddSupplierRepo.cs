@@ -101,6 +101,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             var suppliers = await _context.Suppliers
                 .Select(s => new
                 {
+                    s.Id,
                     s.SupplierName,
                     s.ContactPerson,
                     s.PhoneNumber,
