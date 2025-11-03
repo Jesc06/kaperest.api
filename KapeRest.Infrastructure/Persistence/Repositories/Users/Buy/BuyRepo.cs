@@ -86,7 +86,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
             return $"Purchase successful (Receipt #{sale.ReceiptNumber})\nSubtotal:{subtotal}\nTax:{tax}\nDiscount:{discount}\nTotal:{total}";
         }
 
-        
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy) {
             var cashier = await _context.UsersIdentity
                     .FirstOrDefaultAsync(u => u.Id == buy.CashierId);
@@ -132,37 +131,153 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Users.Buy
             return $"Transaction held (Hold #{transaction.Id})";
         }
 
+
+        public async Task<string> UpdateHeldTransaction(UpdateHoldTransaction update)
+        {
+            var transaction = await _context.SalesTransaction
+             .FirstOrDefaultAsync(t => t.Id == update.SalesTransactionID && t.Status == "Hold");
+
+            if (transaction == null)
+                return "Held transaction not found";
+
+            var saleItem = await _context.SalesItems
+                .FirstOrDefaultAsync(s => s.SalesTransactionId == transaction.Id);
+
+            if (saleItem == null)
+                return "Sale item not found for this transaction";
+
+            var menuItem = await _context.MenuItems
+                .FirstOrDefaultAsync(m => m.Id == saleItem.MenuItemId);
+
+            if (menuItem == null)
+                return "Menu item not found";
+
+            // Recalculate
+            var subtotal = menuItem.Price * update.Quantity;
+            var tax = subtotal * (update.Tax / 100m);
+            var discount = subtotal * (update.DiscountPercent / 100m);
+            var total = subtotal + tax - discount;
+
+            // Update transaction fields
+            transaction.Subtotal = subtotal;
+            transaction.Tax = tax;
+            transaction.Discount = discount;
+            transaction.Total = total;
+            transaction.PaymentMethod = update.PaymentMethod ?? transaction.PaymentMethod;
+
+            // Update sale item
+            saleItem.Quantity = update.Quantity;
+            saleItem.UnitPrice = menuItem.Price;
+
+            await _context.SaveChangesAsync();
+
+            return $"Held transaction #{transaction.Id} updated successfully";
+        }
+
+
         public async Task<string> ResumeHoldAsync(int saleId)
         {
+            //Get the sale info
             var sale = await _context.SalesTransaction
-             .FirstOrDefaultAsync(s => s.Id == saleId);
+                .FirstOrDefaultAsync(s => s.Id == saleId);
 
-            if (sale == null) return "Hold not found";
-            if (sale.Status != "Hold") return "Already finalized";
+            if (sale == null)
+                return "Hold not found";
 
+            if (sale.Status != "Hold")
+                return "Already finalized";
+
+            //Get cashier for this sale
+            var cashier = await _context.UsersIdentity
+                .FirstOrDefaultAsync(u => u.Id == sale.CashierId);
+
+            if (cashier == null)
+                return "Cashier not found";
+
+            //Get sale items with menu items + product links
             var saleItems = await _context.SalesItems
                 .Where(i => i.SalesTransactionId == sale.Id)
                 .Include(i => i.MenuItem)
                     .ThenInclude(m => m.MenuItemProducts)
-                    .ThenInclude(mp => mp.ProductOfSupplier)
+                        .ThenInclude(mp => mp.ProductOfSupplier)
                 .ToListAsync();
 
-            // Deduct stocks now that payment is confirmed
+            //Deduct stocks for each product (specific to cashier)
             foreach (var item in saleItems)
             {
-                foreach (var prod in item.MenuItem.MenuItemProducts)
+                foreach (var menuItemProduct in item.MenuItem.MenuItemProducts)
                 {
-                    var totalToDeduct = prod.QuantityUsed * item.Quantity;
-                    if (prod.ProductOfSupplier.Stocks < totalToDeduct)
-                        return $"Not enough stock for {prod.ProductOfSupplier.ProductName}";
-                    prod.ProductOfSupplier.Stocks -= totalToDeduct;
+                    var productName = menuItemProduct.ProductOfSupplier.ProductName;
+                    var totalToDeduct = menuItemProduct.QuantityUsed * item.Quantity;
+
+                    //Find the product stock owned by this cashier
+                    var cashierProduct = await _context.Products
+                        .FirstOrDefaultAsync(p =>
+                            p.ProductName == productName &&
+                            p.CashierId == cashier.Id);
+
+                    if (cashierProduct == null)
+                        return $"No stock record found for {productName} (Cashier: {cashier.UserName})";
+
+                    if (cashierProduct.Stocks < totalToDeduct)
+                        return $"Not enough stock for {productName} (Cashier: {cashier.UserName})";
+
+                    cashierProduct.Stocks -= totalToDeduct;
                 }
             }
 
+            //Mark sale as completed
             sale.Status = "Completed";
             await _context.SaveChangesAsync();
 
             return $"Hold transaction #{sale.Id} finalized successfully.";
+        }
+
+
+        public async Task<string> VoidItemAsync(int saleId)
+        {
+            var sale = await _context.SalesTransaction
+        .Include(s => s.SalesItems)
+            .ThenInclude(i => i.MenuItem)
+                .ThenInclude(m => m.MenuItemProducts)
+                    .ThenInclude(mp => mp.ProductOfSupplier)
+        .FirstOrDefaultAsync(s => s.Id == saleId);
+
+            if (sale == null)
+                return "Sale not found";
+
+            if (sale.Status == "Voided")
+                return "Already voided";
+
+            var cashier = await _context.UsersIdentity.FirstOrDefaultAsync(u => u.Id == sale.CashierId);
+            if (cashier == null)
+                return "Cashier not found";
+
+            foreach (var item in sale.SalesItems)
+            {
+                foreach (var menuItemProduct in item.MenuItem.MenuItemProducts)
+                {
+                    var productName = menuItemProduct.ProductOfSupplier.ProductName;
+                    var totalToReturn = menuItemProduct.QuantityUsed * item.Quantity;
+
+                    // Hanapin yung product stock ng cashier
+                    var cashierProduct = await _context.Products
+                        .FirstOrDefaultAsync(p =>
+                            p.ProductName == productName &&
+                            p.CashierId == cashier.Id);
+
+                    if (cashierProduct != null)
+                    {
+                        // Ibalik yung stock
+                        cashierProduct.Stocks += totalToReturn;
+                    }
+                }
+            }
+
+            sale.Status = "Voided";
+            await _context.SaveChangesAsync();
+
+            return $"Sale #{sale.Id} voided successfully, stocks restored.";
         }
 
 

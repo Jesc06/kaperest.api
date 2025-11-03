@@ -24,11 +24,18 @@ namespace KapeRest.Application.Services.Users.Buy
         {
             return await _buy.HoldTransaction(buy);
         }
+        public async Task<string> UpdateHeldTransaction(UpdateHoldTransaction update)
+        {
+            return await _buy.UpdateHeldTransaction(update);
+        }
         public async Task<string> ResumeHoldAsync(int saleId)
         {
             return await _buy.ResumeHoldAsync(saleId);
         }
-
+        public async Task<string> VoidItemAsync(int saleItemId)
+        {
+            return await _buy.VoidItemAsync(saleItemId);
+        }
         public async Task<string> CancelHoldAsync(int saleId)
         {
             return await _buy.CancelHoldAsync(saleId);
