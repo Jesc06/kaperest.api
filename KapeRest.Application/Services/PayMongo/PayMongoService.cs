@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KapeRest.Application.Interfaces.GeneratePdf
+namespace KapeRest.Application.Services.PayMongo
 {
-    public interface ISalesPdf
+    public class PayMongoService
     {
-        byte[] GeneratePdf<T>(T document);
     }
 }
