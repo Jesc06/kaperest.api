@@ -15,10 +15,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
 {
-    public class AddProductRepo : IInventory
+    public class AddProductRepository : IInventory
     {
         private readonly ApplicationDbContext _context;
-        public AddProductRepo(ApplicationDbContext context)
+        public AddProductRepository(ApplicationDbContext context)
         {
             _context = context;
         }

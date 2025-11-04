@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
 {
-    public class BranchRepo : IBranch
+    public class BranchRepository : IBranch
     {
         private readonly ApplicationDbContext _context;
-        public BranchRepo(ApplicationDbContext context)
+        public BranchRepository(ApplicationDbContext context)
         {
             _context = context;
         }

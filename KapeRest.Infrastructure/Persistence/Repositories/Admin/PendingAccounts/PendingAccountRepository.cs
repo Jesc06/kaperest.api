@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccounts
 {
-    public class PendingAccountRepo : IpendingAccount
+    public class PendingAccountRepository : IpendingAccount
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<UsersIdentity> _userManager;
-        public PendingAccountRepo(ApplicationDbContext context, UserManager<UsersIdentity> userManager)
+        public PendingAccountRepository(ApplicationDbContext context, UserManager<UsersIdentity> userManager)
         {
             _context = context;
             _userManager = userManager;

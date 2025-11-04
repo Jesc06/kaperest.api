@@ -31,7 +31,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                     page.PageColor(Colors.White);
                     page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.SegoeUI));
 
-                    // ---------- HEADER ----------
+                    //header
                     page.Header().Row(row =>
                     {
                         if (System.IO.File.Exists(logoPath))
@@ -50,19 +50,19 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                         });
                     });
 
-                    // ---------- CONTENT ----------
+                    //Content
                     page.Content().PaddingVertical(15).Column(column =>
                     {
-                        // Title
+                        //Title
                         column.Item().AlignCenter().Text($"Sales Report by {role}")
                             .FontSize(20).SemiBold().FontColor(Colors.Brown.Medium);
                         column.Item().PaddingBottom(10);
 
-                        // ---------- TABLE ----------
+                        //Table
                         column.Item().Table(table =>
                         {
                             
-                            // Define columns
+                            //Col
                             table.ColumnsDefinition(columns =>
                             {
                                 columns.ConstantColumn(25);    // #
@@ -130,7 +130,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                             }
                         });
 
-                        // ---------- SUMMARY ----------
+                        //Summary
                         column.Item().PaddingTop(15).Row(row =>
                         {
                             row.RelativeItem().AlignLeft()
@@ -143,7 +143,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                         });
                     });
 
-                    // ---------- FOOTER ----------
+                    // Foooter
                     page.Footer().AlignCenter().Text(x =>
                     {
                         x.Span("© 2025 KapeRest Café — All Rights Reserved")

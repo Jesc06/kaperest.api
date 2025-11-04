@@ -14,10 +14,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
 {
-    public class TaxDiscountRepo : ITaxDiscount
+    public class TaxDiscountRepository : ITaxDiscount
     {
         private readonly ApplicationDbContext _context;
-        public TaxDiscountRepo(ApplicationDbContext context)
+        public TaxDiscountRepository(ApplicationDbContext context)
         {
             _context = context;
         }

@@ -53,25 +53,25 @@ namespace KapeRest.Infrastructure.DependencyInjection
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUser, CurrentUserService>();
 
-            services.AddScoped<IpendingAccount, PendingAccountRepo>();
+            services.AddScoped<IpendingAccount, PendingAccountRepository>();
             services.AddScoped<PendingAccService>();
 
-            services.AddScoped<IInventory, AddProductRepo>();
+            services.AddScoped<IInventory, AddProductRepository>();
             services.AddScoped<AddProductService>();
 
-            services.AddScoped<ISupplier, AddSupplierRepo>();
+            services.AddScoped<ISupplier, AddSupplierRepository>();
             services.AddScoped<AddSupplierService>();
 
-            services.AddScoped<IMenuItem, MenuItemRepo>();
+            services.AddScoped<IMenuItem, MenuItemRepository>();
             services.AddScoped<MenuItemService>();
 
-            services.AddScoped<IBuy, BuyRepo>();
+            services.AddScoped<IBuy, BuyRepository>();
             services.AddScoped<BuyService>();
 
-            services.AddScoped<ITaxDiscount, TaxDiscountRepo>();
+            services.AddScoped<ITaxDiscount, TaxDiscountRepository>();
             services.AddScoped<TaxDiscountService>();
 
-            services.AddScoped<IBranch, BranchRepo>();
+            services.AddScoped<IBranch, BranchRepository>();
             services.AddScoped<BranchService>();
 
             services.AddScoped<ICashierSalesReport, CashierSalesReportRepository>();

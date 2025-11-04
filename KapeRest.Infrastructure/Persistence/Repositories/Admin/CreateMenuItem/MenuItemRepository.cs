@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
 {
-    public class MenuItemRepo : IMenuItem
+    public class MenuItemRepository : IMenuItem
     {
 
         private readonly ApplicationDbContext _context;
-        public MenuItemRepo(ApplicationDbContext context)
+        public MenuItemRepository(ApplicationDbContext context)
         {
             _context = context;
         }

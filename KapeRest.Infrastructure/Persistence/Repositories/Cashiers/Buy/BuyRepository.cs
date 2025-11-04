@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 {
-    public class BuyRepo : IBuy
+    public class BuyRepository : IBuy
     {
         private readonly ApplicationDbContext _context;
-        public BuyRepo(ApplicationDbContext context)
+        public BuyRepository(ApplicationDbContext context)
         {
             _context = context;
         }

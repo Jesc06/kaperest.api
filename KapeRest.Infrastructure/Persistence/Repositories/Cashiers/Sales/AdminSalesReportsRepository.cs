@@ -67,7 +67,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
 
         #endregion
 
-
         #region -- Sales Reports (Based on Philippine Local Time) --
 
         public async Task<ICollection<SalesReportDTO>> GetDailySalesReportAsync()

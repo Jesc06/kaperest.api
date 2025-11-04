@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
 {
-    public class AddSupplierRepo : ISupplier
+    public class AddSupplierRepository : ISupplier
     {
         private readonly ApplicationDbContext _context;
-        public AddSupplierRepo(ApplicationDbContext context)
+        public AddSupplierRepository(ApplicationDbContext context)
         {
             _context = context;
         }
