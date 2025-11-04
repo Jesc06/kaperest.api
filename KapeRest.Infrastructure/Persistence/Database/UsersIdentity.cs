@@ -17,6 +17,11 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public int? BranchId { get; set; }
         public BranchEntities? Branch { get; set; }
 
+        //Link Staff → Cashier
+        public string? CashierId { get; set; }
+        public UsersIdentity? Cashier { get; set; }
+
+
         //Jwt refresh token properties
         public string? RefreshTokenHash { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }

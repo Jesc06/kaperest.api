@@ -27,22 +27,34 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
 
         public async Task<string> RegisterPending(PendingAccDTO pending)
         {
-            var alreadyExists = await _context.PendingUserAccount.FirstOrDefaultAsync(x => x.Email == pending.Email);
+            var alreadyExists = await _context.PendingUserAccount
+               .FirstOrDefaultAsync(x => x.Email == pending.Email);
 
-            if(alreadyExists is not null)
-               return "A pending account with this email already exists.";
+            if (alreadyExists is not null)
+                return "A pending account with this email already exists.";
 
-            if(pending.Role == "Cashier")
+            //Validate role rules
+            if (pending.Role == "Cashier")
             {
-                var findExistence = await _context.Branches.FirstOrDefaultAsync(f => f.Id == pending.BranchId);
-                if (findExistence is null)
-                    return "branch is not exist";
+                var findBranch = await _context.Branches
+                    .FirstOrDefaultAsync(f => f.Id == pending.BranchId);
+                if (findBranch is null)
+                    return "Branch does not exist.";
+            }
+            else if (pending.Role == "Staff")
+            {
+                if (string.IsNullOrEmpty(pending.CashierId))
+                    return "Staff must be linked to a cashier.";
+
+                var cashierExists = await _userManager.FindByIdAsync(pending.CashierId);
+                if (cashierExists == null)
+                    return "Cashier does not exist.";
             }
             else
             {
                 pending.BranchId = null;
             }
-           
+
             var pendingUser = new PendingUserAccount
             {
                 FirstName = pending.FirstName,
@@ -52,7 +64,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 Password = pending.Password,
                 Role = pending.Role,
                 Status = "Pending",
-                BranchId = pending.BranchId
+                BranchId = pending.BranchId,
+                CashierId = pending.CashierId //Save Cashier link
             };
 
             _context.PendingUserAccount.Add(pendingUser);
@@ -69,8 +82,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             });
 
             await _context.SaveChangesAsync();
-
-            return "Successfully registered pending accounts!";
+            return "Successfully registered pending account!";
         }
 
         public async Task<string> ApprovePendingAccount(int id, string username, string role)
@@ -78,9 +90,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             var pending = await _context.PendingUserAccount.FindAsync(id);
             if (pending == null)
                 return "Pending account not found.";
-            
-            if(pending.Status is not "Pending")
-                throw new Exception("Account already proceed");
+
+            if (pending.Status is not "Pending")
+                throw new Exception("Account already processed.");
 
             var user = new UsersIdentity
             {
@@ -89,12 +101,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 LastName = pending.LastName,
                 UserName = pending.Email,
                 Email = pending.Email,
-                BranchId = pending.BranchId
+                BranchId = pending.BranchId,
+                //assign Cashier link if Staff
+                CashierId = pending.Role == "Staff" ? pending.CashierId : null
             };
 
             var result = await _userManager.CreateAsync(user, pending.Password);
-            if(!result.Succeeded)
-                return "Failed to create user account. already exist username";
+            if (!result.Succeeded)
+                return "Failed to create user account. Already exists.";
 
             await _userManager.AddToRoleAsync(user, pending.Role);
 
@@ -140,21 +154,22 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
         public async Task<ICollection> GetPendingAccounts()
         {
             var list = await _context.PendingUserAccount
-            .Include(p => p.Branch)
-            .Select(f => new
-            {
-                f.Id,
-                f.FirstName,
-                f.LastName,
-                f.Email,
-                f.Role,
-                f.Status,
-                Branch = new
-                {
-                    f.Branch.BranchName,
-                    f.Branch.Location
-                }
-            }).ToListAsync();
+               .Include(p => p.Branch)
+               .Select(f => new
+               {
+                   f.Id,
+                   f.FirstName,
+                   f.LastName,
+                   f.Email,
+                   f.Role,
+                   f.Status,
+                   f.CashierId,
+                   Branch = new
+                   {
+                       f.Branch.BranchName,
+                       f.Branch.Location
+                   }
+               }).ToListAsync();
 
             return list;
         }

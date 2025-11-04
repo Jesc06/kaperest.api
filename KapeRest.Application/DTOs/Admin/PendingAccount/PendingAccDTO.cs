@@ -15,5 +15,8 @@ namespace KapeRest.Application.DTOs.Admin.PendingAccount
         public string Password { get; set; }
         public string Role { get; set; }
         public int? BranchId { get; set; }
+
+        //Link to Cashier for Staff Accounts
+        public string? CashierId { get; set; }
     }
 }

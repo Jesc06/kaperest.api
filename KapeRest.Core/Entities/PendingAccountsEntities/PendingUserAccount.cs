@@ -19,7 +19,10 @@ namespace KapeRest.Domain.Entities.PendingAccounts
         public string Status { get; set; } = "Pending"; 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public int? BranchId { get; set; }   // foreign key
-        public BranchEntities? Branch { get; set; }   // navigation (optional but helpful)
+        public int? BranchId { get; set; }
+        public BranchEntities? Branch { get; set; }
+
+        //Staff to Cashier link
+        public string? CashierId { get; set; }
     }
 }
