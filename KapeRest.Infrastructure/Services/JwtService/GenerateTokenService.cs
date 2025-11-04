@@ -45,6 +45,9 @@ namespace KapeRest.Infrastructures.Services.JwtService
             if (!string.IsNullOrEmpty(payload.cashierId))//ito ay option nilagay ko lang for features na gusto ko pero in by default alisin na ito
                 claims.Add(new Claim("cashierId", payload.cashierId));
 
+            if(payload.branchId != null)//ito ay option nilagay ko lang for features na gusto ko pero in by default alisin na ito
+                claims.Add(new Claim("branchId", payload.branchId.ToString()!));
+
             if (payload.roles != null)
                 claims.AddRange(payload.roles.Select(r => new Claim(ClaimTypes.Role, r)));
 

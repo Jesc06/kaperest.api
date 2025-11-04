@@ -1,4 +1,4 @@
-﻿namespace KapeRest.Api.DTOs
+﻿namespace KapeRest.Api.DTOs.MenuItem
 {
     public class MenuItemProductDTOs
     {

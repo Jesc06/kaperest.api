@@ -76,10 +76,11 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             var payload = new JwtPayloadDTO
             {
                 id = user.Id,
-                username = user.UserName,
-                email = user.Email,
+                username = user.UserName!,
+                email = user.Email!,
                 roles = getUserRoles,
-                cashierId = user.CashierId
+                cashierId = user.CashierId,
+                branchId = user.BranchId
             };
 
             var token = _jwtService.CreateToken(payload);

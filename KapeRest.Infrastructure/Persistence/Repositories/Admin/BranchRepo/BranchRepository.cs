@@ -40,19 +40,11 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
         public async Task<object> GetBranches()
         {
             var get = await _context.Branches
-                .Include(b => b.PendingAccounts)
                 .Select(b => new
                 {
+                    b.Id,
                     b.BranchName,
                     b.Location,
-                    PendingAccounts = b.PendingAccounts.Select(p => new
-                    {
-                        p.FirstName,
-                        p.MiddleName,
-                        p.LastName,
-                        p.Email,
-                        p.Role
-                    })
                 }).ToListAsync();
             return get;
         }

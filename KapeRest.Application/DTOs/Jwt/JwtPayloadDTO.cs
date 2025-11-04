@@ -13,5 +13,6 @@ namespace KapeRest.Application.DTOs.Jwt
         public string email { get; set; }
         public IList<string> roles { get; set; }
         public string? cashierId { get; set; }
+        public int? branchId { get; set; }
     }
 }

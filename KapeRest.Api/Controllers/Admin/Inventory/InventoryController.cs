@@ -1,4 +1,5 @@
-﻿using KapeRest.Application.DTOs.Admin.Inventory;
+﻿using KapeRest.Api.DTOs.AddProducts;
+using KapeRest.Application.DTOs.Admin.Inventory;
 using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Domain.Entities.InventoryEntities;
 using Microsoft.AspNetCore.Http;
@@ -18,10 +19,24 @@ namespace KapeRest.Controllers.Admin.Inventory
 
 
         [HttpPost("AddProductsOfSuppliers")]
-        public async Task<ActionResult> AddProductOfSuppliers(CreateProductDTO addProduct)
+        public async Task<ActionResult> AddProductOfSuppliers(InventoryDTO add)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var cashierIDFromJwtClaims = User.FindFirst("cashierId")?.Value;
+            var cashierBranchIdFromJwtClaims = User.FindFirst("branchId")?.Value;
+
+            var addProduct = new CreateProductDTO
+            {
+                ProductName = add.ProductName,
+                CostPrice = add.CostPrice,
+                Stocks = add.Stocks,
+                Units = add.Units,
+                SupplierId = add.SupplierId,
+                CashierId = cashierIDFromJwtClaims!,
+                BranchId = cashierBranchIdFromJwtClaims != null ? int.Parse(cashierBranchIdFromJwtClaims) : null
+            };
 
             var response = await _inventoryService.AddProductOfSuppliers(addProduct);
             return Ok(response);

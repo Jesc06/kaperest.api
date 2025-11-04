@@ -138,6 +138,25 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                     p.CostPrice,
                     p.TransactionDate,
                     p.Supplier.SupplierName,
+                     //branch details
+                     Branch = _context.Branches
+                        .Where(b => b.Id == p.BranchId)
+                        .Select(b => new
+                        {
+                            b.BranchName,
+                            b.Location
+                        })
+                        .FirstOrDefault(),
+                     //cashier details
+                     Cashier = _context.UsersIdentity
+                        .Where(c => c.Id == p.CashierId)
+                        .Select(c => new
+                        {
+                            c.FirstName,
+                            c.LastName,
+                            c.Email
+                        })
+                        .FirstOrDefault()
                  }).ToListAsync();
             return products;
         }
