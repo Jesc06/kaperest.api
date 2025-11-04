@@ -180,6 +180,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             {
                 c.Id,
                 c.UserName,
+                c.BranchId,
                 c.Branch.BranchName,
                 c.Branch.Location
             }).ToListAsync();

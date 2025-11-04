@@ -41,12 +41,16 @@ namespace KapeRest.Infrastructures.Services.JwtService
                 new Claim(ClaimTypes.Email, payload.email ?? ""),
                 new Claim(ClaimTypes.NameIdentifier, payload.id.ToString())
             };
+            #region--Added via modified features not totally needed in generating token--
+            var cashierIdValue = !string.IsNullOrEmpty(payload.cashierId)
+            ? payload.cashierId
+            : payload.id.ToString();//kapag walang cashierID sa payload na naka assign automatic yung Id ng authorized user yung magiging default cashierID
 
-            if (!string.IsNullOrEmpty(payload.cashierId))//ito ay option nilagay ko lang for features na gusto ko pero in by default alisin na ito
-                claims.Add(new Claim("cashierId", payload.cashierId));
+            claims.Add(new Claim("cashierId", cashierIdValue));
 
-            if(payload.branchId != null)//ito ay option nilagay ko lang for features na gusto ko pero in by default alisin na ito
+            if (payload.branchId != null)//ito ay option nilagay ko lang for features na gusto ko pero in by default alisin na ito
                 claims.Add(new Claim("branchId", payload.branchId.ToString()!));
+            #endregion
 
             if (payload.roles != null)
                 claims.AddRange(payload.roles.Select(r => new Claim(ClaimTypes.Role, r)));
