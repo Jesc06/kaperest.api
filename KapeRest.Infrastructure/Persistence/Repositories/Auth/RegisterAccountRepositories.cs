@@ -78,7 +78,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
                 id = user.Id,
                 username = user.UserName,
                 email = user.Email,
-                roles = getUserRoles
+                roles = getUserRoles,
+                cashierId = user.CashierId
             };
 
             var token = _jwtService.CreateToken(payload);

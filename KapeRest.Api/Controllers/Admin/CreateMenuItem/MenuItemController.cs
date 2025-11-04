@@ -40,14 +40,20 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
                 ? new List<MenuItemProductDTO>()
                 : JsonSerializer.Deserialize<List<MenuItemProductDTO>>(dto.ProductsJson);
 
+            var cashierIdFromJWTClaims = User.FindFirst("cashierId")?.Value;//automatic get cashierId from JWT claims
+
+            /*parang ang pinaka purpose ko dito sa cashierID jwt claims ay sa features na staff and cashier mag ka relationship kung
+             baga kapag nag add ako ng item sa staff account automatically kung anong cashier ang naka tali sa staff acc
+             sa cashier acc lang ma access o mapupunta yung created item na menu ng kaperest*/
+
             var appDTO = new CreateMenuItemDTO
             {
                 Item_name = dto.Item_name,
                 Price = dto.Price,
                 Description = dto.Description,
                 Image = ms.ToArray(),
-                Products = products,
-                cashierId = dto.cashierId
+                Products = products!,
+                cashierId = cashierIdFromJWTClaims!
             };
            
             var result = await _menuItemService.CreateMenuItem(appDTO);
