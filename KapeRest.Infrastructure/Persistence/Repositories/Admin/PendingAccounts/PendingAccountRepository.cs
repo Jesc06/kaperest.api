@@ -174,6 +174,18 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             return list;
         }
 
+        public async Task<ICollection> ExistingCashierAccountNavigaiton()
+        {
+            var cashierAccount = await _context.UsersIdentity.Select(c => new
+            {
+                c.Id,
+                c.UserName,
+                c.Branch.BranchName,
+                c.Branch.Location
+            }).ToListAsync();
+           return cashierAccount;
+        }
+
 
     }
 }

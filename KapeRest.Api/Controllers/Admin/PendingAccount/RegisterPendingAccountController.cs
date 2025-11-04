@@ -49,6 +49,14 @@ namespace KapeRest.Controllers.Admin.PendingAccount
             return Ok(pending);
         }
 
+        [HttpGet("ExistingCashierAccount")]
+        public async Task<ActionResult> ExistingCashierAccount()
+        {
+            var result = await _pendingAccService.ExistingCashierAccountNavigaiton();
+            return Ok(result);
+        }
+
+
 
     }
 

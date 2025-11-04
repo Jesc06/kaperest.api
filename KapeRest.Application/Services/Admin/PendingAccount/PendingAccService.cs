@@ -45,6 +45,11 @@ namespace KapeRest.Application.Services.Admin.PendingAcc
             return await _pendingAccount.GetPendingAccounts();
         }
 
+        public async Task<ICollection> ExistingCashierAccountNavigaiton()
+        {
+            var result = await _pendingAccount.ExistingCashierAccountNavigaiton();
+            return result;
+        }
 
     }
 }

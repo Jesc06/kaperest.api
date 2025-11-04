@@ -15,5 +15,6 @@ namespace KapeRest.Application.Interfaces.Admin.PendingAcc
         Task<string> ApprovePendingAccount(int id, string username, string role);
         Task<string> RejectPendingAccount(int id, string username, string role);
         Task<ICollection> GetPendingAccounts();
+        Task<ICollection> ExistingCashierAccountNavigaiton();
     }
 }
