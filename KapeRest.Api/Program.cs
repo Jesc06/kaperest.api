@@ -6,9 +6,10 @@ using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Application.Interfaces.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Application.Interfaces.Auth;
-using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
 using KapeRest.Application.Interfaces.Cashiers.Sales;
+using KapeRest.Application.Interfaces.CurrentUserService;
+using KapeRest.Application.Interfaces.PayMongo;
 using KapeRest.Application.Services.Admin.Branch;
 using KapeRest.Application.Services.Admin.CreateMenuItem;
 using KapeRest.Application.Services.Admin.Inventory;
@@ -22,6 +23,7 @@ using KapeRest.Infrastructure.DependencyInjection;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount;
 using KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales;
+using KapeRest.Infrastructure.Services.PayMongoService;
 using KapeRest.Infrastructures.Persistence.Database;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
 using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
@@ -54,6 +56,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSevices();
 
 Env.Load();
+
+#region--PayMongo Secret Key Injection--
+    var apiKey = Environment.GetEnvironmentVariable("ApiKey");
+    if (string.IsNullOrEmpty(apiKey))
+        throw new Exception("PayMongo API key not found in .env");
+
+    builder.Services.AddScoped<IPayMongo>(provider => new PayMongo(apiKey));
+#endregion
 
 #region --Identity--
 var connectionString = Environment.GetEnvironmentVariable("KapeRest_DB");
