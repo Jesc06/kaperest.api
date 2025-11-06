@@ -25,57 +25,48 @@ namespace KapeRest.Infrastructure.Services.PayMongoService
             if (dto == null) throw new ArgumentNullException(nameof(dto));
             if (dto.Amount <= 0) throw new ArgumentException("Amount must be greater than zero.");
 
-            var client = new RestClient($"{_baseUrl}/checkout_sessions");
+            var client = new RestClient($"{_baseUrl}/sources");
             var request = new RestRequest();
             request.Method = Method.Post;
 
-            //Authorization header using Basic Auth
-            var authToken = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(_secretKey + ":"));
+            var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(_secretKey + ":"));
             request.AddHeader("Authorization", $"Basic {authToken}");
             request.AddHeader("Content-Type", "application/json");
 
-            //Payload with lineitems
             var payload = new
             {
                 data = new
                 {
                     attributes = new
                     {
-                        payment_method_types = new[] { "gcash" },
-                        success_url = "https://github.com/Jesc06/KapeRest.Api/tree/main",
-                        cancel_url = "https://search.yahoo.com/search?fr=mcafee&type=E210US91215G0&p=error",
-                        line_items = new[]
+                        amount = (int)(dto.Amount * 100), // in centavos
+                        currency = "PHP",
+                        type = "gcash",
+                        redirect = new
                         {
-                        new {
-                            name = dto.Description,
-                            amount = (int)(dto.Amount * 100), //convert pesos to centavos
-                            currency = "PHP",
-                            quantity = 1
+                            success = "https://search.yahoo.com/search?fr=mcafee&type=E210US91215G0&p=success",
+                            failed = "https://example.com/failed"
                         }
-                    }
                     }
                 }
             };
 
             request.AddJsonBody(payload);
 
-            //Execute request
             var response = await client.ExecuteAsync(request);
 
             if (!response.IsSuccessful)
                 throw new Exception($"PayMongo error ({response.StatusCode}): {response.Content}");
 
-            if (string.IsNullOrEmpty(response.Content))
-                throw new Exception("PayMongo returned empty response.");
+            dynamic result = JsonConvert.DeserializeObject(response.Content!)!;
+            string checkoutUrl = result?.data?.attributes?.redirect?.checkout_url!;
 
-            //Deserialize response
-            dynamic result = JsonConvert.DeserializeObject(response.Content)!;
-            if (result?.data?.attributes?.checkout_url == null)
+            if (string.IsNullOrEmpty(checkoutUrl))
                 throw new Exception("Checkout URL not found in PayMongo response.");
 
             return new PaymentResultDto
             {
-                CheckoutUrl = result.data.attributes.checkout_url,
+                CheckoutUrl = checkoutUrl,
                 ReferenceId = result.data.id
             };
         }
