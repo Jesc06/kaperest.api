@@ -22,7 +22,7 @@ namespace KapeRest.Api.Controllers.Cashiers.PayMongo
             return Ok(result);  
         }
 
-        [HttpGet("GenerateGcashQrCode")]
+        [HttpGet("GcashQrCode")]
         public ActionResult GenerateGcashQrCode([FromQuery] string checkoutUrl)
         {
             var qrCodeBytes = _pay.GenerateQrCode(checkoutUrl);
