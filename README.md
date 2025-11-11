@@ -1,66 +1,66 @@
-<p align="left">
-  <img src="https://github.com/Jesc06/Images-Sources/blob/main/kape%20logo.png" width="140" alt="KapeRest Logo">
-</p>
+```bash
+# ☕ KapeRest
 
-# KapeRest
+### Full-Stack Café Management System
 
-### A Full-Stack Café Management System  
-An integrated platform combining **Point of Sale** and **Inventory Management** — designed for performance, reliability, and the refined rhythm of modern café operations.
+> Practical. Scalable. Production-ready.
 
----
+KapeRest integrates **Point of Sale**, **Inventory Management**, and **Analytics** into one unified platform.  
+No unnecessary complexity — just a clean, scalable solution for real café operations.
 
-## Overview
+───────────────────────────────────────────────
+## 🧭 Overview
+───────────────────────────────────────────────
 
-**KapeRest** streamlines daily café workflows by uniting transaction handling, stock control, and sales analytics into one cohesive system.  
-Built with scalability and clean architecture principles, it ensures maintainability and readiness for production environments.
+Built with one goal: **make café management efficient without the bloat**.  
+It manages sales, stock, and suppliers through a consistent backend and responsive frontend.  
+The architecture is modular, stable, and designed to scale gracefully.
 
----
-## Core Modules
+───────────────────────────────────────────────
+## ⚙️ Features
+───────────────────────────────────────────────
 
-#### • User Management  
-Role-based authentication with secure account lifecycle handling.
+• **User Management** — Role-based accounts with secure authentication  
+• **Point of Sale (POS)** — Responsive interface for quick transactions  
+• **Payment Integration (GCash)** — Seamless cashless payments  
+• **Branch-Based Cashier System** — Each cashier is branch-bound for precise reporting  
+• **Real-Time Sales Notification** — Live monitoring of every transaction  
+• **Inventory Management** — Auto-updates stock levels and alerts for low items  
+• **Supplier Management** — Centralized supplier and purchase records  
+• **Sales & Analytics** — Generates daily, weekly, and monthly reports  
+• **Transaction History** — Full log with reprint and audit support  
+• **System Configuration** — Adjustable tax, discount, and operation parameters  
 
-#### • Point of Sale (POS)  
-Fast, responsive interface for seamless transaction processing.
+───────────────────────────────────────────────
+## 🧩 Tech Stack
+───────────────────────────────────────────────
 
-#### • Payment Integration (Gcash)  
-Supports secure **Gcash** transactions for cashless and contactless payments.
+| Component     | Technology                              |
+|---------------|------------------------------------------|
+| **Backend**   | ASP.NET Core Web API (Clean Architecture) |
+| **Frontend**  | React (Vite + TypeScript)                |
+| **Database**  | MySQL                                    |
+| **Auth**      | ASP.NET Identity + JWT                   |
 
-#### • Branch-Based Cashier System  
-Each cashier account is tied to a specific branch, ensuring accurate **sales tracking per branch** and centralized analytics for admins.
+───────────────────────────────────────────────
+## 💡 Philosophy
+───────────────────────────────────────────────
 
-#### • Real-Time Sales Notification  
-Instant alerts for completed transactions, allowing managers to monitor ongoing sales activity across branches in real time.
+> “Good software doesn’t hide behind buzzwords.”
 
-#### • Inventory Management  
-Real-time stock tracking with low-stock alerts and automatic updates.
+KapeRest is built around **clarity**, **maintainability**, and **performance** —  
+simple principles that actually work in production.
 
-#### • Supplier Management  
-Centralized supplier database with order tracking and purchase history.
+No overengineering. No magic. Just code that runs.
 
-#### • Sales & Analytics  
-Generates detailed daily, weekly, and monthly reports for data-driven decision-making.
+───────────────────────────────────────────────
+## 🚀 Vision
+───────────────────────────────────────────────
 
-#### • Transaction History  
-Comprehensive sales record access with options for reprint and audit.
+KapeRest doesn’t aim to reinvent POS systems — it aims to **perfect the essentials**.  
+A system both **developers** and **café owners** can trust.  
+It scales cleanly, stays predictable, and remains easy to maintain as your business grows.
 
-#### • System Configuration  
-Fully customizable parameters including taxes, discounts, and operational settings.
-
----
-
-## Technology Stack
-
-| Layer | Technology |
-|-------|-------------|
-| **Backend** | ASP.NET Core Web API (Clean Architecture) |
-| **Frontend** | React (Vite + TypeScript) |
-| **Database** | MySQL |
-| **Authentication** | ASP.NET Identity + JWT |
-
----
-
-## Vision
-
-KapeRest aims to be more than just a POS system — it’s a **foundation for digital café operations**, built to scale with real-world business needs.  
-Every component emphasizes **clarity, maintainability, and user experience**.
+───────────────────────────────────────────────
+# > run dotnet run
+# ✅ System Ready. Brewing Innovation...
