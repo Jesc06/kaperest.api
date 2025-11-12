@@ -149,7 +149,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173")//react port
+            policy.WithOrigins("http://localhost:5174")//react port
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -164,7 +164,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowReactApp");
+    app.UseCors("AllowReactApp");
 
 app.UseStaticFiles();
 
