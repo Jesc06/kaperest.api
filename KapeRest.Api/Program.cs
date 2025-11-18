@@ -67,7 +67,7 @@ Env.Load();
 
 #region --Identity--
 var connectionString = Environment.GetEnvironmentVariable("KapeRest_DB");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddIdentity<UsersIdentity, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -149,7 +149,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5174")//react port
+            policy.WithOrigins("http://localhost:5173")//react port
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });

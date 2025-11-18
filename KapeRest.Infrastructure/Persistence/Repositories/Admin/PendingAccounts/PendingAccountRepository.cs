@@ -74,9 +74,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             {
                 Username = pending.Email,
                 Role = pending.Role,
-                Category = "Authentication",
                 Action = "Pending Account",
-                AffectedEntity = pending.Email,
                 Description = "Processing pending account",
                 Date = DateTime.Now
             });
@@ -118,9 +116,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             {
                 Username = username,
                 Role = role,
-                Category = "Authentication",
                 Action = "Approved Account",
-                AffectedEntity = pending.Email,
                 Description = "Approved pending account successfully registered.",
                 Date = DateTime.Now
             });
@@ -139,9 +135,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
             {
                 Username = username,
                 Role = role,
-                Category = "Authentication",
                 Action = "Rejected Account",
-                AffectedEntity = pending.Email,
                 Description = "Rejected pending account",
                 Date = DateTime.Now
             });
