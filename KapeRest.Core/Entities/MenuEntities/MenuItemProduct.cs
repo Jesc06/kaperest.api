@@ -1,11 +1,12 @@
 ﻿using KapeRest.Domain.Entities.InventoryEntities;
+using KapeRest.Domain.Entities.MenuEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KapeRest.Domain.Entities.MenuEntities
+namespace KapeRest.Core.Entities.MenuEntities
 {
     public class MenuItemProduct
     {

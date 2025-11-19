@@ -50,6 +50,7 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
             {
                 Item_name = dto.Item_name,
                 Price = dto.Price,
+                Category = dto.Category,    
                 Description = dto.Description,
                 Image = ms.ToArray(),
                 Products = products!,
@@ -77,6 +78,7 @@ namespace KapeRest.Controllers.Admin.CreateMenuItem
             {
                 Item_name = dto.Item_name,
                 Price = dto.Price,
+                Category = dto.Category,
                 Description = dto.Description,
                 Image = ms.ToArray(),
                 Products = products,

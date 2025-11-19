@@ -1,5 +1,6 @@
 ﻿using KapeRest.Application.DTOs.Admin.CreateMenuItem;
 using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
+using KapeRest.Core.Entities.MenuEntities;
 using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -27,6 +28,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             {
                 ItemName = dto.Item_name,
                 Price = dto.Price,
+                Category = dto.Category,
                 Description = dto.Description,
                 Image = dto.Image,
                 IsAvailable = dto.IsAvailable,
@@ -67,6 +69,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             // Update fields
             menuItem.ItemName = dto.Item_name;
             menuItem.Price = dto.Price;
+            menuItem.Category = dto.Category;
             menuItem.Description = dto.Description;
             menuItem.Image = dto.Image;
             menuItem.IsAvailable = dto.IsAvailable;

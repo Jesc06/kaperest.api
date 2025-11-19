@@ -1,4 +1,4 @@
-﻿using KapeRest.Domain.Entities.MenuEntities;
+﻿using KapeRest.Core.Entities.MenuEntities;
 using KapeRest.Domain.Entities.SupplierEntities;
 using System;
 using System.Collections.Generic;

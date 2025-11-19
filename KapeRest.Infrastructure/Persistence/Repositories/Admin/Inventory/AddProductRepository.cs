@@ -126,6 +126,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             var products = await _context.Products
                  .Select(p => new
                  {
+                    p.Id,
                     p.ProductName,
                     p.Stocks,
                     p.Units,

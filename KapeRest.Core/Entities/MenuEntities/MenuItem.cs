@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KapeRest.Core.Entities.MenuEntities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace KapeRest.Domain.Entities.MenuEntities
         public int Id { get; set; }
         public string ItemName { get; set; }
         public decimal Price { get; set; }
+        public string Category { get; set; }
         public string Description { get; set; }
         public string IsAvailable { get; set; }   
         public byte[] Image { get; set; }

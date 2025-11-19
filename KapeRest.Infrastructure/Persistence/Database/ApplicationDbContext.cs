@@ -13,6 +13,7 @@ using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Core.Entities.Tax_Rate;
 using KapeRest.Core.Entities.Branch;
 using KapeRest.Core.Entities.SalesTransaction;
+using KapeRest.Core.Entities.MenuEntities;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {
