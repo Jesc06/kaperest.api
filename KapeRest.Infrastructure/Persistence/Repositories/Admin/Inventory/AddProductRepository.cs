@@ -121,11 +121,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             return true;
         }
 
-        public async Task<ICollection> GetAllProducts()
+        public async Task<ICollection> GetAllProducts(string cashierId)
         {
             var products = await _context.Products
-                 .Select(p => new
-                 {
+                .Where(p => p.CashierId == cashierId) 
+                .Select(p => new
+                {
                     p.Id,
                     p.ProductName,
                     p.Stocks,
@@ -133,8 +134,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                     p.CostPrice,
                     p.TransactionDate,
                     p.Supplier.SupplierName,
-                     //branch details
-                     Branch = _context.Branches
+
+                    Branch = _context.Branches
                         .Where(b => b.Id == p.BranchId)
                         .Select(b => new
                         {
@@ -142,8 +143,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                             b.Location
                         })
                         .FirstOrDefault(),
-                     //cashier details
-                     Cashier = _context.UsersIdentity
+
+                    Cashier = _context.UsersIdentity
                         .Where(c => c.Id == p.CashierId)
                         .Select(c => new
                         {
@@ -152,7 +153,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
                             c.Email
                         })
                         .FirstOrDefault()
-                 }).ToListAsync();
+                })
+                .ToListAsync();
+
             return products;
         }
 

@@ -22,41 +22,44 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
         {
             _context = context;
         }
-        public async Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto)
-        {
-            var menuItem = new MenuItem
-            {
-                ItemName = dto.Item_name,
-                Price = dto.Price,
-                Category = dto.Category,
-                Description = dto.Description,
-                Image = dto.Image,
-                IsAvailable = dto.IsAvailable,
-                CashierId = dto.cashierId,
-                BranchId = null // or get from cashier repo
-            };
-
-            foreach (var product in dto.Products)
-            {
-                // Only link product if it belongs to this cashier
-                var productExists = await _context.Products
-                    .AnyAsync(p => p.Id == product.ProductOfSupplierId && p.CashierId == dto.cashierId);
-
-                if (!productExists)
-                    throw new Exception($"Product {product.ProductOfSupplierId} does not belong to this cashier");
-
-                menuItem.MenuItemProducts.Add(new MenuItemProduct
+                public async Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto)
                 {
-                    ProductOfSupplierId = product.ProductOfSupplierId,
-                    QuantityUsed = product.QuantityUsed
-                });
-            }
+                    var menuItem = new MenuItem
+                    {
+                        ItemName = dto.Item_name,
+                        Price = dto.Price,
+                        Category = dto.Category,
+                        Description = dto.Description,
+                        Image = dto.Image,
+                        IsAvailable = dto.IsAvailable,
+                        CashierId = dto.cashierId,
+                        BranchId = null
+                    };
 
-            _context.MenuItems.Add(menuItem);
-            await _context.SaveChangesAsync();
+                    // Only validate products if there are any
+                    if (dto.Products != null && dto.Products.Count > 0)
+                    {
+                        foreach (var product in dto.Products)
+                        {
+                            var productExists = await _context.Products
+                                .AnyAsync(p => p.Id == product.ProductOfSupplierId && p.CashierId == dto.cashierId);
 
-            return menuItem;
-        }
+                            if (!productExists)
+                                throw new Exception($"Product {product.ProductOfSupplierId} does not belong to this cashier");
+
+                            menuItem.MenuItemProducts.Add(new MenuItemProduct
+                            {
+                                ProductOfSupplierId = product.ProductOfSupplierId,
+                                QuantityUsed = product.QuantityUsed
+                            });
+                        }
+                    }
+
+                    _context.MenuItems.Add(menuItem);
+                    await _context.SaveChangesAsync();
+
+                    return menuItem;
+                }
 
         public async Task<MenuItem> UpdateMenuItemAsync(UpdateMenuItemDTO dto)
         {

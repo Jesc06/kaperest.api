@@ -63,7 +63,15 @@ namespace KapeRest.Controllers.Admin.Inventory
         [HttpGet("GetAllProducts")]
         public async Task<ActionResult> GetAllProducts()
         {
-            var products = await _inventoryService.GetAllProducts();
+            var cashierIdFromJwtClaims = User.FindFirst("cashierId")?.Value;
+
+            if (string.IsNullOrEmpty(cashierIdFromJwtClaims))
+            {
+                return Unauthorized(new { message = "CashierId not found in token" });
+            }
+
+            // Pass cashierId to service to filter products
+            var products = await _inventoryService.GetAllProducts(cashierIdFromJwtClaims);
             return Ok(products);
         }
 
