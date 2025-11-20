@@ -26,6 +26,7 @@ namespace KapeRest.Controllers.Admin.Inventory
 
             var cashierIDFromJwtClaims = User.FindFirst("cashierId")?.Value;
             var cashierBranchIdFromJwtClaims = User.FindFirst("branchId")?.Value;
+            var userIdFromJwt = User.FindFirst("uid")?.Value;
 
             var addProduct = new CreateProductDTO
             {
@@ -35,7 +36,8 @@ namespace KapeRest.Controllers.Admin.Inventory
                 Units = add.Units,
                 SupplierId = add.SupplierId,
                 CashierId = cashierIDFromJwtClaims!,
-                BranchId = cashierBranchIdFromJwtClaims != null ? int.Parse(cashierBranchIdFromJwtClaims) : null
+                BranchId = cashierBranchIdFromJwtClaims != null ? int.Parse(cashierBranchIdFromJwtClaims) : null,
+                UserId = userIdFromJwt!
             };
 
             var response = await _inventoryService.AddProductOfSuppliers(addProduct);
@@ -63,15 +65,14 @@ namespace KapeRest.Controllers.Admin.Inventory
         [HttpGet("GetAllProducts")]
         public async Task<ActionResult> GetAllProducts()
         {
-            var cashierIdFromJwtClaims = User.FindFirst("cashierId")?.Value;
+            var userIdFromJwtClaims = User.FindFirst("uid")?.Value;
 
-            if (string.IsNullOrEmpty(cashierIdFromJwtClaims))
+            if (string.IsNullOrEmpty(userIdFromJwtClaims))
             {
-                return Unauthorized(new { message = "CashierId not found in token" });
+                return Unauthorized(new { message = "User ID not found in token" });
             }
 
-            // Pass cashierId to service to filter products
-            var products = await _inventoryService.GetAllProducts(cashierIdFromJwtClaims);
+            var products = await _inventoryService.GetAllProducts(userIdFromJwtClaims);
             return Ok(products);
         }
 

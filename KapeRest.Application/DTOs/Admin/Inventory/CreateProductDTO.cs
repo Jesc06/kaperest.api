@@ -18,5 +18,7 @@ namespace KapeRest.Application.DTOs.Admin.Inventory
         public int SupplierId { get; set; }
         public string CashierId { get; set; } = string.Empty;
         public int? BranchId { get; set; }
+
+        public string UserId { get; set; }
     }
 }

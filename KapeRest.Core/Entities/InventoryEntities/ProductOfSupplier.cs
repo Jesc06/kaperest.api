@@ -27,5 +27,7 @@ namespace KapeRest.Domain.Entities.InventoryEntities
         public int? BranchId { get; set; }
 
         public ICollection<MenuItemProduct> MenuItemProducts { get; set; } = new List<MenuItemProduct>();
+
+        public string UserId { get; set; } 
     }
 }

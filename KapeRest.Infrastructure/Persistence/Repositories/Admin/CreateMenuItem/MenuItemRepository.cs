@@ -41,13 +41,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                     {
                         foreach (var product in dto.Products)
                         {
-                            var productExists = await _context.Products
-                                .AnyAsync(p => p.Id == product.ProductOfSupplierId && p.CashierId == dto.cashierId);
+                    var productExists = await _context.Products
+                        .AnyAsync(p => p.Id == product.ProductOfSupplierId);
 
-                            if (!productExists)
-                                throw new Exception($"Product {product.ProductOfSupplierId} does not belong to this cashier");
-
-                            menuItem.MenuItemProducts.Add(new MenuItemProduct
+                    if (!productExists)
+                        throw new Exception($"Product {product.ProductOfSupplierId} not found");
+                    menuItem.MenuItemProducts.Add(new MenuItemProduct
                             {
                                 ProductOfSupplierId = product.ProductOfSupplierId,
                                 QuantityUsed = product.QuantityUsed
@@ -64,7 +63,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
         public async Task<MenuItem> UpdateMenuItemAsync(UpdateMenuItemDTO dto)
         {
             var menuItem = await _context.MenuItems
-        .FirstOrDefaultAsync(m => m.Id == dto.Id && m.CashierId == dto.cashierId);
+                .FirstOrDefaultAsync(m => m.Id == dto.Id && m.CashierId == dto.cashierId);
 
             if (menuItem == null)
                 throw new KeyNotFoundException("Menu item not found or does not belong to this cashier");

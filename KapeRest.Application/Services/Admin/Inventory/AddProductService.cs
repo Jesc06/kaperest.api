@@ -54,10 +54,11 @@ namespace KapeRest.Application.Services.Admin.Inventory
             return await _inventory.DeleteProductOfSuppliers(currentActiveUser,role, id);
         }
 
-        public async Task<ICollection> GetAllProducts(string cashierId)
+        public async Task<ICollection> GetAllProducts(string userId)
         {
-            return await _inventory.GetAllProducts(cashierId);
+            return await _inventory.GetAllProducts(userId);
         }
+
 
     }
 }
