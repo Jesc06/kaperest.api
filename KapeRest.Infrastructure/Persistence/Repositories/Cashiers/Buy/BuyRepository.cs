@@ -86,22 +86,31 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
         }
 
 
-        public async Task<string> HoldTransaction(BuyMenuItemDTO buy) {
+        public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
+        {
+            // Get cashier info
             var cashier = await _context.UsersIdentity
-                    .FirstOrDefaultAsync(u => u.Id == buy.CashierId);
+                .FirstOrDefaultAsync(u => u.Id == buy.CashierId);
 
             if (cashier == null)
-                return "Cashier not found";
+                throw new Exception("Cashier not found");
 
-            var menuItem = await _context.MenuItems.FirstOrDefaultAsync(m => m.Id == buy.MenuItemId);
+            // Get menu item
+            var menuItem = await _context.MenuItems
+                .Include(m => m.MenuItemProducts)
+                    .ThenInclude(mp => mp.ProductOfSupplier)
+                .FirstOrDefaultAsync(m => m.Id == buy.MenuItemId);
+
             if (menuItem == null)
-                return "Menu item not found";
+                throw new Exception("Menu item not found");
 
+            // Calculate totals
             var subtotal = menuItem.Price * buy.Quantity;
             var tax = subtotal * (buy.Tax / 100m);
             var discount = subtotal * (buy.DiscountPercent / 100m);
             var total = subtotal + tax - discount;
 
+            // Save transaction with "Hold" status
             var transaction = new SalesTransactionEntities
             {
                 CashierId = cashier.Id,
@@ -128,7 +137,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             _context.SalesItems.Add(saleItem);
             await _context.SaveChangesAsync();
 
-            return $"Transaction held (Hold #{transaction.Id})";
+            return $"Transaction held (Hold #{transaction.Id})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
         }
 
 

@@ -57,18 +57,28 @@ namespace KapeRest.Controllers.Users.Buy
 
             var cashierIdFromJWTClaims = User.FindFirst("cashierId")?.Value;
 
-            var hold = new BuyMenuItemDTO
+            if (string.IsNullOrEmpty(cashierIdFromJWTClaims))
+                return Unauthorized(new { error = "Cashier ID not found in token" });
+
+            var holdDTO = new BuyMenuItemDTO
             {
                 MenuItemId = buy.MenuItemId,
                 Quantity = buy.Quantity,
                 DiscountPercent = buy.DiscountPercent,
                 Tax = buy.Tax,
                 PaymentMethod = buy.PaymentMethod,
-                CashierId = cashierIdFromJWTClaims!
+                CashierId = cashierIdFromJWTClaims
             };
 
-            var result = await _buyService.HoldTransaction(hold);
-            return Ok(result);
+            try
+            {
+                var result = await _buyService.HoldTransaction(holdDTO);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpPut("UpdateHoldTransaction")]
