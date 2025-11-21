@@ -21,6 +21,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             _context = context;
         }
 
+
         public async Task<string> BuyMenuItemAsync(BuyMenuItemDTO buy)
         {
             // Get cashier info
@@ -28,7 +29,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 .FirstOrDefaultAsync(u => u.Id == buy.CashierId);
 
             if (cashier == null)
-                return "Cashier not found";
+                throw new Exception("Cashier not found");
 
             // Get menu item
             var menuItem = await _context.MenuItems
@@ -37,24 +38,22 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 .FirstOrDefaultAsync(m => m.Id == buy.MenuItemId);
 
             if (menuItem == null)
-                return "Menu item not found";
+                throw new Exception("Menu item not found");
 
-            // Deduct stocks (based on cashier)
+            // Deduct stocks
             foreach (var itemProduct in menuItem.MenuItemProducts)
             {
-                //Find the specific cashier’s product stock
+                // ✅ FIXED: Just get the product by ID, no CashierId check
                 var product = await _context.Products
-                    .FirstOrDefaultAsync(p =>
-                        p.ProductName == itemProduct.ProductOfSupplier.ProductName &&
-                        p.CashierId == buy.CashierId);
+                    .FirstOrDefaultAsync(p => p.Id == itemProduct.ProductOfSupplierId);
 
                 if (product == null)
-                    return $"No stock found for {itemProduct.ProductOfSupplier.ProductName} for this cashier.";
+                    throw new Exception($"Product {itemProduct.ProductOfSupplier.ProductName} not found in inventory.");
 
                 var totalToDeduct = itemProduct.QuantityUsed * buy.Quantity;
 
                 if (product.Stocks < totalToDeduct)
-                    return $"Not enough stock for {product.ProductName} (Cashier: {cashier.UserName})";
+                    throw new Exception($"Insufficient stock for {product.ProductName}. Available: {product.Stocks}, Required: {totalToDeduct}");
 
                 product.Stocks -= totalToDeduct;
             }
@@ -67,7 +66,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             decimal discount = subtotal * discountRate;
             decimal total = subtotal + tax - discount;
 
-            // Save to SalesTransaction (linked to cashier + branch)
+            // Save to SalesTransaction
             var sale = new SalesTransactionEntities
             {
                 CashierId = cashier.Id,
@@ -83,8 +82,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             _context.SalesTransaction.Add(sale);
             await _context.SaveChangesAsync();
 
-            return $"Purchase successful (Receipt #{sale.ReceiptNumber})\nSubtotal:{subtotal}\nTax:{tax}\nDiscount:{discount}\nTotal:{total}";
+            return $"Purchase successful (Receipt #{sale.ReceiptNumber})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
         }
+
 
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy) {
             var cashier = await _context.UsersIdentity

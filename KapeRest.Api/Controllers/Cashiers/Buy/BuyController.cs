@@ -20,10 +20,13 @@ namespace KapeRest.Controllers.Users.Buy
         [HttpPost("Buy")]
         public async Task<ActionResult> Buy(BuyDTO buy)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var cashierIdFromJWTClaims = User.FindFirst("cashierId")?.Value;
+
+            if (string.IsNullOrEmpty(cashierIdFromJWTClaims))
+                return Unauthorized(new { error = "Cashier ID not found in token" });
 
             var buymenuItemDTO = new BuyMenuItemDTO
             {
@@ -32,10 +35,18 @@ namespace KapeRest.Controllers.Users.Buy
                 DiscountPercent = buy.DiscountPercent,
                 Tax = buy.Tax,
                 PaymentMethod = buy.PaymentMethod,
-                CashierId = cashierIdFromJWTClaims!
+                CashierId = cashierIdFromJWTClaims
             };
-            var result = await _buyService.BuyItem(buymenuItemDTO);
-            return Ok(result);
+
+            try
+            {
+                var result = await _buyService.BuyItem(buymenuItemDTO);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpPost("HoldTransaction")]
