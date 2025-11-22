@@ -33,7 +33,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                               select new
                               {
                                   s.Id,
-                                  s.ReceiptNumber,
+                                  s.MenuItemName,
                                   s.DateTime,
                                   s.Subtotal,
                                   s.Tax,
@@ -43,6 +43,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                               }).ToListAsync();
             return data;
         }
+
 
         public async Task<ICollection> GetAllSalesByAdmin()
         {
@@ -57,7 +58,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                                    BranchName = u.Branch != null ? u.Branch.BranchName : "N/A",
                                    BranchLocation = u.Branch != null ? u.Branch.Location : "N/A",
                                    Email = u.Email != null ? u.Email : "N/A",
-                                   s.ReceiptNumber,
+                                   s.MenuItemName,
                                    s.DateTime,
                                    s.Subtotal,
                                    s.Tax,
@@ -68,6 +69,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
 
             return sales;
         }
+
+
 
 
     }

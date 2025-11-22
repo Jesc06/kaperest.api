@@ -54,7 +54,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                                   Email = u.Email,
                                   BranchName = bj != null ? bj.BranchName : "N/A",
                                   BranchLocation = bj != null ? bj.Location : "N/A",
-                                  ReceiptNumber = s.ReceiptNumber,
+                                  MenuItemName = s.MenuItemName,
                                   DateTime = s.DateTime,
                                   Subtotal = s.Subtotal,
                                   Tax = s.Tax,
@@ -66,7 +66,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             return data;
         }
         #endregion
-
 
         #region -- Sales Reports Per Cashier (Based on Philippine Local Time) --
         public async Task<ICollection<SalesReportDTO>> GetDailySalesReportByCashierAsync(string cashierId)

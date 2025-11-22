@@ -120,7 +120,7 @@ namespace KapeRest.Infrastructure.Services.PdfServices
                                 table.Cell().Element(CellStyle).Text(s.Email);
                                 table.Cell().Element(CellStyle).Text(s.BranchName);
                                 table.Cell().Element(CellStyle).Text(s.BranchLocation);
-                                table.Cell().Element(CellStyle).Text(s.ReceiptNumber);
+                                table.Cell().Element(CellStyle).Text(s.MenuItemName);
                                 table.Cell().Element(CellStyle).Text(s.DateTime.ToString("MMM dd, yyyy"));
                                 table.Cell().Element(CellStyle).Text(s.Subtotal.ToString("C", new CultureInfo("en-PH")));
                                 table.Cell().Element(CellStyle).Text(s.Tax.ToString("C", new CultureInfo("en-PH")));

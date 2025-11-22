@@ -1,5 +1,6 @@
 ﻿using KapeRest.Application.DTOs.Users.Buy;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,6 @@ namespace KapeRest.Application.Interfaces.Cashiers.Buy
         Task<string> CancelHoldAsync(int saleId);
         Task<string> UpdateHeldTransaction(UpdateHoldTransaction buy);
         Task<string> VoidItemAsync(int saleId);
+        Task<ICollection> GetHoldTransactions(string cashierId);
     }
 }

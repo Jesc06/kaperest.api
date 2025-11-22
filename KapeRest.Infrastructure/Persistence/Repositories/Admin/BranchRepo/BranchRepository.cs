@@ -47,6 +47,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
                     b.Id,
                     b.BranchName,
                     b.Location,
+                    b.Staff,
+                    b.Status
                 }).ToListAsync();
             return get;
         }

@@ -124,5 +124,24 @@ namespace KapeRest.Controllers.Users.Buy
             return Ok(result);
         }
 
+
+        [HttpGet("GetHoldTransactions")]
+        public async Task<ActionResult> GetHoldTransactions(string cashierId)
+        {
+            if (string.IsNullOrEmpty(cashierId))
+                return BadRequest("Cashier ID is required");
+
+            try
+            {
+                var result = await _buyService.GetHoldTransactions(cashierId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
     }
 }

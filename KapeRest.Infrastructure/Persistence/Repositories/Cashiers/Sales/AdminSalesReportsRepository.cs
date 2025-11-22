@@ -53,7 +53,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                                   Email = u.Email,
                                   BranchName = bj != null ? bj.BranchName : "N/A",
                                   BranchLocation = bj != null ? bj.Location : "N/A",
-                                  ReceiptNumber = s.ReceiptNumber,
+                                  MenuItemName = s.MenuItemName,
                                   DateTime = s.DateTime,
                                   Subtotal = s.Subtotal,
                                   Tax = s.Tax,
@@ -96,10 +96,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             var startOfMonth = new DateTime(phNow.Year, phNow.Month, 1);
             var endOfMonth = startOfMonth.AddMonths(1);
             var (startUtc, endUtc) = GetUtcRange(startOfMonth, endOfMonth);
-
             return await GetSalesReportInRangeAsync(startUtc, endUtc);
         }
-
         #endregion
+
     }
 }

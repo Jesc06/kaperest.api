@@ -9,7 +9,7 @@ namespace KapeRest.Core.Entities.SalesTransaction
     public class SalesTransactionEntities
     {
         public int Id { get; set; }
-        public string ReceiptNumber { get; set; } = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+        public string MenuItemName { get; set; } = string.Empty;
         public DateTime DateTime { get; set; } = DateTime.UtcNow;
 
         public string CashierId { get; set; } = string.Empty;  

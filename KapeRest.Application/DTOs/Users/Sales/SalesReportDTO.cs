@@ -14,7 +14,7 @@ namespace KapeRest.Application.DTOs.Users.Sales
         public string Email { get; set; } = string.Empty;
         public string BranchName { get; set; } = string.Empty;
         public string BranchLocation { get; set; } = string.Empty;
-        public string ReceiptNumber { get; set; } = string.Empty;
+        public string MenuItemName { get; set; } = string.Empty;
         public DateTime DateTime { get; set; }
         public decimal Subtotal { get; set; }
         public decimal Tax { get; set; }
