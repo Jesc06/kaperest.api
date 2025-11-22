@@ -1,5 +1,7 @@
 ﻿using KapeRest.Application.DTOs.Admin.PendingAccount;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
+using KapeRest.Application.Interfaces.CurrentUserService;
+using KapeRest.Core.Entities.Branch;
 using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.PendingAccounts;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -12,6 +14,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccounts
 {
@@ -103,6 +106,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 //assign Cashier link if Staff
                 CashierId = pending.Role == "Staff" ? pending.CashierId : null
             };
+
+
+            var branch = await _context.Branches
+                .Where(b => b.Id == pending.BranchId)
+                .FirstOrDefaultAsync();
+
+            branch.Staff = $"{pending.FirstName} {pending.MiddleName} {pending.LastName}";
+            branch.Status = "Active";
+
 
             var result = await _userManager.CreateAsync(user, pending.Password);
             if (!result.Succeeded)

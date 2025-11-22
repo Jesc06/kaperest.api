@@ -14,7 +14,8 @@ namespace KapeRest.Core.Entities.Branch
         public int Id { get; set; }
         public string BranchName { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
-
+        public string? Staff { get; set; } = "N/A";
+        public string? Status { get; set; } = "N/A";
         public ICollection<PendingUserAccount>? PendingAccounts { get; set; }
       
     }

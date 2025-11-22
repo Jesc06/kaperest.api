@@ -29,7 +29,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
             var branch = new BranchEntities
             {
                 BranchName = dto.Name,
-                Location = dto.Location
+                Location = dto.Location,
+                Staff = "N/A",
+                Status = "N/A"
             };
 
             _context.Branches.Add(branch);
@@ -68,6 +70,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
 
             branch.BranchName = dto.Name;
             branch.Location = dto.Location;
+            branch.Staff = dto.Staff;
+            branch.Status = dto.Status;
             await _context.SaveChangesAsync();
             return dto;
         }

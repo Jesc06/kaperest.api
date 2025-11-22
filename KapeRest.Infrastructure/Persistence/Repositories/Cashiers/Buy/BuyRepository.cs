@@ -40,10 +40,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             if (menuItem == null)
                 throw new Exception("Menu item not found");
 
-            //Deduct stocks
+            // Deduct stocks
             foreach (var itemProduct in menuItem.MenuItemProducts)
             {
-                //Just get the product by ID, no CashierId check
+                // Just get the product by ID, no CashierId check
                 var product = await _context.Products
                     .FirstOrDefaultAsync(p => p.Id == itemProduct.ProductOfSupplierId);
 
@@ -55,10 +55,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 if (product.Stocks < totalToDeduct)
                     throw new Exception($"Insufficient stock for {product.ProductName}. Available: {product.Stocks}, Required: {totalToDeduct}");
 
+                //Deduct stock
                 product.Stocks -= totalToDeduct;
+
+                //Mark the entity as modified
+                _context.Products.Update(product);
             }
 
-            //Compute totals
+            // Compute totals
             decimal subtotal = menuItem.Price * buy.Quantity;
             decimal taxRate = buy.Tax / 100m;
             decimal discountRate = buy.DiscountPercent / 100m;
@@ -66,7 +70,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             decimal discount = subtotal * discountRate;
             decimal total = subtotal + tax - discount;
 
-            //Save to SalesTransaction
+            // Save to SalesTransaction
             var sale = new SalesTransactionEntities
             {
                 CashierId = cashier.Id,
@@ -80,11 +84,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             };
 
             _context.SalesTransaction.Add(sale);
+
+            //Save ALL changes (Products + SalesTransaction)
             await _context.SaveChangesAsync();
 
             return $"Purchase successful (Receipt #{sale.ReceiptNumber})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
         }
-
 
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
         {
