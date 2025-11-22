@@ -40,10 +40,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             if (menuItem == null)
                 throw new Exception("Menu item not found");
 
-            // Deduct stocks
+            //Deduct stocks
             foreach (var itemProduct in menuItem.MenuItemProducts)
             {
-                // ✅ FIXED: Just get the product by ID, no CashierId check
+                //Just get the product by ID, no CashierId check
                 var product = await _context.Products
                     .FirstOrDefaultAsync(p => p.Id == itemProduct.ProductOfSupplierId);
 
@@ -58,7 +58,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 product.Stocks -= totalToDeduct;
             }
 
-            // Compute totals
+            //Compute totals
             decimal subtotal = menuItem.Price * buy.Quantity;
             decimal taxRate = buy.Tax / 100m;
             decimal discountRate = buy.DiscountPercent / 100m;
@@ -66,7 +66,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             decimal discount = subtotal * discountRate;
             decimal total = subtotal + tax - discount;
 
-            // Save to SalesTransaction
+            //Save to SalesTransaction
             var sale = new SalesTransactionEntities
             {
                 CashierId = cashier.Id,
@@ -88,14 +88,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
         {
-            // Get cashier info
+            //Get cashier info
             var cashier = await _context.UsersIdentity
                 .FirstOrDefaultAsync(u => u.Id == buy.CashierId);
 
             if (cashier == null)
                 throw new Exception("Cashier not found");
 
-            // Get menu item
+            //Get menu item
             var menuItem = await _context.MenuItems
                 .Include(m => m.MenuItemProducts)
                     .ThenInclude(mp => mp.ProductOfSupplier)
@@ -104,13 +104,13 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             if (menuItem == null)
                 throw new Exception("Menu item not found");
 
-            // Calculate totals
+            //Calculate totals
             var subtotal = menuItem.Price * buy.Quantity;
             var tax = subtotal * (buy.Tax / 100m);
             var discount = subtotal * (buy.DiscountPercent / 100m);
             var total = subtotal + tax - discount;
 
-            // Save transaction with "Hold" status
+            //Save transaction with "Hold" status
             var transaction = new SalesTransactionEntities
             {
                 CashierId = cashier.Id,
@@ -126,7 +126,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             _context.SalesTransaction.Add(transaction);
             await _context.SaveChangesAsync();
 
-            // Save item details
+            //Save item details
             var saleItem = new SalesItemEntities
             {
                 SalesTransactionId = transaction.Id,
@@ -161,13 +161,13 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             if (menuItem == null)
                 return "Menu item not found";
 
-            // Recalculate
+            //Recalculate
             var subtotal = menuItem.Price * update.Quantity;
             var tax = subtotal * (update.Tax / 100m);
             var discount = subtotal * (update.DiscountPercent / 100m);
             var total = subtotal + tax - discount;
 
-            // Update transaction fields
+            //Update transaction fields
             transaction.Subtotal = subtotal;
             transaction.Tax = tax;
             transaction.Discount = discount;
