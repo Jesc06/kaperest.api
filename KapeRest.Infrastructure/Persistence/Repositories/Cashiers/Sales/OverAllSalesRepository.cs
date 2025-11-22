@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
@@ -15,36 +14,42 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<UsersIdentity> _userManager;
-        public OverAllSalesRepository(ApplicationDbContext context, UserManager<UsersIdentity> userManager)
+
+
+    public OverAllSalesRepository(ApplicationDbContext context, UserManager<UsersIdentity> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        // For cashier only
         public async Task<ICollection> GetAllSalesByCashiers(string cashierId)
         {
             var cashier = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == cashierId);
             if (cashier == null)
                 throw new Exception("Cashier not found.");
 
-            var data = await (from s in _context.SalesTransaction
-                              join u in _context.UsersIdentity on s.CashierId equals u.Id
-                              where s.CashierId == cashierId && s.BranchId == u.BranchId
-                              select new
-                              {
-                                  s.Id,
-                                  s.MenuItemName,
-                                  s.DateTime,
-                                  s.Subtotal,
-                                  s.Tax,
-                                  s.Discount,
-                                  s.Total,
-                                  s.Status
-                              }).ToListAsync();
+            var data = await _context.SalesTransaction
+                                     .Where(s => s.CashierId == cashierId)
+                                     .Include(s => s.SalesItems)
+                                     .ThenInclude(si => si.MenuItem)
+                                     .Select(s => new
+                                     {
+                                         s.Id,
+                                         // Combine all item names for this transaction
+                                         MenuItemNames = string.Join(", ", s.SalesItems.Select(si => si.MenuItem.ItemName)),
+                                         s.DateTime,
+                                         s.Subtotal,
+                                         s.Tax,
+                                         s.Discount,
+                                         s.Total,
+                                         s.Status
+                                     }).ToListAsync();
+
             return data;
         }
 
-
+        // Admin method stays unchanged
         public async Task<ICollection> GetAllSalesByAdmin()
         {
             var sales = await (from s in _context.SalesTransaction
@@ -69,9 +74,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
 
             return sales;
         }
-
-
-
-
     }
+
+
+
+
 }
