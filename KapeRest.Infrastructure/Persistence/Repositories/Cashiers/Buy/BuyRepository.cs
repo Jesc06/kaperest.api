@@ -288,6 +288,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
             return holdTransactions;
         }
+
+
     }
 
 

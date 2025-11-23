@@ -36,7 +36,10 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             );
         }
 
-        private async Task<ICollection<SalesReportDTO>> GetSalesReportByCashierInRangeAsync(string cashierId, DateTime startUtc, DateTime endUtc)
+        private async Task<ICollection<SalesReportDTO>> GetSalesReportByCashierInRangeAsync(
+            string cashierId,
+            DateTime startUtc,
+            DateTime endUtc)
         {
             var data = await (from s in _context.SalesTransaction
                               join u in _context.UsersIdentity on s.CashierId equals u.Id
@@ -45,7 +48,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                               where s.CashierId == cashierId &&
                                     s.DateTime >= startUtc &&
                                     s.DateTime < endUtc &&
-                                    s.Status == "Completed" 
+                                    s.Status == "Completed"
                               select new SalesReportDTO
                               {
                                   Id = s.Id,
@@ -67,7 +70,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
         }
         #endregion
 
-        #region -- Sales Reports Per Cashier (Based on Philippine Local Time) --
+        #region -- Sales Reports Per Cashier (Philippine Time) --
+
         public async Task<ICollection<SalesReportDTO>> GetDailySalesReportByCashierAsync(string cashierId)
         {
             var phNow = GetPhilippineNow();
@@ -78,13 +82,15 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             return await GetSalesReportByCashierInRangeAsync(cashierId, startUtc, endUtc);
         }
 
-        public async Task<ICollection<SalesReportDTO>> GetWeeklySalesReportByCashierAsync(string cashierId)
+        // ⬇️ WEEKLY → YEARLY
+        public async Task<ICollection<SalesReportDTO>> GetYearlySalesReportByCashierAsync(string cashierId)
         {
             var phNow = GetPhilippineNow();
-            int diff = (7 + (phNow.DayOfWeek - DayOfWeek.Monday)) % 7;
-            var startOfWeek = phNow.AddDays(-diff).Date;
-            var endOfWeek = startOfWeek.AddDays(7);
-            var (startUtc, endUtc) = GetUtcRange(startOfWeek, endOfWeek);
+
+            var startOfYear = new DateTime(phNow.Year, 1, 1);
+            var endOfYear = startOfYear.AddYears(1);
+
+            var (startUtc, endUtc) = GetUtcRange(startOfYear, endOfYear);
 
             return await GetSalesReportByCashierInRangeAsync(cashierId, startUtc, endUtc);
         }

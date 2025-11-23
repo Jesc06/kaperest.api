@@ -12,7 +12,7 @@ namespace KapeRest.Application.Interfaces.Cashiers.Sales
     public interface ICashierSalesReport
     {
         Task<ICollection<SalesReportDTO>> GetDailySalesReportByCashierAsync(string cashierId);
-        Task<ICollection<SalesReportDTO>> GetWeeklySalesReportByCashierAsync(string cashierId);
+        Task<ICollection<SalesReportDTO>> GetYearlySalesReportByCashierAsync(string cashierId);
         Task<ICollection<SalesReportDTO>> GetMonthlySalesReportByCashierAsync(string cashierId);
     }
 }

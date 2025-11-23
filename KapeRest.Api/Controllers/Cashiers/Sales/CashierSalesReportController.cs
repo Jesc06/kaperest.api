@@ -26,10 +26,10 @@ namespace KapeRest.Api.Controllers.Users.Sales
             var result = await _salesService.DailyReport(cashierId);
             return Ok(result);
         }
-        [HttpGet("CashierWeeklySales")]
-        public async Task<ActionResult> GetCashierWeeklySalesReport(string cashierId)
+        [HttpGet("CashierYearlySales")]
+        public async Task<ActionResult> GetCashierYearlySalesReport(string cashierId)
         {
-            var result = await _salesService.WeeklyReport(cashierId);
+            var result = await _salesService.GetYearlySalesReportByCashierAsync(cashierId);
             return Ok(result);
         }
         [HttpGet("CashierMonthlySales")]

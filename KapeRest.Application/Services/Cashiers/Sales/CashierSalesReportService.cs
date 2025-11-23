@@ -22,9 +22,9 @@ namespace KapeRest.Application.Services.Cashiers.Sales
         {
             return await _salesRepo.GetDailySalesReportByCashierAsync(cashierId);
         }
-        public async Task<ICollection<SalesReportDTO>> WeeklyReport(string cashierId)
+        public async Task<ICollection<SalesReportDTO>> GetYearlySalesReportByCashierAsync(string cashierId)
         {
-            return await _salesRepo.GetWeeklySalesReportByCashierAsync(cashierId);
+            return await _salesRepo.GetYearlySalesReportByCashierAsync(cashierId);
         }
         public async Task<ICollection<SalesReportDTO>> MonthlyReport(string cashierId)
         {
