@@ -36,12 +36,12 @@ namespace KapeRest.Controllers.Admin.Supplier
         }
 
         [HttpPut("UpdateSupplier")]
-        public async Task<ActionResult> UpdateSupplier(UpdateSupplierDTO update)
+        public async Task<ActionResult> UpdateSupplier(UpdateSupplierDTO update, string userId)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var response = await _supplierService.UpdateSupplier(update);
+            var response = await _supplierService.UpdateSupplier(update, userId);
             return Ok(response);
         }
 
@@ -55,9 +55,9 @@ namespace KapeRest.Controllers.Admin.Supplier
         }
 
         [HttpGet("GetAllSuppliers")]
-        public async Task<ActionResult> GetAllSuppliers()
+        public async Task<ActionResult> GetAllSuppliers(string userId)
         {
-            var suppliers = await _supplierService.GetAllSuppliers();
+            var suppliers = await _supplierService.GetAllSuppliers(userId);
             return Ok(suppliers);
         }
 

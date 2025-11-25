@@ -30,6 +30,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
                 PhoneNumber = addSupplier.PhoneNumber,
                 Email = addSupplier.Email,
                 Address = addSupplier.Address,
+                UserId = addSupplier.UserId, // ADD THIS
                 Products = new List<ProductOfSupplier>(),
                 TransactionHistories = new List<SupplierTransactionHistory>()
             };
@@ -37,7 +38,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             await _context.Suppliers.AddAsync(supplier);
             await _context.SaveChangesAsync();
 
-            var response = new SupplierResponseDTO
+            return new SupplierResponseDTO
             {
                 Id = supplier.Id,
                 SupplierName = supplier.SupplierName,
@@ -45,19 +46,20 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
                 PhoneNumber = supplier.PhoneNumber,
                 Email = supplier.Email,
                 Address = supplier.Address,
-                Transactions = supplier.TransactionHistories?
-                  .Select(t => $"{t.FormattedDate} - {t.ProductName} ({t.QuantityDelivered}) = {t.TotalCost:C}")
-                  .ToList() ?? new List<string>()
+                Transactions = supplier.TransactionHistories?.Select(t =>
+                    $"{t.FormattedDate} - {t.ProductName} ({t.QuantityDelivered}) = {t.TotalCost:C}"
+                ).ToList()
             };
-
-            return response;
         }
 
-        public async Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update)
+        public async Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update, string userId)
         {
-            var product = await _context.Suppliers.FindAsync(update.Id);
+            var product = await _context.Suppliers
+        .Where(s => s.Id == update.Id && s.UserId == userId)
+        .FirstOrDefaultAsync();
+
             if (product == null)
-                throw new Exception("Product not found.");
+                throw new Exception("Not found or unauthorized.");
 
             product.SupplierName = update.SupplierName ?? product.SupplierName;
             product.ContactPerson = update.ContactPerson ?? product.ContactPerson;
@@ -67,7 +69,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
 
             await _context.SaveChangesAsync();
 
-            var response = new SupplierResponseDTO
+            return new SupplierResponseDTO
             {
                 Id = product.Id,
                 SupplierName = product.SupplierName,
@@ -75,12 +77,10 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
                 PhoneNumber = product.PhoneNumber,
                 Email = product.Email,
                 Address = product.Address,
-                Transactions = product.TransactionHistories?
-                  .Select(t => $"{t.FormattedDate} - {t.ProductName} ({t.QuantityDelivered}) = {t.TotalCost:C}")
-                  .ToList() ?? new List<string>()
+                Transactions = product.TransactionHistories?.Select(t =>
+                    $"{t.FormattedDate} - {t.ProductName} ({t.QuantityDelivered}) = {t.TotalCost:C}"
+                ).ToList()
             };
-
-            return response;
         }
 
         public async Task<string> DeleteSupplier(int productId)
@@ -96,27 +96,29 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             return "Successfully deleted";
         }
 
-        public async Task<ICollection> GetAllSupplier()
+        public async Task<ICollection> GetAllSupplier(string userId)
         {
             var suppliers = await _context.Suppliers
-                .Select(s => new
-                {
-                    s.Id,
-                    s.SupplierName,
-                    s.ContactPerson,
-                    s.PhoneNumber,
-                    s.Email,
-                    s.Address,
-                    s.TransactionDate,
-                    ProductOfSupplier = s.Products.Select(p => new
-                    {
-                        p.ProductName,
-                        p.Units,
-                    }),
-
-                }).ToListAsync();
+         .Where(s => s.UserId == userId)   // FILTER BY USER
+         .Select(s => new
+         {
+             s.Id,
+             s.SupplierName,
+             s.ContactPerson,
+             s.PhoneNumber,
+             s.Email,
+             s.Address,
+             s.TransactionDate,
+             ProductOfSupplier = s.Products.Select(p => new
+             {
+                 p.ProductName,
+                 p.Units,
+             }),
+         })
+         .ToListAsync();
             return suppliers;
         }
+
 
 
     }

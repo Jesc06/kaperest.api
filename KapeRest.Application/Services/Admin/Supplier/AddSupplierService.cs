@@ -22,9 +22,9 @@ namespace KapeRest.Application.Services.Admin.Supplier
             return await _supplier.AddSupplier(add);
         }
 
-        public async Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update)
+        public async Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update, string userId)
         {
-            return await _supplier.UpdateSupplier(update);
+            return await _supplier.UpdateSupplier(update,userId);
         }
 
         public async Task<string> DeleteSupplier(int supplierId)
@@ -32,9 +32,9 @@ namespace KapeRest.Application.Services.Admin.Supplier
             return await _supplier.DeleteSupplier(supplierId);
         }
 
-        public async Task<ICollection> GetAllSuppliers()
+        public async Task<ICollection> GetAllSuppliers(string userId)
         {
-            return await _supplier.GetAllSupplier();
+            return await _supplier.GetAllSupplier(userId);
         }
 
     }

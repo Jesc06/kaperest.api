@@ -21,5 +21,7 @@ namespace KapeRest.Domain.Entities.SupplierEntities
         public ICollection<ProductOfSupplier> Products { get; set; } = new List<ProductOfSupplier>();
 
         public ICollection<SupplierTransactionHistory> TransactionHistories { get; set; }
+
+        public string UserId { get; set; }
     }
 }
