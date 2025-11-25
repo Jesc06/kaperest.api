@@ -9,6 +9,7 @@ namespace KapeRest.Core.Entities.SalesTransaction
     public class SalesTransactionEntities
     {
         public int Id { get; set; }
+        public string ReceiptNumber { get; set; } = string.Empty;
         public string MenuItemName { get; set; } = string.Empty;
         public DateTime DateTime { get; set; } = DateTime.UtcNow;
 

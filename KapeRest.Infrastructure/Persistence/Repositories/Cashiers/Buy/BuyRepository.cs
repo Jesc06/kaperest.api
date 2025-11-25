@@ -22,7 +22,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             _context = context;
         }
 
-
         public async Task<string> BuyMenuItemAsync(BuyMenuItemDTO buy)
         {
             var cashier = await _context.UsersIdentity.FirstOrDefaultAsync(u => u.Id == buy.CashierId);

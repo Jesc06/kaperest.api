@@ -16,9 +16,9 @@ namespace KapeRest.Api.Controllers.Cashiers.Sales
         }
 
         [HttpGet("SalesPurchases")]
-        public async Task<IActionResult> GetSalesPurchases()
+        public async Task<IActionResult> GetSalesPurchases(string cashierId)
         {
-            var sales = await _salesPurchases.SalesPurchases();
+            var sales = await _salesPurchases.SalesPurchases(cashierId);
             return Ok(sales);
         }
 

@@ -19,13 +19,16 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             _context = context;
         }
 
-        public async Task<ICollection<SalesTransactionEntities>> Purchases()
+        public async Task<ICollection<SalesTransactionEntities>> Purchases(string cashierId)
         {
             var sales = await _context.SalesTransaction
-            .OrderByDescending(s => s.DateTime)
-            .ToListAsync();
+                .Where(s => s.CashierId == cashierId)   // Filter based on user/cashier
+                .OrderByDescending(s => s.DateTime)
+                .ToListAsync();
+
             return sales;
-        }   
+        }
+
 
 
 

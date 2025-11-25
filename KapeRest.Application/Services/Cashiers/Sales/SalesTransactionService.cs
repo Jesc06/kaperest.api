@@ -16,9 +16,9 @@ namespace KapeRest.Application.Services.Cashiers.Sales
            _transaction = transaction;
         }
 
-        public async Task<ICollection<SalesTransactionEntities>>SalesPurchases()
+        public async Task<ICollection<SalesTransactionEntities>>SalesPurchases(string CashierId)
         {
-            var sales = await _transaction.Purchases();
+            var sales = await _transaction.Purchases(CashierId);
             return sales;
         }
 
