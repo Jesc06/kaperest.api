@@ -82,28 +82,6 @@ namespace KapeRest.Controllers.Users.Buy
             }
         }
 
-        [HttpPut("UpdateHoldTransaction")]
-        public async Task<ActionResult> UpdateHoldTransaction(UpdateHoldDTO update)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var cashierIdFromJWTClaims = User.FindFirst("cashierId")?.Value;
-
-            var updateHold = new UpdateHoldTransaction
-            {
-                SalesTransactionID = update.SalesTransactionID,
-                Quantity = update.Quantity,
-                DiscountPercent = update.DiscountPercent,
-                Tax = update.Tax,
-                PaymentMethod = update.PaymentMethod,
-                CashierId = cashierIdFromJWTClaims!
-            };
-
-            var result = await _buyService.UpdateHeldTransaction(updateHold);
-            return Ok(result);
-        }
-
         [HttpPost("ResumeTransaction")]
         public async Task<ActionResult> ResumeTransaction([FromQuery] int saleId)
         {

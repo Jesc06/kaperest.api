@@ -131,37 +131,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             return $"Transaction held (Hold #{transaction.Id})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
         }
 
-        public async Task<string> UpdateHeldTransaction(UpdateHoldTransaction update)
-        {
-            var transaction = await _context.SalesTransaction
-                .FirstOrDefaultAsync(t => t.Id == update.SalesTransactionID && t.Status == "Hold");
-            if (transaction == null) return "Held transaction not found";
-
-            var saleItem = await _context.SalesItems
-                .FirstOrDefaultAsync(s => s.SalesTransactionId == transaction.Id);
-            if (saleItem == null) return "Sale item not found for this transaction";
-
-            var menuItem = await _context.MenuItems.FirstOrDefaultAsync(m => m.Id == saleItem.MenuItemId);
-            if (menuItem == null) return "Menu item not found";
-
-            var subtotal = menuItem.Price * update.Quantity;
-            var tax = subtotal * (update.Tax / 100m);
-            var discount = subtotal * (update.DiscountPercent / 100m);
-            var total = subtotal + tax - discount;
-
-            transaction.Subtotal = subtotal;
-            transaction.Tax = tax;
-            transaction.Discount = discount;
-            transaction.Total = total;
-            transaction.PaymentMethod = update.PaymentMethod ?? transaction.PaymentMethod;
-
-            saleItem.Quantity = update.Quantity;
-            saleItem.UnitPrice = menuItem.Price;
-
-            await _context.SaveChangesAsync();
-
-            return $"Held transaction #{transaction.Id} updated successfully";
-        }
 
         public async Task<string> ResumeHoldAsync(int saleId)
         {

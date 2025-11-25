@@ -14,7 +14,6 @@ namespace KapeRest.Application.Interfaces.Cashiers.Buy
         Task<string> HoldTransaction(BuyMenuItemDTO buy);
         Task<string> ResumeHoldAsync(int saleId);
         Task<string> CancelHoldAsync(int saleId);
-        Task<string> UpdateHeldTransaction(UpdateHoldTransaction buy);
         Task<string> VoidItemAsync(int saleId);
         Task<ICollection> GetHoldTransactions(string cashierId);
 

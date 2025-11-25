@@ -25,10 +25,6 @@ namespace KapeRest.Application.Services.Cashiers.Buy
         {
             return await _buy.HoldTransaction(buy);
         }
-        public async Task<string> UpdateHeldTransaction(UpdateHoldTransaction update)
-        {
-            return await _buy.UpdateHeldTransaction(update);
-        }
         public async Task<string> ResumeHoldAsync(int saleId)
         {
             return await _buy.ResumeHoldAsync(saleId);
