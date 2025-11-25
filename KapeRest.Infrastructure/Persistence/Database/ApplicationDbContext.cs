@@ -59,8 +59,25 @@ namespace KapeRest.Infrastructures.Persistence.Database
                 entity.HasOne<BranchEntities>()
                   .WithMany()
                   .HasForeignKey(x => x.BranchId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                  .OnDelete(DeleteBehavior.Restrict)
+                  .IsRequired(false);
 
+            });
+
+            // Relationship for SalesItemEntities
+            modelBuilder.Entity<SalesItemEntities>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.HasOne(x => x.SalesTransaction)
+                    .WithMany(s => s.SalesItems)
+                    .HasForeignKey(x => x.SalesTransactionId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.MenuItem)
+                    .WithMany()
+                    .HasForeignKey(x => x.MenuItemId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
 

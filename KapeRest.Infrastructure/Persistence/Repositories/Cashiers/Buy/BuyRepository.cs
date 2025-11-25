@@ -22,6 +22,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             _context = context;
         }
 
+
         public async Task<string> BuyMenuItemAsync(BuyMenuItemDTO buy)
         {
             var cashier = await _context.UsersIdentity.FirstOrDefaultAsync(u => u.Id == buy.CashierId);
@@ -36,8 +37,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             foreach (var itemProduct in menuItem.MenuItemProducts)
             {
                 var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == itemProduct.ProductOfSupplierId);
-                if (product == null)
-                    throw new Exception($"Product {itemProduct.ProductOfSupplier.ProductName} not found in inventory.");
+                if (product == null) throw new Exception($"Product {itemProduct.ProductOfSupplier.ProductName} not found in inventory.");
 
                 var totalToDeduct = itemProduct.QuantityUsed * buy.Quantity;
                 if (product.Stocks < totalToDeduct)
@@ -56,24 +56,20 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             {
                 MenuItemName = menuItem.ItemName,
                 CashierId = cashier.Id,
-                BranchId = cashier.BranchId ?? 0,
+                BranchId = cashier.BranchId,
                 Subtotal = subtotal,
                 Tax = tax,
                 Discount = discount,
                 Total = total,
                 PaymentMethod = buy.PaymentMethod ?? "Cash",
                 Status = "Completed",
+                Reason = null
             };
 
-            // Save first to get auto-generated sale.Id
             _context.SalesTransaction.Add(sale);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); //Save first to get sale.Id
 
-            // Generate Receipt Number
-            sale.ReceiptNumber = $"RCPT-{DateTime.UtcNow:yyyyMMdd}-{sale.Id:D5}";
-            _context.SalesTransaction.Update(sale);
-            await _context.SaveChangesAsync();
-
+            //Save SalesItem details
             var saleItem = new SalesItemEntities
             {
                 SalesTransactionId = sale.Id,
@@ -81,18 +77,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 Quantity = buy.Quantity,
                 UnitPrice = menuItem.Price
             };
-
             _context.SalesItems.Add(saleItem);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); //Save SalesItem
 
-            return
-                $"Purchase Successful!\n" +
-                $"Receipt No: {sale.ReceiptNumber}\n" +
-                $"Subtotal: ₱{subtotal:F2}\n" +
-                $"Tax: ₱{tax:F2}\n" +
-                $"Discount: ₱{discount:F2}\n" +
-                $"Total: ₱{total:F2}";
+            return $"Purchase successful (Receipt #{sale.MenuItemName})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
         }
+
 
 
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
@@ -115,13 +105,14 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             {
                 MenuItemName = menuItem.ItemName,
                 CashierId = cashier.Id,
-                BranchId = cashier.BranchId ?? 0,
+                BranchId = cashier.BranchId,
                 Subtotal = subtotal,
                 Tax = tax,
                 Discount = discount,
                 Total = total,
                 PaymentMethod = buy.PaymentMethod ?? "Cash",
-                Status = "Hold"
+                Status = "Hold",
+                Reason = null
             };
 
             _context.SalesTransaction.Add(transaction);
