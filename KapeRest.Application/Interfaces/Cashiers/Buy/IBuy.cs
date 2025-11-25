@@ -17,5 +17,12 @@ namespace KapeRest.Application.Interfaces.Cashiers.Buy
         Task<string> UpdateHeldTransaction(UpdateHoldTransaction buy);
         Task<string> VoidItemAsync(int saleId);
         Task<ICollection> GetHoldTransactions(string cashierId);
+
+
+        //Void request
+        Task<string> RequestVoidAsync(int saleId, string reason);
+        Task<string> ApproveVoidAsync(int saleId);
+        Task<string> RejectVoidAsync(int saleId);
+
     }
 }

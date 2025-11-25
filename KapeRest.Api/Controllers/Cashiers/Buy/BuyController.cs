@@ -2,6 +2,7 @@
 using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Services.Cashiers.Buy;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -141,6 +142,31 @@ namespace KapeRest.Controllers.Users.Buy
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+
+        //Void Request from cashier
+
+        [HttpPost("RequestVoid")]
+        public async Task<ActionResult> RequestVoid(int saleId, string reason)
+        {
+            var result = await _buyService.RequestVoidAsync(saleId, reason);
+            return Ok(result);
+        }
+        [HttpPost("ApprovedVoid")]
+        public async Task<ActionResult> ApprovedVoid(int saleId)
+        {   
+            var result = await _buyService.ApproveVoidAsync(saleId);
+            return Ok(result);
+        }
+        [HttpPost("RejectVoid")]
+        public async Task<ActionResult> RejectVoid(int saleId)
+        {
+            var result = await _buyService.RejectVoidAsync(saleId);
+            return Ok(result);
+        }
+
+
+
 
 
     }

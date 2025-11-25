@@ -48,5 +48,20 @@ namespace KapeRest.Application.Services.Cashiers.Buy
         }
 
 
+        //void request from cashier
+        public async Task<string> RequestVoidAsync(int saleId, string reason)
+        {
+            return await _buy.RequestVoidAsync(saleId, reason);
+        }
+        public async Task<string> ApproveVoidAsync(int saleId)
+        {
+            return await _buy.ApproveVoidAsync(saleId);
+        }
+        public async Task<string> RejectVoidAsync(int saleId)
+        {
+            return await _buy.RejectVoidAsync(saleId);
+        }
+
+
     }
 }

@@ -23,6 +23,8 @@ namespace KapeRest.Core.Entities.SalesTransaction
 
         public string PaymentMethod { get; set; } = "Cash";   
         public string Status { get; set; }
+        public string Reason { get; set; }
+
         public ICollection<SalesItemEntities> SalesItems { get; set; } = new List<SalesItemEntities>();
     }
 }

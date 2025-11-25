@@ -36,14 +36,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             foreach (var itemProduct in menuItem.MenuItemProducts)
             {
                 var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == itemProduct.ProductOfSupplierId);
-                if (product == null) throw new Exception($"Product {itemProduct.ProductOfSupplier.ProductName} not found in inventory.");
+                if (product == null)
+                    throw new Exception($"Product {itemProduct.ProductOfSupplier.ProductName} not found in inventory.");
 
                 var totalToDeduct = itemProduct.QuantityUsed * buy.Quantity;
                 if (product.Stocks < totalToDeduct)
                     throw new Exception($"Insufficient stock for {product.ProductName}. Available: {product.Stocks}, Required: {totalToDeduct}");
 
                 product.Stocks -= totalToDeduct;
-                _context.Products.Update(product);  
+                _context.Products.Update(product);
             }
 
             decimal subtotal = menuItem.Price * buy.Quantity;
@@ -64,10 +65,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 Status = "Completed",
             };
 
+            // Save first to get auto-generated sale.Id
             _context.SalesTransaction.Add(sale);
-            await _context.SaveChangesAsync(); //Save first to get sale.Id
+            await _context.SaveChangesAsync();
 
-            //Save SalesItem details
+            // Generate Receipt Number
+            sale.ReceiptNumber = $"RCPT-{DateTime.UtcNow:yyyyMMdd}-{sale.Id:D5}";
+            _context.SalesTransaction.Update(sale);
+            await _context.SaveChangesAsync();
+
             var saleItem = new SalesItemEntities
             {
                 SalesTransactionId = sale.Id,
@@ -75,11 +81,19 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 Quantity = buy.Quantity,
                 UnitPrice = menuItem.Price
             };
-            _context.SalesItems.Add(saleItem);
-            await _context.SaveChangesAsync(); //Save SalesItem
 
-            return $"Purchase successful (Receipt #{sale.MenuItemName})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
+            _context.SalesItems.Add(saleItem);
+            await _context.SaveChangesAsync();
+
+            return
+                $"Purchase Successful!\n" +
+                $"Receipt No: {sale.ReceiptNumber}\n" +
+                $"Subtotal: ₱{subtotal:F2}\n" +
+                $"Tax: ₱{tax:F2}\n" +
+                $"Discount: ₱{discount:F2}\n" +
+                $"Total: ₱{total:F2}";
         }
+
 
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
         {
@@ -234,6 +248,80 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
             return $"Sale #{sale.Id} voided successfully.";
         }
+
+        //Void Request to staff
+        public async Task<string> RequestVoidAsync(int saleId, string reason)
+        {
+            var sale = await _context.SalesTransaction
+                .FirstOrDefaultAsync(s => s.Id == saleId);
+
+            if (sale == null) return "Sale not found";
+            if (sale.Status == "Voided") return "Sale already voided";
+            if (sale.Status == "PendingVoid") return "Void request already pending";
+
+            sale.Status = "PendingVoid";
+            sale.Reason = reason;
+
+            await _context.SaveChangesAsync();
+
+            return $"Void request submitted for Sale #{sale.Id}. Awaiting admin approval.";
+        }
+
+
+        public async Task<string> ApproveVoidAsync(int saleId)
+        {
+            var sale = await _context.SalesTransaction
+                .Include(s => s.SalesItems)
+                    .ThenInclude(i => i.MenuItem)
+                        .ThenInclude(m => m.MenuItemProducts)
+                .FirstOrDefaultAsync(s => s.Id == saleId);
+
+            if (sale == null) return "Sale not found";
+            if (sale.Status != "PendingVoid") return "Sale is not pending void";
+
+            // Return stocks
+            foreach (var item in sale.SalesItems)
+            {
+                foreach (var menuItemProduct in item.MenuItem.MenuItemProducts)
+                {
+                    var product = await _context.Products
+                        .FirstOrDefaultAsync(p => p.Id == menuItemProduct.ProductOfSupplierId);
+
+                    if (product != null)
+                    {
+                        product.Stocks += menuItemProduct.QuantityUsed * item.Quantity;
+                        _context.Products.Update(product);
+                    }
+                }
+            }
+
+            sale.Status = "Voided";
+
+            await _context.SaveChangesAsync();
+
+            return $"Sale #{sale.Id} has been voided successfully.";
+        }
+
+
+
+        public async Task<string> RejectVoidAsync(int saleId)
+        {
+            var sale = await _context.SalesTransaction
+                .FirstOrDefaultAsync(s => s.Id == saleId);
+
+            if (sale == null) return "Sale not found";
+            if (sale.Status != "PendingVoid") return "Sale is not pending void";
+
+            sale.Status = "Completed";
+
+            await _context.SaveChangesAsync();
+
+            return $"Void request for Sale #{sale.Id} has been rejected.";
+        }
+
+
+
+
 
         public async Task<string> CancelHoldAsync(int saleId)
         {
