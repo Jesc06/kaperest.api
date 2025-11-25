@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251118120137_updateEntities")]
-    partial class updateEntities
+    [Migration("20251125185837_start")]
+    partial class start
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,9 +41,38 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Staff")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.ToTable("Branches");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.MenuEntities.MenuItemProduct", b =>
+                {
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductOfSupplierId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductOfSupplierId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantityUsed")
+                        .HasColumnType("int");
+
+                    b.HasKey("MenuItemId", "ProductOfSupplierId");
+
+                    b.HasIndex("ProductOfSupplierId");
+
+                    b.HasIndex("ProductOfSupplierId1");
+
+                    b.ToTable("MenuItemProducts");
                 });
 
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesItemEntities", b =>
@@ -54,7 +83,7 @@ namespace KapeRest.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MenuItemId")
+                    b.Property<int?>("MenuItemId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -96,8 +125,15 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<string>("MenuItemName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Reason")
                         .HasColumnType("longtext");
 
                     b.Property<string>("ReceiptNumber")
@@ -240,6 +276,10 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SupplierId");
@@ -262,12 +302,15 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<byte[]>("Image")
-                        .IsRequired()
                         .HasColumnType("longblob");
 
                     b.Property<string>("IsAvailable")
@@ -284,29 +327,6 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MenuItems");
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItemProduct", b =>
-                {
-                    b.Property<int>("MenuItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductOfSupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductOfSupplierId1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantityUsed")
-                        .HasColumnType("int");
-
-                    b.HasKey("MenuItemId", "ProductOfSupplierId");
-
-                    b.HasIndex("ProductOfSupplierId");
-
-                    b.HasIndex("ProductOfSupplierId1");
-
-                    b.ToTable("MenuItemProducts");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>
@@ -391,6 +411,10 @@ namespace KapeRest.Infrastructure.Migrations
 
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -664,13 +688,35 @@ namespace KapeRest.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("KapeRest.Core.Entities.MenuEntities.MenuItemProduct", b =>
+                {
+                    b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
+                        .WithMany("MenuItemProducts")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", "ProductOfSupplier")
+                        .WithMany()
+                        .HasForeignKey("ProductOfSupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", null)
+                        .WithMany("MenuItemProducts")
+                        .HasForeignKey("ProductOfSupplierId1");
+
+                    b.Navigation("MenuItem");
+
+                    b.Navigation("ProductOfSupplier");
+                });
+
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesItemEntities", b =>
                 {
                     b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
                         .WithMany()
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", "SalesTransaction")
                         .WithMany("SalesItems")
@@ -706,29 +752,6 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItemProduct", b =>
-                {
-                    b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
-                        .WithMany("MenuItemProducts")
-                        .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", "ProductOfSupplier")
-                        .WithMany()
-                        .HasForeignKey("ProductOfSupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", null)
-                        .WithMany("MenuItemProducts")
-                        .HasForeignKey("ProductOfSupplierId1");
-
-                    b.Navigation("MenuItem");
-
-                    b.Navigation("ProductOfSupplier");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>

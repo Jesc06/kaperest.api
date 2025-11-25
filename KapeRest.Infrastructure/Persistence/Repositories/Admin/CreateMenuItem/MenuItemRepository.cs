@@ -128,24 +128,34 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             return menuItem;
         }
 
+
         public async Task<string> DeleteMenuItem(string cashierId, int id)
         {
             var menuItem = await _context.MenuItems
-            .FirstOrDefaultAsync(m => m.Id == id && m.CashierId == cashierId);
+                .FirstOrDefaultAsync(m => m.Id == id && m.CashierId == cashierId);
 
             if (menuItem == null)
                 return "Menu item not found or does not belong to this cashier";
 
-            // Delete linked MenuItemProducts
+            // Delete child MenuItemProducts only
             var linkedProducts = _context.MenuItemProducts
                 .Where(mp => mp.MenuItemId == id);
             _context.MenuItemProducts.RemoveRange(linkedProducts);
 
+            // SalesItems are not deleted; MenuItemId will be set to NULL automatically
             _context.MenuItems.Remove(menuItem);
-            await _context.SaveChangesAsync();
 
-            return "Successfully deleted menu item";
+            try
+            {
+                await _context.SaveChangesAsync();
+                return "Successfully deleted menu item";
+            }
+            catch (DbUpdateException ex)
+            {
+                return ex.InnerException?.Message ?? ex.Message;
+            }
         }
+
 
 
 

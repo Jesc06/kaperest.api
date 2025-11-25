@@ -80,7 +80,7 @@ namespace KapeRest.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MenuItemId")
+                    b.Property<int?>("MenuItemId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -696,7 +696,7 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", "ProductOfSupplier")
                         .WithMany()
                         .HasForeignKey("ProductOfSupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", null)
@@ -713,8 +713,7 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
                         .WithMany()
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", "SalesTransaction")
                         .WithMany("SalesItems")

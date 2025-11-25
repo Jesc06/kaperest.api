@@ -25,28 +25,36 @@ namespace KapeRest.Infrastructures.Persistence.Database
         {
             base.OnModelCreating(modelBuilder);
 
-            // Many-to-many for MenuItemProduct
-            modelBuilder.Entity<MenuItemProduct>()
-                .HasKey(mip => new { mip.MenuItemId, mip.ProductOfSupplierId });
+            // ---------------------------
+            // MENU ITEM PRODUCT
+            // ---------------------------
+            modelBuilder.Entity<MenuItemProduct>(entity =>
+            {
+                entity.HasKey(e => new { e.MenuItemId, e.ProductOfSupplierId });
 
-            modelBuilder.Entity<MenuItemProduct>()
-                .HasOne(mip => mip.MenuItem)
-                .WithMany(mi => mi.MenuItemProducts)
-                .HasForeignKey(mip => mip.MenuItemId);
+                entity.HasOne(e => e.MenuItem)
+                    .WithMany(mi => mi.MenuItemProducts)
+                    .HasForeignKey(e => e.MenuItemId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<MenuItemProduct>()
-                .HasOne(mip => mip.ProductOfSupplier)
-                .WithMany()
-                .HasForeignKey(mip => mip.ProductOfSupplierId);
+                entity.HasOne(e => e.ProductOfSupplier)
+                    .WithMany()
+                    .HasForeignKey(e => e.ProductOfSupplierId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
-            // Branch relationship
+            // ---------------------------
+            // PENDING USER ACCOUNT
+            // ---------------------------
             modelBuilder.Entity<PendingUserAccount>()
                 .HasOne(p => p.Branch)
                 .WithMany(b => b.PendingAccounts)
                 .HasForeignKey(p => p.BranchId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relationship for sales, branch, and cashier
+            // ---------------------------
+            // SALES TRANSACTION
+            // ---------------------------
             modelBuilder.Entity<SalesTransactionEntities>(entity =>
             {
                 entity.HasKey(x => x.Id);
@@ -57,14 +65,15 @@ namespace KapeRest.Infrastructures.Persistence.Database
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne<BranchEntities>()
-                  .WithMany()
-                  .HasForeignKey(x => x.BranchId)
-                  .OnDelete(DeleteBehavior.Restrict)
-                  .IsRequired(false);
-
+                    .WithMany()
+                    .HasForeignKey(x => x.BranchId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired(false);
             });
 
-            // Relationship for SalesItemEntities
+            // ---------------------------
+            // SALES ITEM
+            // ---------------------------
             modelBuilder.Entity<SalesItemEntities>(entity =>
             {
                 entity.HasKey(x => x.Id);
@@ -77,9 +86,12 @@ namespace KapeRest.Infrastructures.Persistence.Database
                 entity.HasOne(x => x.MenuItem)
                     .WithMany()
                     .HasForeignKey(x => x.MenuItemId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.SetNull); // Safe delete
             });
         }
+
+
+
 
 
         #region--Accounts--

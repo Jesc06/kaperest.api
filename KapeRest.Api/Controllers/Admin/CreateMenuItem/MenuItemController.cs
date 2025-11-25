@@ -92,7 +92,7 @@
                 return Ok(result);
             }
 
-        [HttpDelete("DeleteMenuItem")]
+            [HttpDelete("DeleteMenuItem")]
             public async Task<ActionResult> DeleteMenuItem(string cashierId, int id)
             {
                 var result = await _menuItemService.DeleteMenuItem(cashierId,id);

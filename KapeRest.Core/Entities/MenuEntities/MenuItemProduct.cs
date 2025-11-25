@@ -19,3 +19,4 @@ namespace KapeRest.Core.Entities.MenuEntities
         public int QuantityUsed { get; set; }
     }
 }
+    
