@@ -28,12 +28,14 @@ namespace KapeRest.Controllers.Admin.Supplier
                 ContactPerson = addSuppliers.ContactPerson,
                 PhoneNumber = addSuppliers.PhoneNumber,
                 Email = addSuppliers.Email,
-                Address = addSuppliers.Address
+                Address = addSuppliers.Address,
+                UserId = addSuppliers.UserId  
             };
 
             var response = await _supplierService.addSupplier(supplierDTO);
             return Ok(response);
         }
+
 
         [HttpPut("UpdateSupplier")]
         public async Task<ActionResult> UpdateSupplier(UpdateSupplierDTO update, string userId)
