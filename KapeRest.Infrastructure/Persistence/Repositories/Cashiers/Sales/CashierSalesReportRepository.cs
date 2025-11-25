@@ -82,7 +82,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             return await GetSalesReportByCashierInRangeAsync(cashierId, startUtc, endUtc);
         }
 
-        // ⬇️ WEEKLY → YEARLY
+        //WEEKLY → YEARLY
         public async Task<ICollection<SalesReportDTO>> GetYearlySalesReportByCashierAsync(string cashierId)
         {
             var phNow = GetPhilippineNow();

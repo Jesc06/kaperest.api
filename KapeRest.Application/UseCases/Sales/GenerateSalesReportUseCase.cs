@@ -43,7 +43,7 @@ namespace KapeRest.Application.UseCases.Sales
             var sales = await _cashierSalesReport.GetDailySalesReportByCashierAsync(cashierId);
             return _pdfService.GenerateSalesReport(sales, logopath, "Cashier");
         }
-        public async Task<byte[]> CashierWeeklySalesReport(string cashierId, string logopath)
+        public async Task<byte[]> CashierYearlySalesReport(string cashierId, string logopath)
         {
             var sales = await _cashierSalesReport.GetYearlySalesReportByCashierAsync(cashierId);
             return _pdfService.GenerateSalesReport(sales, logopath, "Cashier");

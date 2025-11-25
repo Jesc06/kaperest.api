@@ -95,11 +95,16 @@ namespace KapeRest.Infrastructure.DependencyInjection
             services.AddScoped<IOverallSales, OverAllSalesRepository>();
             services.AddScoped<OverAllSalesService>();
 
+            services.AddScoped<IStaffSalesReport, StaffSalesReportRepository>();
+            services.AddScoped<StaffSalesService>();
+
+            services.AddScoped<IsalesTransaction, SalesTransactionRepositories>();
+            services.AddScoped<SalesTransactionService>();
 
 
             #endregion
 
-           
+
             return services;
         }
     }

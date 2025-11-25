@@ -48,11 +48,11 @@ namespace KapeRest.Api.Controllers.Users.Sales
             var result = await _generateSalesReportUseCase.CashierDailySalesReport(cashierId, logopath);
             return File(result, "application/pdf", "CashierDailySalesReport.pdf");
         }
-        [HttpGet("CashierGenerateWeeklyPdfReports")]
+        [HttpGet("CashierGenerateYearlyPdfReports")]
         public async Task<ActionResult> CashierGenerateWeeklyPdfReports(string cashierId)
         {
             var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
-            var result = await _generateSalesReportUseCase.CashierWeeklySalesReport(cashierId, logopath);
+            var result = await _generateSalesReportUseCase.CashierYearlySalesReport(cashierId, logopath);
             return File(result, "application/pdf", "CashierWeeklySalesReport.pdf");
         }
         [HttpGet("CashierGenerateMonthlyPdfReports")]

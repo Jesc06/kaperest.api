@@ -16,49 +16,81 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
 {
     public class MenuItemRepository : IMenuItem
     {
-
         private readonly ApplicationDbContext _context;
         public MenuItemRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-                public async Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto)
-                {
-                    var menuItem = new MenuItem
-                    {
-                        ItemName = dto.Item_name,
-                        Price = dto.Price,
-                        Category = dto.Category,
-                        Description = dto.Description,
-                        Image = dto.Image,
-                        IsAvailable = dto.IsAvailable,
-                        CashierId = dto.cashierId,
-                        BranchId = null
-                    };
 
-                    // Only validate products if there are any
-                    if (dto.Products != null && dto.Products.Count > 0)
-                    {
-                        foreach (var product in dto.Products)
-                        {
+        // Helper: determine availability based on linked products and their stocks
+        private string CheckAvailability(MenuItem menuItem)
+        {
+            if (menuItem.MenuItemProducts == null || menuItem.MenuItemProducts.Count == 0)
+            {
+                // If there are no linked products, consider it Available by default
+                return "Available";
+            }
+
+            foreach (var itemProduct in menuItem.MenuItemProducts)
+            {
+                var product = itemProduct.ProductOfSupplier;
+                if (product == null)
+                {
+                    // missing product -> out of stock
+                    return "Out of Stock";
+                }
+
+                if (product.Stocks <= 0)
+                {
+                    return "Out of Stock";
+                }
+
+                if (product.Stocks < itemProduct.QuantityUsed)
+                {
+                    return "Out of Stock";
+                }
+            }
+
+            return "Available";
+        }
+
+        public async Task<MenuItem> CreateMenuItemAsync(string user, string role, CreateMenuItemDTO dto)
+        {
+            var menuItem = new MenuItem
+            {
+                ItemName = dto.Item_name,
+                Price = dto.Price,
+                Category = dto.Category,
+                Description = dto.Description,
+                Image = dto.Image,
+                IsAvailable = dto.IsAvailable,
+                CashierId = dto.cashierId,
+                BranchId = null
+            };
+
+            // Only validate products if there are any
+            if (dto.Products != null && dto.Products.Count > 0)
+            {
+                foreach (var product in dto.Products)
+                {
                     var productExists = await _context.Products
                         .AnyAsync(p => p.Id == product.ProductOfSupplierId);
 
                     if (!productExists)
                         throw new Exception($"Product {product.ProductOfSupplierId} not found");
                     menuItem.MenuItemProducts.Add(new MenuItemProduct
-                            {
-                                ProductOfSupplierId = product.ProductOfSupplierId,
-                                QuantityUsed = product.QuantityUsed
-                            });
-                        }
-                    }
-
-                    _context.MenuItems.Add(menuItem);
-                    await _context.SaveChangesAsync();
-
-                    return menuItem;
+                    {
+                        ProductOfSupplierId = product.ProductOfSupplierId,
+                        QuantityUsed = product.QuantityUsed
+                    });
                 }
+            }
+
+            _context.MenuItems.Add(menuItem);
+            await _context.SaveChangesAsync();
+
+            return menuItem;
+        }
 
         public async Task<MenuItem> UpdateMenuItemAsync(UpdateMenuItemDTO dto)
         {
@@ -81,16 +113,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 .Where(mp => mp.MenuItemId == dto.Id);
             _context.MenuItemProducts.RemoveRange(existingProducts);
 
-            // Add new products
+            // Add new products (validation removed - products are shared)
             foreach (var product in dto.Products)
             {
-                // Ensure product belongs to this cashier
-                var exists = await _context.Products
-                    .AnyAsync(p => p.Id == product.ProductOfSupplierId && p.CashierId == dto.cashierId);
-
-                if (!exists)
-                    throw new Exception($"Product {product.ProductOfSupplierId} does not belong to this cashier");
-
                 _context.MenuItemProducts.Add(new MenuItemProduct
                 {
                     MenuItemId = dto.Id,
@@ -122,30 +147,35 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             return "Successfully deleted menu item";
         }
 
+
+
         public async Task<ICollection> GetAllMenuItem(string cashierId)
         {
             var menuItems = await _context.MenuItems
-           .Where(m => m.CashierId == cashierId)
-           .ToListAsync();
-
-            // Optional: load MenuItemProducts separately if needed
-            var menuItemIds = menuItems.Select(m => m.Id).ToList();
-            var allProducts = await _context.MenuItemProducts
-                .Where(mp => menuItemIds.Contains(mp.MenuItemId))
+                .Where(m => m.CashierId == cashierId)
+                .Include(m => m.MenuItemProducts)
+                    .ThenInclude(mp => mp.ProductOfSupplier)
                 .ToListAsync();
 
-            // Assign products manually (if you want to return it in one object)
             foreach (var menuItem in menuItems)
             {
-                menuItem.MenuItemProducts = allProducts
-                    .Where(mp => mp.MenuItemId == menuItem.Id)
-                    .ToList();
+                // Compute availability
+                string newStatus = CheckAvailability(menuItem);
+
+                // Update only if changed (prevents unnecessary DB operations)
+                if (menuItem.IsAvailable != newStatus)
+                {
+                    menuItem.IsAvailable = newStatus;
+                    _context.MenuItems.Update(menuItem);
+                }
             }
 
+            await _context.SaveChangesAsync();
             return menuItems;
         }
 
 
+
+
     }
 }
-

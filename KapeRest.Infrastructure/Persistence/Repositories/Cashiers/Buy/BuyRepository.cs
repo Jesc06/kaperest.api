@@ -44,7 +44,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                     throw new Exception($"Insufficient stock for {product.ProductName}. Available: {product.Stocks}, Required: {totalToDeduct}");
 
                 product.Stocks -= totalToDeduct;
-                _context.Products.Update(product);
+                _context.Products.Update(product);  
             }
 
             decimal subtotal = menuItem.Price * buy.Quantity;
@@ -66,9 +66,9 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             };
 
             _context.SalesTransaction.Add(sale);
-            await _context.SaveChangesAsync(); // ✅ Save first to get sale.Id
+            await _context.SaveChangesAsync(); //Save first to get sale.Id
 
-            // ✅ ADD THIS: Save SalesItem details
+            //Save SalesItem details
             var saleItem = new SalesItemEntities
             {
                 SalesTransactionId = sale.Id,
@@ -77,7 +77,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 UnitPrice = menuItem.Price
             };
             _context.SalesItems.Add(saleItem);
-            await _context.SaveChangesAsync(); // ✅ Save SalesItem
+            await _context.SaveChangesAsync(); //Save SalesItem
 
             return $"Purchase successful (Receipt #{sale.MenuItemName})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
         }
@@ -288,6 +288,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
             return holdTransactions;
         }
+
+
 
 
     }

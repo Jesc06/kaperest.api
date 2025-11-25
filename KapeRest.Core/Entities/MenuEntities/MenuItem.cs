@@ -1,28 +1,28 @@
-﻿using KapeRest.Core.Entities.MenuEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿    using KapeRest.Core.Entities.MenuEntities;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
-namespace KapeRest.Domain.Entities.MenuEntities
-{
-    public class MenuItem
+    namespace KapeRest.Domain.Entities.MenuEntities
     {
-        public int Id { get; set; }
-        public string ItemName { get; set; }
-        public decimal Price { get; set; }
-        public string Category { get; set; }
-        public string Description { get; set; }
-        public string IsAvailable { get; set; }   
-        public byte[] Image { get; set; }
-        public string CashierId { get; set; } // link to cashier
-        public int? BranchId { get; set; }    // optional branch
-
-        public ICollection<MenuItemProduct> MenuItemProducts { get; set; }
-        public MenuItem()
+        public class MenuItem
         {
-            MenuItemProducts = new List<MenuItemProduct>();
+            public int Id { get; set; }
+            public string ItemName { get; set; }
+            public decimal Price { get; set; }
+            public string Category { get; set; }
+            public string Description { get; set; }
+            public string IsAvailable { get; set; }   
+            public byte[]? Image { get; set; }
+            public string CashierId { get; set; } // link to cashier
+            public int? BranchId { get; set; }    // optional branch
+
+            public ICollection<MenuItemProduct> MenuItemProducts { get; set; }
+            public MenuItem()
+            {
+                MenuItemProducts = new List<MenuItemProduct>();
+            }
         }
     }
-}

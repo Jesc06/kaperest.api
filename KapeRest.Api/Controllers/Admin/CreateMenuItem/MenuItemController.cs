@@ -62,7 +62,7 @@
             }
 
             [HttpPut("UpdateMenuItem")]
-            public async Task<IActionResult> UpdateMenuItem([FromForm]UpdateMenuItemDTOs dto)
+            public async Task<IActionResult> UpdateMenuItem([FromForm] UpdateMenuItemDTOs dto)
             {
                 if (dto.Image == null || dto.Image.Length == 0)
                 {
@@ -74,21 +74,25 @@
                 var products = string.IsNullOrEmpty(dto.ProductsJson)
                     ? new List<MenuItemProductDTO>()
                     : JsonSerializer.Deserialize<List<MenuItemProductDTO>>(dto.ProductsJson);
+
                 var appDTO = new UpdateMenuItemDTO
                 {
+                    Id = dto.Id, 
+                    cashierId = dto.cashierId,
                     Item_name = dto.Item_name,
                     Price = dto.Price,
                     Category = dto.Category,
                     Description = dto.Description,
                     Image = ms.ToArray(),
-                    Products = products,
-                    cashierId = dto.cashierId,
+                    IsAvailable = dto.IsAvailable, 
+                    Products = products
                 };
+
                 var result = await _menuItemService.UpdateMenuItem(appDTO);
                 return Ok(result);
             }
 
-            [HttpDelete("DeleteMenuItem")]
+        [HttpDelete("DeleteMenuItem")]
             public async Task<ActionResult> DeleteMenuItem(string cashierId, int id)
             {
                 var result = await _menuItemService.DeleteMenuItem(cashierId,id);
@@ -101,6 +105,7 @@
                 var result = await _menuItemService.GetAllMenuItem(cashierId);
                 return Ok(result);
             }
+
 
 
         }
