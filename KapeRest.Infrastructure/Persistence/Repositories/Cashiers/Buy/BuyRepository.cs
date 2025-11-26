@@ -324,8 +324,6 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             return $"Sale #{sale.Id} has been voided successfully.";
         }
 
-
-
         public async Task<string> RejectVoidAsync(int saleId, string userId, string role)
         {
             var sale = await _context.SalesTransaction

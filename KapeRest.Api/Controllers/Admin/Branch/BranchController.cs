@@ -18,10 +18,7 @@ namespace KapeRest.Api.Controllers.Admin.Branch
         [HttpPost("AddBranch")]
         public async Task<ActionResult> AddBranch(BranchDTO add)
         {
-          var userIdFromJwt = User.FindFirst("sub")?.Value;
-          var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
-
-          var result = await _branchService.AddBranch(add, userIdFromJwt, roleFromJwt);
+          var result = await _branchService.AddBranch(add);
           return Ok(result);
         }
 
@@ -31,17 +28,14 @@ namespace KapeRest.Api.Controllers.Admin.Branch
             var userIdFromJwt = User.FindFirst("sub")?.Value;
             var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
 
-            var result = await _branchService.UpdateBranch(add, userIdFromJwt, roleFromJwt);
+            var result = await _branchService.UpdateBranch(add);
             return Ok(result);
         }
 
         [HttpDelete("DeleteBranch")]
         public async Task<ActionResult>DeleteBranch(int id)
         {
-            var userIdFromJwt = User.FindFirst("sub")?.Value;
-            var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
-
-            var result = await _branchService.DeleteBranch(id, userIdFromJwt, roleFromJwt);
+            var result = await _branchService.DeleteBranch(id);
             return Ok(result);
         }
 
