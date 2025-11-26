@@ -13,6 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using KapeRest.Domain.Entities.AuditLogEntities;
 
 namespace KapeRest.Infrastructures.Persistence.Repositories.Account
 {
@@ -58,6 +59,17 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
                     return "Cannot assign Admin role during registration.";
 
                 await _userManager.AddToRoleAsync(users, register.Roles);
+
+                _context.AuditLog.Add(new AuditLogEntities
+                {
+                    Username = register.Email,
+                    Role = register.Roles,
+                    Action = "Register",
+                    Description = $"User {register.Email} registered with role {register.Roles}",
+                    Date = DateTime.Now
+                });
+                await _context.SaveChangesAsync();
+
                 return "Successfully registered account!";
             }
             return "Failed to registered account";
@@ -91,7 +103,17 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             user.RefreshTokenHash = _jwtService.HashToken(refreshToken);
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(tokenExpiry);
 
-            await _userManager.UpdateAsync(user);   
+            await _userManager.UpdateAsync(user);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = user.Email,
+                Role = getUserRoles.FirstOrDefault() ?? "User",
+                Action = "Login",
+                Description = $"User {user.Email} logged in",
+                Date = DateTime.Now
+            });
+            await _context.SaveChangesAsync();
 
             return new CreateJwtTokenDTO
             {
@@ -106,9 +128,21 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             var user = await _userManager.FindByNameAsync(username);
             if (user == null) return;
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             user.RefreshTokenHash = null;
             user.RefreshTokenExpiryTime = null;
             await _userManager.UpdateAsync(user);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = user.Email,
+                Role = roles.FirstOrDefault() ?? "User",
+                Action = "Logout",
+                Description = $"User {user.Email} logged out",
+                Date = DateTime.Now
+            });
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> ChangePassword(ChangePassDTO changePassDTO)
@@ -116,6 +150,21 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             var user = await _userManager.FindByEmailAsync(changePassDTO.Email);
             if (user == null) return false;
             var result = await _userManager.ChangePasswordAsync(user, changePassDTO.CurrentPassword, changePassDTO.NewPassword);
+            
+            if (result.Succeeded)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                _context.AuditLog.Add(new AuditLogEntities
+                {
+                    Username = user.Email,
+                    Role = roles.FirstOrDefault() ?? "User",
+                    Action = "Change Password",
+                    Description = $"User {user.Email} changed password",
+                    Date = DateTime.Now
+                });
+                await _context.SaveChangesAsync();
+            }
+
             return result.Succeeded;
         }
 

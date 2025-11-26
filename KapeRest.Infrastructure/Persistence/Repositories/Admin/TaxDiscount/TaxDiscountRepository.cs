@@ -1,6 +1,7 @@
 ﻿using KapeRest.Application.DTOs.Admin.TaxDiscount;
 using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Core.Entities.Tax_Rate;
+using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
             _context = context;
         }
         #region --Tax--
-        public async Task<Tax> AddTax(TaxDiscountDTO dto)
+        public async Task<Tax> AddTax(TaxDiscountDTO dto, string userId, string role)
         {
             var rate = new Tax
             {
@@ -31,11 +32,21 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
                 Description = dto.Description
             };
             _context.Tax.Add(rate);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Added",
+                Description = $"Added tax {dto.SettingName} with value {dto.Value}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return rate;
         }
 
-        public async Task<string> UpdateTax(UpdateTaxDiscountDTO dto)
+        public async Task<string> UpdateTax(UpdateTaxDiscountDTO dto, string userId, string role)
         {
             var taxDiscount = await _context.Tax.FirstOrDefaultAsync(t => t.Id == dto.Id);
             if(taxDiscount is not null)
@@ -43,6 +54,16 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
                 taxDiscount.TaxRate = dto.SettingName;
                 taxDiscount.Value = dto.Value;
                 taxDiscount.Description = dto.Description;
+
+                _context.AuditLog.Add(new AuditLogEntities
+                {
+                    Username = userId,
+                    Role = role,
+                    Action = "Updated",
+                    Description = $"Updated tax {dto.SettingName}",
+                    Date = DateTime.Now
+                });
+
                 await _context.SaveChangesAsync();
                 return "Successfully Updated";
             }
@@ -55,20 +76,30 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
             return taxAndDiscounts;
         }
 
-        public async Task<string> DeleteTax(int id)
+        public async Task<string> DeleteTax(int id, string userId, string role)
         {
             var taxAndDiscounts = await _context.Tax.FindAsync(id);
             if(taxAndDiscounts is null)
                 return "Tax and Discount not found";
 
             _context.Tax.Remove(taxAndDiscounts);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Deleted",
+                Description = $"Deleted tax {taxAndDiscounts.TaxRate}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return "Successfully Deleted";
         }
         #endregion
 
         #region --Discount--
-        public async Task<Discount> AddDiscount(TaxDiscountDTO dto)
+        public async Task<Discount> AddDiscount(TaxDiscountDTO dto, string userId, string role)
         {
             var rate = new Discount
             {
@@ -77,10 +108,20 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
                 Description = dto.Description
             };
             _context.Discount.Add(rate);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Added",
+                Description = $"Added discount {dto.SettingName} with value {dto.Value}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return rate;
         }
-        public async Task<string> UpdateDiscount(UpdateTaxDiscountDTO dto)
+        public async Task<string> UpdateDiscount(UpdateTaxDiscountDTO dto, string userId, string role)
         {
             var taxDiscount = await _context.Discount.FirstOrDefaultAsync(t => t.Id == dto.Id);
             if (taxDiscount is not null)
@@ -88,6 +129,16 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
                 taxDiscount.TaxRate = dto.SettingName;
                 taxDiscount.Value = dto.Value;
                 taxDiscount.Description = dto.Description;
+
+                _context.AuditLog.Add(new AuditLogEntities
+                {
+                    Username = userId,
+                    Role = role,
+                    Action = "Updated",
+                    Description = $"Updated discount {dto.SettingName}",
+                    Date = DateTime.Now
+                });
+
                 await _context.SaveChangesAsync();
                 return "Successfully Updated";
             }
@@ -98,13 +149,23 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount
             var taxAndDiscounts = await _context.Discount.ToListAsync();
             return taxAndDiscounts;
         }
-        public async Task<string> DeleteDiscount(int id)
+        public async Task<string> DeleteDiscount(int id, string userId, string role)
         {
             var taxAndDiscounts = await _context.Discount.FindAsync(id);
             if (taxAndDiscounts is null)
                 return "Tax and Discount not found";
 
             _context.Discount.Remove(taxAndDiscounts);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Deleted",
+                Description = $"Deleted discount {taxAndDiscounts.TaxRate}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return "Successfully Deleted";
         }

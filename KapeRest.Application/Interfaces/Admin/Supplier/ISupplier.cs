@@ -11,9 +11,9 @@ namespace KapeRest.Application.Interfaces.Admin.Supplier
 {
     public interface ISupplier
     {
-        Task<SupplierResponseDTO> AddSupplier(CreateSupplierDTO addSupplier);
+        Task<SupplierResponseDTO> AddSupplier(CreateSupplierDTO addSupplier,string user, string role);
         Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update, string userId);
-        Task<string> DeleteSupplier(int productId);
+        Task<string> DeleteSupplier(int productId, string userId, string role);
         Task<ICollection> GetAllSupplier(string userId);
     }
 }

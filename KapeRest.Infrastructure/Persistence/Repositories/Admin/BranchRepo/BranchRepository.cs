@@ -1,6 +1,7 @@
 ﻿using KapeRest.Application.DTOs.Admin.Branch;
 using KapeRest.Application.Interfaces.Admin.Branch;
 using KapeRest.Core.Entities.Branch;
+using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,7 +21,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
             _context = context;
         }
 
-        public async Task<BranchDTO> AddBranch(BranchDTO dto)
+        public async Task<BranchDTO> AddBranch(BranchDTO dto, string userId, string role)
         {
             var exists = await _context.Branches.AnyAsync(x => x.BranchName == dto.Name);
             if (exists)
@@ -35,6 +36,16 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
             };
 
             _context.Branches.Add(branch);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Added",
+                Description = $"Added branch {dto.Name} at {dto.Location}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return dto;
         }
@@ -53,18 +64,28 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
             return get;
         }
 
-        public async Task<string> DeleteBranch(int id)
+        public async Task<string> DeleteBranch(int id, string userId, string role)
         {
             var branch = await _context.Branches.FindAsync(id);
             if (branch == null)
                 return "Branch not found.";
 
             _context.Branches.Remove(branch);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Deleted",
+                Description = $"Deleted branch {branch.BranchName}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return "Successfully deleted!";
         }
 
-        public async Task<BranchDTO> UpdateBranch(BranchDTO dto)
+        public async Task<BranchDTO> UpdateBranch(BranchDTO dto, string userId, string role)
         {
             var branch = await _context.Branches.FindAsync(dto.Id);
             if (branch == null)
@@ -74,6 +95,16 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch
             branch.Location = dto.Location;
             branch.Staff = dto.Staff;
             branch.Status = dto.Status;
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Updated",
+                Description = $"Updated branch {dto.Name}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return dto;
         }

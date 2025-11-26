@@ -2,6 +2,7 @@
 using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
 using KapeRest.Core.Entities.SalesTransaction;
+using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -78,6 +79,16 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 UnitPrice = menuItem.Price
             };
             _context.SalesItems.Add(saleItem);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = cashier.Email ?? cashier.UserName ?? "Unknown",
+                Role = "Cashier",
+                Action = "Purchase",
+                Description = $"Completed purchase of {menuItem.ItemName} (Qty: {buy.Quantity}, Total: ₱{total:F2})",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync(); //Save SalesItem
 
             return $"Purchase successful (Receipt #{sale.MenuItemName})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
@@ -126,6 +137,16 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 UnitPrice = menuItem.Price
             };
             _context.SalesItems.Add(saleItem);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = cashier.Email ?? cashier.UserName ?? "Unknown",
+                Role = "Cashier",
+                Action = "Hold Transaction",
+                Description = $"Put transaction on hold for {menuItem.ItemName} (Qty: {buy.Quantity})",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return $"Transaction held (Hold #{transaction.Id})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
@@ -172,12 +193,21 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             sale.MenuItemName = string.Join(", ", saleItems.Select(i => i.MenuItem.ItemName));
             sale.Status = "Completed";
 
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = cashier.Email ?? cashier.UserName ?? "Unknown",
+                Role = "Cashier",
+                Action = "Resume Hold",
+                Description = $"Resumed and completed hold transaction #{sale.Id}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return $"Hold transaction #{sale.Id} completed successfully.";
         }
 
-        public async Task<string> VoidItemAsync(int saleId)
+        public async Task<string> VoidItemAsync(int saleId, string userId, string role)
         {
             var sale = await _context.SalesTransaction
                 .Include(s => s.SalesItems)
@@ -204,13 +234,23 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             }
 
             sale.Status = "Voided";
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Void Sale",
+                Description = $"Voided sale #{sale.Id}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return $"Sale #{sale.Id} voided successfully.";
         }
 
         //Void Request to staff
-        public async Task<string> RequestVoidAsync(int saleId, string reason)
+        public async Task<string> RequestVoidAsync(int saleId, string reason,string user, string role)
         {
             var sale = await _context.SalesTransaction
                 .FirstOrDefaultAsync(s => s.Id == saleId);
@@ -222,13 +262,22 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             sale.Status = "PendingVoid";
             sale.Reason = reason;
 
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = user,
+                Role = role,
+                Action = "Request Void",
+                Description = $"Requested void for sale #{sale.Id}. Reason: {reason}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return $"Void request submitted for Sale #{sale.Id}. Awaiting admin approval.";
         }
 
 
-        public async Task<string> ApproveVoidAsync(int saleId)
+        public async Task<string> ApproveVoidAsync(int saleId, string user, string role)
         {
             var sale = await _context.SalesTransaction
                 .Include(s => s.SalesItems)
@@ -257,6 +306,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
             sale.Status = "Voided";
 
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = user,
+                Role = role,
+                Action = "Approve Void",
+                Description = $"Approved void request for sale #{sale.Id}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return $"Sale #{sale.Id} has been voided successfully.";
@@ -264,7 +322,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
 
 
-        public async Task<string> RejectVoidAsync(int saleId)
+        public async Task<string> RejectVoidAsync(int saleId, string userId, string role)
         {
             var sale = await _context.SalesTransaction
                 .FirstOrDefaultAsync(s => s.Id == saleId);
@@ -273,6 +331,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             if (sale.Status != "PendingVoid") return "Sale is not pending void";
 
             sale.Status = "Completed";
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Reject Void",
+                Description = $"Rejected void request for sale #{sale.Id}",
+                Date = DateTime.Now
+            });
 
             await _context.SaveChangesAsync();
 
@@ -289,6 +356,16 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             if (sale == null) return "Hold not found";
 
             sale.Status = "Canceled";
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = sale.CashierId,
+                Role = "Cashier",
+                Action = "Cancel Hold",
+                Description = $"Canceled hold transaction #{sale.Id}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return $"Hold transaction #{sale.Id} canceled.";

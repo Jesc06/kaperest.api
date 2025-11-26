@@ -18,19 +18,19 @@ namespace KapeRest.Application.Services.Admin.Branch
             _branch = branch;
         }
 
-        public async Task<BranchDTO> AddBranch(BranchDTO add)
+        public async Task<BranchDTO> AddBranch(BranchDTO add, string userId, string role)
         {
-            return await _branch.AddBranch(add);
+            return await _branch.AddBranch(add, userId, role);
         }
 
-        public async Task<string> DeleteBranch(int id)
+        public async Task<string> DeleteBranch(int id, string userId, string role)
         {
-            return await _branch.DeleteBranch(id);
+            return await _branch.DeleteBranch(id, userId, role);
         }
 
-        public async Task<BranchDTO> UpdateBranch(BranchDTO update)
+        public async Task<BranchDTO> UpdateBranch(BranchDTO update, string userId, string role)
         {
-           return  await _branch.UpdateBranch(update);
+           return  await _branch.UpdateBranch(update, userId, role);
         }
         public async Task<object>GetAllBranch()
         {

@@ -87,6 +87,16 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             }
 
             _context.MenuItems.Add(menuItem);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = user,
+                Role = role,
+                Action = "Created",
+                Description = $"Created menu item {dto.Item_name}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return menuItem;
@@ -124,6 +134,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 });
             }
 
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = dto.cashierId,
+                Role = "Admin",
+                Action = "Updated",
+                Description = $"Updated menu item {dto.Item_name}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
             return menuItem;
         }
@@ -144,6 +163,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
 
             // SalesItems are not deleted; MenuItemId will be set to NULL automatically
             _context.MenuItems.Remove(menuItem);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = cashierId,
+                Role = "Admin",
+                Action = "Deleted",
+                Description = $"Deleted menu item {menuItem.ItemName}",
+                Date = DateTime.Now
+            });
 
             try
             {

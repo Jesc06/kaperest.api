@@ -14,14 +14,14 @@ namespace KapeRest.Application.Interfaces.Cashiers.Buy
         Task<string> HoldTransaction(BuyMenuItemDTO buy);
         Task<string> ResumeHoldAsync(int saleId);
         Task<string> CancelHoldAsync(int saleId);
-        Task<string> VoidItemAsync(int saleId);
+        Task<string> VoidItemAsync(int saleId, string userId, string role);
         Task<ICollection> GetHoldTransactions(string cashierId);
 
 
         //Void request
-        Task<string> RequestVoidAsync(int saleId, string reason);
-        Task<string> ApproveVoidAsync(int saleId);
-        Task<string> RejectVoidAsync(int saleId);
+        Task<string> RequestVoidAsync(int saleId, string reason, string user, string role);
+        Task<string> ApproveVoidAsync(int saleId, string user, string role);
+        Task<string> RejectVoidAsync(int saleId, string userId, string role);
 
     }
 }

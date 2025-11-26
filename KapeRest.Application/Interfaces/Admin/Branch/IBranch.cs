@@ -11,9 +11,9 @@ namespace KapeRest.Application.Interfaces.Admin.Branch
 {
     public interface IBranch
     {
-        Task<BranchDTO> AddBranch(BranchDTO dto);
+        Task<BranchDTO> AddBranch(BranchDTO dto, string userId, string role);
         Task<object> GetBranches();
-        Task<string> DeleteBranch(int id);
-        Task<BranchDTO> UpdateBranch(BranchDTO dto);
+        Task<string> DeleteBranch(int id, string userId, string role);
+        Task<BranchDTO> UpdateBranch(BranchDTO dto, string userId, string role);
     }
 }

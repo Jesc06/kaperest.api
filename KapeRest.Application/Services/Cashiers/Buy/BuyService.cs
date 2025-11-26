@@ -1,5 +1,6 @@
 ﻿using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
+using KapeRest.Application.Interfaces.CurrentUserService;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ namespace KapeRest.Application.Services.Cashiers.Buy
     public class BuyService
     {
         private readonly IBuy _buy;
-        public BuyService(IBuy buy)
+        private readonly ICurrentUser _currentUser;
+        public BuyService(IBuy buy, ICurrentUser currentUser)
         {
             _buy = buy;
+            _currentUser = currentUser;
         }
         public async Task<string> BuyItem(BuyMenuItemDTO buy)
         {
@@ -29,9 +32,9 @@ namespace KapeRest.Application.Services.Cashiers.Buy
         {
             return await _buy.ResumeHoldAsync(saleId);
         }
-        public async Task<string> VoidItemAsync(int saleItemId)
+        public async Task<string> VoidItemAsync(int saleItemId, string userId, string role)
         {
-            return await _buy.VoidItemAsync(saleItemId);
+            return await _buy.VoidItemAsync(saleItemId, userId, role);
         }
         public async Task<string> CancelHoldAsync(int saleId)
         {
@@ -47,15 +50,21 @@ namespace KapeRest.Application.Services.Cashiers.Buy
         //void request from cashier
         public async Task<string> RequestVoidAsync(int saleId, string reason)
         {
-            return await _buy.RequestVoidAsync(saleId, reason);
+            var user = _currentUser.Email;
+            var role = _currentUser.Role;
+            return await _buy.RequestVoidAsync(saleId, reason,user,role);
         }
         public async Task<string> ApproveVoidAsync(int saleId)
         {
-            return await _buy.ApproveVoidAsync(saleId);
+            var user = _currentUser.Email;
+            var role = _currentUser.Role;
+            return await _buy.ApproveVoidAsync(saleId,user,role);
         }
         public async Task<string> RejectVoidAsync(int saleId)
         {
-            return await _buy.RejectVoidAsync(saleId);
+            var user = _currentUser.Email;
+            var role = _currentUser.Role;
+            return await _buy.RejectVoidAsync(saleId, user, role);
         }
 
 

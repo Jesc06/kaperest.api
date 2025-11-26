@@ -1,6 +1,7 @@
 ﻿using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.Supplier;
+using KapeRest.Application.Interfaces.CurrentUserService;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,13 +14,17 @@ namespace KapeRest.Application.Services.Admin.Supplier
     public class AddSupplierService
     {
         private readonly ISupplier _supplier;
-        public AddSupplierService(ISupplier supplier)
+        private ICurrentUser _currentUser;
+        public AddSupplierService(ISupplier supplier, ICurrentUser currentUser)
         {
             _supplier = supplier;
+            _currentUser = currentUser;
         }
         public async Task<SupplierResponseDTO> addSupplier(CreateSupplierDTO add)
         {
-            return await _supplier.AddSupplier(add);
+            var user = _currentUser.Email;
+            var role = _currentUser.Role;
+            return await _supplier.AddSupplier(add,user,role);
         }
 
         public async Task<SupplierResponseDTO> UpdateSupplier(UpdateSupplierDTO update, string userId)
@@ -27,9 +32,9 @@ namespace KapeRest.Application.Services.Admin.Supplier
             return await _supplier.UpdateSupplier(update,userId);
         }
 
-        public async Task<string> DeleteSupplier(int supplierId)
+        public async Task<string> DeleteSupplier(int supplierId, string userId, string role)
         {
-            return await _supplier.DeleteSupplier(supplierId);
+            return await _supplier.DeleteSupplier(supplierId, userId, role);
         }
 
         public async Task<ICollection> GetAllSuppliers(string userId)

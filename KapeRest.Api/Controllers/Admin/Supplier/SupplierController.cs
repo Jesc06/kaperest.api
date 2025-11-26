@@ -50,7 +50,10 @@ namespace KapeRest.Controllers.Admin.Supplier
         [HttpDelete("DeleteSupplier/{Id}")]
         public async Task<ActionResult> DeleteSupplier(int Id)
         {
-            var result = await _supplierService.DeleteSupplier(Id);
+            var userIdFromJwt = User.FindFirst("sub")?.Value;
+            var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
+
+            var result = await _supplierService.DeleteSupplier(Id, userIdFromJwt, roleFromJwt);
             if (result is null)
                 return NotFound(new { Message = "Supplier not found or could not be deleted." });
             return Ok(new { Message = "Supplier deleted successfully." });

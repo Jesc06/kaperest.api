@@ -129,7 +129,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 Username = username,
                 Role = role,
                 Action = "Approved Account",
-                Description = "Approved pending account successfully registered.",
+                Description = $"Approved {user.FirstName} pending account {user.Email} successfully registered.",
                 Date = DateTime.Now
             });
 
@@ -148,7 +148,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccount
                 Username = username,
                 Role = role,
                 Action = "Rejected Account",
-                Description = "Rejected pending account",
+                Description = $"Rejected pending account {pending.Email}",
                 Date = DateTime.Now
             });
 

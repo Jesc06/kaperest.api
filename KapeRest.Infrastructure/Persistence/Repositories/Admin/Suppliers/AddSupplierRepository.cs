@@ -1,5 +1,6 @@
 ﻿using KapeRest.Application.DTOs.Admin.Supplier;
 using KapeRest.Application.Interfaces.Admin.Supplier;
+using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.InventoryEntities;
 using KapeRest.Domain.Entities.SupplierEntities;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -21,7 +22,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             _context = context;
         }
         
-        public async Task<SupplierResponseDTO> AddSupplier(CreateSupplierDTO addSupplier)
+        public async Task<SupplierResponseDTO> AddSupplier(CreateSupplierDTO addSupplier,string user, string role)
         {
             var supplier = new AddSupplier
             {
@@ -36,6 +37,16 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             };
 
             await _context.Suppliers.AddAsync(supplier);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = user,
+                Role = role,
+                Action = "Added",
+                Description = $"Added supplier {addSupplier.SupplierName}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return new SupplierResponseDTO
@@ -67,6 +78,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             product.Email = update.Email ?? product.Email;
             product.Address = update.Address ?? product.Address;
 
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = "Admin",
+                Action = "Updated",
+                Description = $"Updated supplier {product.SupplierName}",
+                Date = DateTime.Now
+            });
+
             await _context.SaveChangesAsync();
 
             return new SupplierResponseDTO
@@ -83,13 +103,22 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
             };
         }
 
-        public async Task<string> DeleteSupplier(int productId)
+        public async Task<string> DeleteSupplier(int productId, string userId, string role)
         {
             var product = await _context.Suppliers.FindAsync(productId);
             if (product == null)
                 return "Product not found.";
 
             _context.Suppliers.Remove(product);
+
+            _context.AuditLog.Add(new AuditLogEntities
+            {
+                Username = userId,
+                Role = role,
+                Action = "Deleted",
+                Description = $"Deleted supplier {product.SupplierName}",
+                Date = DateTime.Now
+            });
 
             await _context.SaveChangesAsync();
 

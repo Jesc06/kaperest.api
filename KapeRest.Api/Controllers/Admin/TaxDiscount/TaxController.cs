@@ -18,14 +18,20 @@ namespace KapeRest.Api.Controllers.Admin.TaxDiscount
         [HttpPost("AddTax")]
         public async Task<ActionResult> AddTax(TaxDiscountDTO dto)
         {
-            var add = await _taxDiscountService.AddTax(dto);
+            var userIdFromJwt = User.FindFirst("sub")?.Value;
+            var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
+
+            var add = await _taxDiscountService.AddTax(dto, userIdFromJwt, roleFromJwt);
             return Ok(add);
         }
 
         [HttpPut("UpdateTax")]
         public async Task<ActionResult> UpdateDiscount(UpdateTaxDiscountDTO dto)
         {
-            var update = await _taxDiscountService.UpdateDiscount(dto);
+            var userIdFromJwt = User.FindFirst("sub")?.Value;
+            var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
+
+            var update = await _taxDiscountService.UpdateDiscount(dto, userIdFromJwt, roleFromJwt);
             return Ok(update);
         }
 
@@ -39,7 +45,10 @@ namespace KapeRest.Api.Controllers.Admin.TaxDiscount
         [HttpDelete("DeleteTax")]
         public async Task<ActionResult> DeleteTaxAndDiscount(int id)
         {
-            var delete = await _taxDiscountService.DeleteTax(id);
+            var userIdFromJwt = User.FindFirst("sub")?.Value;
+            var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
+
+            var delete = await _taxDiscountService.DeleteTax(id, userIdFromJwt, roleFromJwt);
             return Ok(delete);
         }
 

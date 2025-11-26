@@ -28,7 +28,9 @@ namespace KapeRest.Api.Controllers.Admin.TaxDiscount
         [HttpPut("UpdateDiscount")]
         public async Task<ActionResult> UpdateDiscount(UpdateTaxDiscountDTO dto)
         {
-            var result = await _taxDiscountService.UpdateDiscount(dto);
+            var userIdFromJwt = User.FindFirst("uid")?.Value;
+            var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
+            var result = await _taxDiscountService.UpdateDiscount(dto,userIdFromJwt,roleFromJwt);
             return Ok(result);
         }
 
