@@ -21,9 +21,9 @@ namespace KapeRest.Application.Services.Cashiers.Sales
         {
             return await _salesReport.GetDailySalesReportAsync();
         }
-        public async Task<ICollection<SalesReportDTO>> GetWeeklySaleReport()
+        public async Task<ICollection<SalesReportDTO>> GetYearlySaleReport()
         {
-            return await _salesReport.GetWeeklySalesReportAsync();
+            return await _salesReport.GetYearlySalesReportAsync();
         }
         public async Task<ICollection<SalesReportDTO>> GetMonthlySaleReport()
         {

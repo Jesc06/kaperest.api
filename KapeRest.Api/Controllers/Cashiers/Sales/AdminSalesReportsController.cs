@@ -27,10 +27,10 @@ namespace KapeRest.Api.Controllers.Users.Sales
             var result = await _salesReportService.GetDailySaleReport();
             return Ok(result);
         }
-        [HttpGet("AdminWeeklyReports")]
-        public async Task<ActionResult> WeeklyReports()
+        [HttpGet("AdminYearlyReports")]
+        public async Task<ActionResult> YearlyReports()
         {
-            var result = await _salesReportService.GetWeeklySaleReport();
+            var result = await _salesReportService.GetYearlySaleReport();
             return Ok(result);
         }
         [HttpGet("AdminMonthlyReports")]
@@ -48,11 +48,11 @@ namespace KapeRest.Api.Controllers.Users.Sales
             var result = await _generateSalesReportUseCase.AdminDailySalesReport(logopath);
             return File(result, "application/pdf", "AdminDailySalesReport.pdf");
         }
-        [HttpGet("AdminGenerateWeeklyPdfReports")]
-        public async Task<ActionResult> AdminGenerateWeeklyPdfReports()
+        [HttpGet("AdminGenerateYearlyPdfReports")]
+        public async Task<ActionResult> AdminGenerateYearlyPdfReports()
         {
             var logopath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "kapelogo.png");
-            var result = await _generateSalesReportUseCase.AdminWeeklySalesReport(logopath);
+            var result = await _generateSalesReportUseCase.AdminYearlySalesReport(logopath);
             return File(result, "application/pdf", "AdminWeeklySalesReport.pdf");
         }
         [HttpGet("AdminGenerateMonthlyPdfReports")]

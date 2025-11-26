@@ -10,7 +10,7 @@ namespace KapeRest.Application.Interfaces.Cashiers.Sales
     public interface IAdminSalesReport
     {
         Task<ICollection<SalesReportDTO>> GetDailySalesReportAsync();
-        Task<ICollection<SalesReportDTO>> GetWeeklySalesReportAsync();
+        Task<ICollection<SalesReportDTO>> GetYearlySalesReportAsync();
         Task<ICollection<SalesReportDTO>> GetMonthlySalesReportAsync();
     }
 }

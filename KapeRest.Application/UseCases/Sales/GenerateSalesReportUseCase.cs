@@ -25,9 +25,9 @@ namespace KapeRest.Application.UseCases.Sales
             var sales = await _AdminsalesReport.GetDailySalesReportAsync();
             return _pdfService.GenerateSalesReport(sales, logopath, "Admin");
         }
-        public async Task<byte[]> AdminWeeklySalesReport(string logopath)
+        public async Task<byte[]> AdminYearlySalesReport(string logopath)
         {
-            var sales = await _AdminsalesReport.GetWeeklySalesReportAsync();
+            var sales = await _AdminsalesReport.GetYearlySalesReportAsync();
             return _pdfService.GenerateSalesReport(sales, logopath, "Admin");
         }
         public async Task<byte[]> AdminMonthlySalesReport(string logopath)
