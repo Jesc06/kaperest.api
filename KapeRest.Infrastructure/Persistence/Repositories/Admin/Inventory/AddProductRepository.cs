@@ -165,5 +165,47 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             return products;
         }
 
+
+        public async Task<ICollection> GetAllProducts_Admin()
+        {
+            var products = await _context.Products
+                .Select(p => new
+                {
+                    p.Id,
+                    p.ProductName,
+                    p.Stocks,
+                    p.Units,
+                    p.CostPrice,
+                    p.TransactionDate,
+                    p.Supplier.SupplierName,
+
+                    Branch = _context.Branches
+                        .Where(b => b.Id == p.BranchId)
+                        .Select(b => new
+                        {
+                            b.BranchName,
+                            b.Location
+                        })
+                        .FirstOrDefault(),
+
+                    Cashier = _context.UsersIdentity
+                        .Where(c => c.Id == p.CashierId)
+                        .Select(c => new
+                        {
+                            c.FirstName,
+                            c.LastName,
+                            c.Email
+                        })
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return products;
+        }
+
+
+
+
+
     }
 }

@@ -76,6 +76,13 @@ namespace KapeRest.Controllers.Admin.Inventory
             return Ok(products);
         }
 
+        [HttpGet("GetAllProducts_Admin")]
+        public async Task<ActionResult> GetAllProducts_Admin()
+        {
+            var products = await _inventoryService.GetAllProducts_Admin();
+            return Ok(products);
+        }
+
 
 
     }

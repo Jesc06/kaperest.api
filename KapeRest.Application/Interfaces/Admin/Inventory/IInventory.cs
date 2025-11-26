@@ -15,5 +15,6 @@ namespace KapeRest.Application.Interfaces.Admin.Inventory
         Task<string> UpdateProductOfSuppliers(string currentUser,string role,UpdateProductDTO update);
         Task<bool> DeleteProductOfSuppliers(string currentUser,string role,int productId);
         Task<ICollection> GetAllProducts(string userID);
+        Task<ICollection> GetAllProducts_Admin();
     }
 }
