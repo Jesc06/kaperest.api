@@ -53,8 +53,12 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             decimal discount = subtotal * (buy.DiscountPercent / 100m);
             decimal total = subtotal + tax - discount;
 
+
+            string generatedReceipt = $"RCP-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}";
+
             var sale = new SalesTransactionEntities
             {
+                ReceiptNumber = generatedReceipt,
                 MenuItemName = menuItem.ItemName,
                 CashierId = cashier.Id,
                 BranchId = cashier.BranchId,
