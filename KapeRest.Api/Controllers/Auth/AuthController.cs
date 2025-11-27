@@ -21,12 +21,15 @@ namespace KapeRest.Controllers.Auth
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<CreateJwtTokenDTO>> Login([FromBody]LoginDTO login)
+        public async Task<ActionResult<CreateJwtTokenDTO>> Login([FromBody] LoginDTO login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var result = await _accountService.Login(login);
+
+            if (result == null || string.IsNullOrEmpty(result.Token))
+                return BadRequest("Invalid credentials");
 
             var tokenDTO = new CreateJwtTokenDTO
             {
@@ -34,11 +37,7 @@ namespace KapeRest.Controllers.Auth
                 RefreshToken = result.RefreshToken
             };
 
-            if (result is not null)
-            {
-                return Ok(tokenDTO);
-            }
-            return BadRequest("Invalid credentials");
+            return Ok(tokenDTO);
         }
 
 

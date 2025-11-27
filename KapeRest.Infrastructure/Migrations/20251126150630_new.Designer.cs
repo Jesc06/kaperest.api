@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251126003115_new")]
+    [Migration("20251126150630_new")]
     partial class @new
     {
         /// <inheritdoc />
