@@ -92,7 +92,7 @@ namespace KapeRest.Controllers.Users.Buy
         [HttpPost("VoidItem")]
         public async Task<ActionResult> VoidItem([FromQuery] int saleItemId)
         {
-            var userIdFromJwt = User.FindFirst("sub")?.Value;
+            var userIdFromJwt = User.FindFirst("uid")?.Value;
             var roleFromJwt = User.FindFirst("role")?.Value ?? "Cashier";
 
             var result = await _buyService.VoidItemAsync(saleItemId, userIdFromJwt, roleFromJwt); 
@@ -135,14 +135,17 @@ namespace KapeRest.Controllers.Users.Buy
         }
         [HttpPost("ApprovedVoid")]
         public async Task<ActionResult> ApprovedVoid(int saleId)
-        {
+        {   
             var result = await _buyService.ApproveVoidAsync(saleId);
             return Ok(result);
         }
         [HttpPost("RejectVoid")]
         public async Task<ActionResult> RejectVoid(int saleId)
         {
-            var result = await _buyService.RejectVoidAsync(saleId);
+            var userIdFromJwt = User.FindFirst("uid")?.Value;
+            var roleFromJwt = User.FindFirst("role")?.Value ?? "Admin";
+
+            var result = await _buyService.RejectVoidAsync(saleId, userIdFromJwt, roleFromJwt);
             return Ok(result);
         }
 

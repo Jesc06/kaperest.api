@@ -1,6 +1,5 @@
 ﻿using KapeRest.Application.DTOs.Admin.Branch;
 using KapeRest.Application.Interfaces.Admin.Branch;
-using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Core.Entities.Branch;
 using System;
 using System.Collections;
@@ -14,32 +13,24 @@ namespace KapeRest.Application.Services.Admin.Branch
     public class BranchService
     {
         private readonly IBranch _branch;
-        private readonly ICurrentUser _currentUser;
-        public BranchService(IBranch branch, ICurrentUser currentUser)
+        public BranchService(IBranch branch)
         {
             _branch = branch;
-            _currentUser = currentUser; 
         }
 
-        public async Task<BranchDTO> AddBranch(BranchDTO add)
+        public async Task<BranchDTO> AddBranch(BranchDTO add, string userId, string role)
         {
-            var user = _currentUser.Email;
-            var role = _currentUser.Role;
-            return await _branch.AddBranch(add, user, role);
+            return await _branch.AddBranch(add, userId, role);
         }
 
-        public async Task<string> DeleteBranch(int id)
+        public async Task<string> DeleteBranch(int id, string userId, string role)
         {
-            var user = _currentUser.Email;
-            var role = _currentUser.Role;
-            return await _branch.DeleteBranch(id, user, role);
+            return await _branch.DeleteBranch(id, userId, role);
         }
 
-        public async Task<BranchDTO> UpdateBranch(BranchDTO update)
+        public async Task<BranchDTO> UpdateBranch(BranchDTO update, string userId, string role)
         {
-            var user = _currentUser.Email;
-            var role = _currentUser.Role;
-            return  await _branch.UpdateBranch(update, user, role);
+           return  await _branch.UpdateBranch(update, userId, role);
         }
         public async Task<object>GetAllBranch()
         {

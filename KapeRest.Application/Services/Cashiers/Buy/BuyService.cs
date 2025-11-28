@@ -1,6 +1,5 @@
 ﻿using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
-using KapeRest.Application.Interfaces.CurrentUserService;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,11 +12,9 @@ namespace KapeRest.Application.Services.Cashiers.Buy
     public class BuyService
     {
         private readonly IBuy _buy;
-        private readonly ICurrentUser _currentUser;
-        public BuyService(IBuy buy, ICurrentUser currentUser)
+        public BuyService(IBuy buy)
         {
             _buy = buy;
-            _currentUser = currentUser;
         }
         public async Task<string> BuyItem(BuyMenuItemDTO buy)
         {
@@ -50,21 +47,15 @@ namespace KapeRest.Application.Services.Cashiers.Buy
         //void request from cashier
         public async Task<string> RequestVoidAsync(int saleId, string reason)
         {
-            var user = _currentUser.Email;
-            var role = _currentUser.Role;
-            return await _buy.RequestVoidAsync(saleId, reason,user,role);
+            return await _buy.RequestVoidAsync(saleId, reason);
         }
         public async Task<string> ApproveVoidAsync(int saleId)
         {
-            var user = _currentUser.Email;
-            var role = _currentUser.Role;
-            return await _buy.ApproveVoidAsync(saleId,user,role);
+            return await _buy.ApproveVoidAsync(saleId);
         }
-        public async Task<string> RejectVoidAsync(int saleId)
+        public async Task<string> RejectVoidAsync(int saleId, string userId, string role)
         {
-            var user = _currentUser.Email;
-            var role = _currentUser.Role;
-            return await _buy.RejectVoidAsync(saleId, user, role);
+            return await _buy.RejectVoidAsync(saleId, userId, role);
         }
 
 

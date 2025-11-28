@@ -53,12 +53,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             decimal discount = subtotal * (buy.DiscountPercent / 100m);
             decimal total = subtotal + tax - discount;
 
-
-            string generatedReceipt = $"RCP-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}";
-
             var sale = new SalesTransactionEntities
             {
-                ReceiptNumber = generatedReceipt,
                 MenuItemName = menuItem.ItemName,
                 CashierId = cashier.Id,
                 BranchId = cashier.BranchId,
@@ -254,7 +250,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
         }
 
         //Void Request to staff
-        public async Task<string> RequestVoidAsync(int saleId, string reason,string user, string role)
+        public async Task<string> RequestVoidAsync(int saleId, string reason)
         {
             var sale = await _context.SalesTransaction
                 .FirstOrDefaultAsync(s => s.Id == saleId);
@@ -268,8 +264,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                Username = user,
-                Role = role,
+                Username = sale.CashierId,
+                Role = "Staff",
                 Action = "Request Void",
                 Description = $"Requested void for sale #{sale.Id}. Reason: {reason}",
                 Date = DateTime.Now
@@ -281,7 +277,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
         }
 
 
-        public async Task<string> ApproveVoidAsync(int saleId, string user, string role)
+        public async Task<string> ApproveVoidAsync(int saleId)
         {
             var sale = await _context.SalesTransaction
                 .Include(s => s.SalesItems)
@@ -312,8 +308,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
             _context.AuditLog.Add(new AuditLogEntities
             {
-                Username = user,
-                Role = role,
+                Username = "Admin",
+                Role = "Admin",
                 Action = "Approve Void",
                 Description = $"Approved void request for sale #{sale.Id}",
                 Date = DateTime.Now
@@ -323,6 +319,8 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
 
             return $"Sale #{sale.Id} has been voided successfully.";
         }
+
+
 
         public async Task<string> RejectVoidAsync(int saleId, string userId, string role)
         {

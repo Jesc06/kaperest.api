@@ -19,8 +19,8 @@ namespace KapeRest.Application.Interfaces.Cashiers.Buy
 
 
         //Void request
-        Task<string> RequestVoidAsync(int saleId, string reason, string user, string role);
-        Task<string> ApproveVoidAsync(int saleId, string user, string role);
+        Task<string> RequestVoidAsync(int saleId, string reason);
+        Task<string> ApproveVoidAsync(int saleId);
         Task<string> RejectVoidAsync(int saleId, string userId, string role);
 
     }

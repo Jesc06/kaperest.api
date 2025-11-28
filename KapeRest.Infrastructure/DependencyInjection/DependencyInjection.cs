@@ -4,7 +4,6 @@ using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
 using KapeRest.Application.Interfaces.Admin.Inventory;
 using KapeRest.Application.Interfaces.Admin.PendingAcc;
 using KapeRest.Application.Interfaces.Admin.Supplier;
-using KapeRest.Application.Interfaces.Admin.TaxDiscount;
 using KapeRest.Application.Interfaces.Auth;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
 using KapeRest.Application.Interfaces.Cashiers.Sales;
@@ -17,14 +16,12 @@ using KapeRest.Application.Services.Admin.CreateMenuItem;
 using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Application.Services.Admin.PendingAcc;
 using KapeRest.Application.Services.Admin.Supplier;
-using KapeRest.Application.Services.Admin.TaxDiscount;
 using KapeRest.Application.Services.Auth;
 using KapeRest.Application.Services.Cashiers.Buy;
 using KapeRest.Application.Services.Cashiers.Sales;
 using KapeRest.Application.UseCases.Sales;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.Audit;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch;
-using KapeRest.Infrastructure.Persistence.Repositories.Admin.TaxDiscount;
 using KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales;
 using KapeRest.Infrastructure.Services.PayMongoService;
 using KapeRest.Infrastructure.Services.PdfServices;
@@ -79,9 +76,7 @@ namespace KapeRest.Infrastructure.DependencyInjection
             services.AddScoped<IBuy, BuyRepository>();
             services.AddScoped<BuyService>();
 
-            services.AddScoped<ITaxDiscount, TaxDiscountRepository>();
-            services.AddScoped<TaxDiscountService>();
-
+      
             services.AddScoped<IBranch, BranchRepository>();
             services.AddScoped<BranchService>();
 

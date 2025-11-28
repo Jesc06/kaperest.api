@@ -22,17 +22,17 @@
                 _menuItemService = menuItemService;
             }
 
-            [HttpPost("CreateMenuItem")]
-            public async Task<IActionResult> CreateMenuItem([FromForm] CreateMenuItemDTOs dto)
+        [HttpPost("CreateMenuItem")]
+        public async Task<IActionResult> CreateMenuItem([FromForm] CreateMenuItemDTOs dto)
+        {
+            // Remove the throw Exception, use proper validation
+            if (dto.Image == null || dto.Image.Length == 0)
             {
-                if (dto.Image == null || dto.Image.Length == 0)
-                {
-                    throw new Exception("Image cannot be null");
-                }
+                return BadRequest(new { message = "Image is required" });
+            }
 
-                if(dto.Image == null || dto.Image.Length == 0)
-                    return BadRequest();
-
+            try
+            {
                 using var ms = new MemoryStream();
                 await dto.Image.CopyToAsync(ms);
 
@@ -40,28 +40,40 @@
                     ? new List<MenuItemProductDTO>()
                     : JsonSerializer.Deserialize<List<MenuItemProductDTO>>(dto.ProductsJson);
 
-                var cashierIdFromJWTClaims = User.FindFirst("cashierId")?.Value;//automatic get cashierId from JWT claims
+                var cashierIdFromJWTClaims = User.FindFirst("cashierId")?.Value;
 
-                /*parang ang pinaka purpose ko dito sa cashierID jwt claims ay sa features na staff and cashier mag ka relationship kung
-                 baga kapag nag add ako ng item sa staff account automatically kung anong cashier ang naka tali sa staff acc
-                 sa cashier acc lang ma access o mapupunta yung created item na menu ng kaperest*/
+                if (string.IsNullOrEmpty(cashierIdFromJWTClaims))
+                {
+                    return Unauthorized(new { message = "Cashier ID not found in token" });
+                }
 
                 var appDTO = new CreateMenuItemDTO
                 {
                     Item_name = dto.Item_name,
                     Price = dto.Price,
-                    Category = dto.Category,    
+                    Category = dto.Category,
                     Description = dto.Description,
                     Image = ms.ToArray(),
                     Products = products!,
-                    cashierId = cashierIdFromJWTClaims!
+                    cashierId = cashierIdFromJWTClaims!,
+                    IsAvailable = "Yes"
                 };
-           
+
                 var result = await _menuItemService.CreateMenuItem(appDTO);
                 return Ok(result);
             }
+            catch (Exception ex)
+            {
+                // Proper error handling
+                return StatusCode(500, new
+                {
+                    message = "Failed to create menu item",
+                    error = ex.Message
+                });
+            }
+        }
 
-            [HttpPut("UpdateMenuItem")]
+        [HttpPut("UpdateMenuItem")]
             public async Task<IActionResult> UpdateMenuItem([FromForm] UpdateMenuItemDTOs dto)
             {
                 if (dto.Image == null || dto.Image.Length == 0)
