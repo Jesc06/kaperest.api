@@ -1,6 +1,8 @@
 ﻿using KapeRest.Api.DTOs.Buy;
 using KapeRest.Application.DTOs.Users.Buy;
+using KapeRest.Application.Interfaces.Cashiers.Buy;
 using KapeRest.Application.Services.Cashiers.Buy;
+using KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,8 @@ namespace KapeRest.Controllers.Users.Buy
     public class BuyController : ControllerBase
     {
         private readonly BuyService _buyService;
+       
+       
         public BuyController(BuyService buyService)
         {
             _buyService = buyService;
@@ -49,6 +53,11 @@ namespace KapeRest.Controllers.Users.Buy
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+
+
+
+
 
         [HttpPost("HoldTransaction")]
         public async Task<ActionResult> HoldTransaction(BuyDTO buy)

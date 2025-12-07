@@ -41,6 +41,15 @@ namespace KapeRest.Controllers.Auth
         }
 
 
+        [HttpGet("total-users")]
+        public async Task<IActionResult> GetTotalUsers()
+        {
+            var totalUsers = await _accountService.TotalUsers();
+            return Ok(new { TotalUsers = totalUsers });
+        }
+
+
+
         [HttpPost("RefreshToken")]
         public async Task<ActionResult<JwtRefreshResponseDTO>> RefreshToken([FromBody]JwtRefreshRequestDTO refreshToken)
         {

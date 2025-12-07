@@ -181,14 +181,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-#region --Seed Admin Account--
+#region --Seed Admin Account and Sample Data--
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UsersIdentity>>();
     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+    // Seed admin account from environment variables
     await AdminSeededAccount.AdminAccount(roleManager, userManager, config);
+    
+    // Seed comprehensive sample data (3 users, 200+ records, menu items with images)
+    await DataSeeder.SeedAllData(context, userManager, roleManager);
 }
 #endregion
 
