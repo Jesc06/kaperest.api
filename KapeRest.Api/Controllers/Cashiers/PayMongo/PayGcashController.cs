@@ -149,5 +149,106 @@ namespace KapeRest.Api.Controllers.Cashiers.PayMongo
             }
         }
 
+        [HttpPost("CompletePurchase")]
+        public async Task<IActionResult> CompletePurchaseManually([FromQuery] string referenceId)
+        {
+            try
+            {
+                Console.WriteLine($"Manual completion requested for reference: {referenceId}");
+                
+                // Check if already completed
+                var alreadyCompleted = await _buy.IsGCashTransactionCompletedAsync(referenceId);
+                if (alreadyCompleted)
+                {
+                    return Ok(new { 
+                        success = true,
+                        message = "Transaction already completed"
+                    });
+                }
+
+                // Verify payment status first
+                var verifyResult = await _pay.VerifyPaymentStatusAsync(referenceId);
+                
+                if (verifyResult == null || 
+                    (verifyResult.Status?.ToLower() != "chargeable" && verifyResult.Status?.ToLower() != "authorized"))
+                {
+                    return BadRequest(new { 
+                        success = false,
+                        message = $"Payment not yet authorized. Status: {verifyResult?.Status}"
+                    });
+                }
+
+                // Complete the purchase
+                var completed = await _buy.CompleteGCashPurchaseAsync(referenceId, null);
+                
+                if (completed)
+                {
+                    return Ok(new { 
+                        success = true,
+                        message = "Purchase completed successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new { 
+                        success = false,
+                        message = "Failed to complete purchase. Please check if pending payment data exists."
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error completing purchase: {ex.Message}");
+                return StatusCode(500, new { 
+                    success = false,
+                    error = ex.Message 
+                });
+            }
+        }
+
+        [HttpGet("TestCompletion")]
+        public async Task<IActionResult> TestCompletion([FromQuery] string referenceId)
+        {
+            try
+            {
+                Console.WriteLine($"=== TEST COMPLETION for {referenceId} ===");
+                
+                // Step 1: Check if already completed
+                var alreadyCompleted = await _buy.IsGCashTransactionCompletedAsync(referenceId);
+                Console.WriteLine($"Already completed: {alreadyCompleted}");
+                
+                if (alreadyCompleted)
+                {
+                    return Ok(new { 
+                        step = "Already completed",
+                        success = true,
+                        message = "Transaction already exists in database"
+                    });
+                }
+
+                // Step 2: Force complete without checking PayMongo status (for testing)
+                Console.WriteLine("Attempting to complete purchase...");
+                var completed = await _buy.CompleteGCashPurchaseAsync(referenceId, null);
+                Console.WriteLine($"Completion result: {completed}");
+                
+                return Ok(new { 
+                    step = "Completion attempted",
+                    success = completed,
+                    message = completed ? 
+                        "Purchase completed successfully! Check your sales/purchases now." : 
+                        "Failed to complete. Check console logs. Make sure pending payment data was saved during checkout."
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in test completion: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return StatusCode(500, new { 
+                    error = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
+        }
+
     }
 }

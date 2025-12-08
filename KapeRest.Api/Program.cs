@@ -59,7 +59,11 @@ Env.Load();
     if (string.IsNullOrEmpty(apiKey))
         throw new Exception("PayMongo API key not found in .env");
 
-    builder.Services.AddScoped<IPayMongo>(provider => new PayMongo(apiKey));
+    builder.Services.AddScoped<IPayMongo>(provider =>
+    {
+        var dbContext = provider.GetRequiredService<ApplicationDbContext>();
+        return new PayMongo(apiKey, dbContext);
+    });
 #endregion
 
 #region --Identity--
