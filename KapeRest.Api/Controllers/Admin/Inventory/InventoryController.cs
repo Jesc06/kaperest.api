@@ -83,6 +83,19 @@ namespace KapeRest.Controllers.Admin.Inventory
             return Ok(products);
         }
 
+        [HttpGet("GetStockMovements")]
+        public async Task<ActionResult> GetStockMovements()
+        {
+            var userIdFromJwtClaims = User.FindFirst("uid")?.Value;
+
+            if (string.IsNullOrEmpty(userIdFromJwtClaims))
+            {
+                return Unauthorized(new { message = "User ID not found in token" });
+            }
+
+            var movements = await _inventoryService.GetStockMovements(userIdFromJwtClaims);
+            return Ok(movements);
+        }
 
 
     }
