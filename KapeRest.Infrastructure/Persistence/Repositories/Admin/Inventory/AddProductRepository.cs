@@ -203,9 +203,29 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory
             return products;
         }
 
+        public async Task<ICollection> GetStockMovements(string userId)
+        {
+            var movements = await _context.StockMovements
+                .Include(sm => sm.Product)
+                .Where(sm => sm.UserId == userId)
+                .OrderByDescending(sm => sm.TransactionDate)
+                .Select(sm => new
+                {
+                    sm.Id,
+                    sm.ProductId,
+                    ProductName = sm.Product.ProductName,
+                    sm.MovementType,
+                    sm.Quantity,
+                    sm.UnitPrice,
+                    sm.Reason,
+                    sm.TransactionDate,
+                    sm.UserId,
+                    sm.BranchId
+                })
+                .ToListAsync();
 
-
-
+            return movements;
+        }
 
     }
 }

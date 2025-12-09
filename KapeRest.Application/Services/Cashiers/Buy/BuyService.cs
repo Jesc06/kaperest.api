@@ -20,7 +20,6 @@ namespace KapeRest.Application.Services.Cashiers.Buy
         {
             return await _buy.BuyMenuItemAsync(buy);
         }
-
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
         {
             return await _buy.HoldTransaction(buy);
@@ -56,6 +55,16 @@ namespace KapeRest.Application.Services.Cashiers.Buy
         public async Task<string> RejectVoidAsync(int saleId, string userId, string role)
         {
             return await _buy.RejectVoidAsync(saleId, userId, role);
+        }
+
+        public async Task<bool> CompleteGCashPurchaseAsync(string paymentReference, string cashierId)
+        {
+            return await _buy.CompleteGCashPurchaseAsync(paymentReference, cashierId);
+        }
+
+        public async Task<bool> IsGCashTransactionCompletedAsync(string paymentReference)
+        {
+            return await _buy.IsGCashTransactionCompletedAsync(paymentReference);
         }
 
 

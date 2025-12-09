@@ -10,5 +10,6 @@ namespace KapeRest.Application.Interfaces.Cashiers.Sales
     public interface IsalesTransaction
     {
         Task<ICollection<SalesTransactionEntities>> Purchases(string cashierId);
+        Task<decimal> GetTotalSalesAsync();
     }
 }

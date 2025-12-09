@@ -42,6 +42,13 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Account
             _jwtService = jwtService;
         }
 
+
+        public async Task<int> GetTotalUsersAsync()
+        {
+            return await _userManager.Users.CountAsync();
+        }
+
+
         public async Task<string> RegisterAccount(RegisterAccountDTO register)
         {
             var users = new UsersIdentity

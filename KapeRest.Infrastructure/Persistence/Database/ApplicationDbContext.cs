@@ -14,6 +14,7 @@ using KapeRest.Core.Entities.Tax_Rate;
 using KapeRest.Core.Entities.Branch;
 using KapeRest.Core.Entities.SalesTransaction;
 using KapeRest.Core.Entities.MenuEntities;
+using KapeRest.Core.Entities.PendingPaymentEntities;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {
@@ -41,6 +42,22 @@ namespace KapeRest.Infrastructures.Persistence.Database
                     .WithMany()
                     .HasForeignKey(e => e.ProductOfSupplierId)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ---------------------------
+            // MENU ITEM SIZE
+            // ---------------------------
+            modelBuilder.Entity<MenuItemSize>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.MenuItem)
+                    .WithMany(mi => mi.MenuItemSizes)
+                    .HasForeignKey(e => e.MenuItemId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.MenuItemId, e.Size })
+                    .IsUnique();
             });
 
             // ---------------------------
@@ -103,13 +120,16 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public DbSet<AddSupplier> Suppliers { get; set; }
         public DbSet<SupplierTransactionHistory> SupplierTransactionHistories { get; set; }
         public DbSet<ProductOfSupplier> Products { get; set; }
+        public DbSet<StockMovement> StockMovements { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<MenuItemProduct> MenuItemProducts { get; set; }
+        public DbSet<MenuItemSize> MenuItemSizes { get; set; }
         #endregion
 
         #region--Sales Transaction--
         public DbSet<SalesTransactionEntities> SalesTransaction { get; set; }
         public DbSet<SalesItemEntities> SalesItems { get; set; }
+        public DbSet<PendingGCashPaymentEntities> PendingGCashPayments { get; set; }
         #endregion
 
         #region--Auditlogs--

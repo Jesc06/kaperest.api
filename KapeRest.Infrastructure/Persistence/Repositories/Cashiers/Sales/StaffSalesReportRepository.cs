@@ -86,5 +86,18 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
         }
         #endregion
 
+
+
+
+
+
+
+
+
+
+            
+
+
+
     }
 }

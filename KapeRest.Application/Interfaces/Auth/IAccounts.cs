@@ -16,5 +16,6 @@ namespace KapeRest.Application.Interfaces.Auth
         Task Logout(string email);
         Task<bool> ChangePassword(ChangePassDTO changePassDTO);
         Task<JwtRefreshResponseDTO> RefreshToken(JwtRefreshRequestDTO requestToken);
+        Task<int> GetTotalUsersAsync();
     }
 }

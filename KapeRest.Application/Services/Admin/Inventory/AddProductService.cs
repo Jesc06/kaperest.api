@@ -65,6 +65,10 @@ namespace KapeRest.Application.Services.Admin.Inventory
             return await _inventory.GetAllProducts_Admin();
         }
 
+        public async Task<ICollection> GetStockMovements(string userId)
+        {
+            return await _inventory.GetStockMovements(userId);
+        }
 
     }
 }

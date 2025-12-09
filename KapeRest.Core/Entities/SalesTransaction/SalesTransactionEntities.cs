@@ -11,7 +11,7 @@ namespace KapeRest.Core.Entities.SalesTransaction
         public int Id { get; set; }
         public string ReceiptNumber { get; set; } = string.Empty;
         public string MenuItemName { get; set; } = string.Empty;
-        public DateTime DateTime { get; set; } = DateTime.UtcNow;
+        public DateTime DateTime { get; set; }
 
         public string CashierId { get; set; } = string.Empty;  
         public int? BranchId { get; set; }                    
@@ -24,6 +24,10 @@ namespace KapeRest.Core.Entities.SalesTransaction
         public string PaymentMethod { get; set; } = "Cash";   
         public string Status { get; set; }
         public string? Reason { get; set; }
+
+
+        public string? PaymentReference { get; set; }
+        public string? CheckoutUrl { get; set; }
 
         public ICollection<SalesItemEntities> SalesItems { get; set; } = new List<SalesItemEntities>();
     }

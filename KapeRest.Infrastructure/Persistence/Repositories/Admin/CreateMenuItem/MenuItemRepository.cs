@@ -86,6 +86,20 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 }
             }
 
+            // Add size variations if provided
+            if (dto.Sizes != null && dto.Sizes.Count > 0)
+            {
+                foreach (var size in dto.Sizes)
+                {
+                    menuItem.MenuItemSizes.Add(new MenuItemSize
+                    {
+                        Size = size.Size,
+                        Price = size.Price,
+                        IsAvailable = size.IsAvailable
+                    });
+                }
+            }
+
             _context.MenuItems.Add(menuItem);
 
             _context.AuditLog.Add(new AuditLogEntities
@@ -134,6 +148,25 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 });
             }
 
+            // Update size variations
+            var existingSizes = _context.MenuItemSizes
+                .Where(s => s.MenuItemId == dto.Id);
+            _context.MenuItemSizes.RemoveRange(existingSizes);
+
+            if (dto.Sizes != null && dto.Sizes.Count > 0)
+            {
+                foreach (var size in dto.Sizes)
+                {
+                    _context.MenuItemSizes.Add(new MenuItemSize
+                    {
+                        MenuItemId = dto.Id,
+                        Size = size.Size,
+                        Price = size.Price,
+                        IsAvailable = size.IsAvailable
+                    });
+                }
+            }
+
             _context.AuditLog.Add(new AuditLogEntities
             {
                 Username = dto.cashierId,
@@ -156,10 +189,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
             if (menuItem == null)
                 return "Menu item not found or does not belong to this cashier";
 
-            // Delete child MenuItemProducts only
+            // Delete child MenuItemProducts
             var linkedProducts = _context.MenuItemProducts
                 .Where(mp => mp.MenuItemId == id);
             _context.MenuItemProducts.RemoveRange(linkedProducts);
+
+            // Delete child MenuItemSizes
+            var linkedSizes = _context.MenuItemSizes
+                .Where(s => s.MenuItemId == id);
+            _context.MenuItemSizes.RemoveRange(linkedSizes);
 
             // SalesItems are not deleted; MenuItemId will be set to NULL automatically
             _context.MenuItems.Remove(menuItem);
@@ -193,6 +231,7 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem
                 .Where(m => m.CashierId == cashierId)
                 .Include(m => m.MenuItemProducts)
                     .ThenInclude(mp => mp.ProductOfSupplier)
+                .Include(m => m.MenuItemSizes)
                 .ToListAsync();
 
             foreach (var menuItem in menuItems)

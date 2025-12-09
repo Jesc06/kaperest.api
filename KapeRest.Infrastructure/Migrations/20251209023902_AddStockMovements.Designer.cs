@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251128002220_new")]
-    partial class @new
+    [Migration("20251209023902_AddStockMovements")]
+    partial class AddStockMovements
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,77 @@ namespace KapeRest.Infrastructure.Migrations
                     b.ToTable("MenuItemProducts");
                 });
 
+            modelBuilder.Entity("KapeRest.Core.Entities.MenuEntities.MenuItemSize", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId", "Size")
+                        .IsUnique();
+
+                    b.ToTable("MenuItemSizes");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.PendingPaymentEntities.PendingGCashPaymentEntities", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CartItemsJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CashierId")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("PaymentReference")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("TaxPercent")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PendingGCashPayments");
+                });
+
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesItemEntities", b =>
                 {
                     b.Property<int>("Id")
@@ -86,11 +157,22 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Property<int?>("MenuItemId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MenuItemSizeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("SalesTransactionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SugarLevel")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(65,30)");
@@ -119,6 +201,9 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("CheckoutUrl")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime(6)");
 
@@ -131,6 +216,9 @@ namespace KapeRest.Infrastructure.Migrations
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PaymentReference")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Reason")
@@ -285,6 +373,48 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasIndex("SupplierId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("KapeRest.Domain.Entities.InventoryEntities.StockMovement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MovementType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("StockMovements");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItem", b =>
@@ -711,6 +841,17 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Navigation("ProductOfSupplier");
                 });
 
+            modelBuilder.Entity("KapeRest.Core.Entities.MenuEntities.MenuItemSize", b =>
+                {
+                    b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
+                        .WithMany("MenuItemSizes")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+                });
+
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesItemEntities", b =>
                 {
                     b.HasOne("KapeRest.Domain.Entities.MenuEntities.MenuItem", "MenuItem")
@@ -752,6 +893,17 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("KapeRest.Domain.Entities.InventoryEntities.StockMovement", b =>
+                {
+                    b.HasOne("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.PendingAccounts.PendingUserAccount", b =>
@@ -859,6 +1011,8 @@ namespace KapeRest.Infrastructure.Migrations
             modelBuilder.Entity("KapeRest.Domain.Entities.MenuEntities.MenuItem", b =>
                 {
                     b.Navigation("MenuItemProducts");
+
+                    b.Navigation("MenuItemSizes");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", b =>

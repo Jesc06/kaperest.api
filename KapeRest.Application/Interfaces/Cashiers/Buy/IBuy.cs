@@ -18,6 +18,11 @@ namespace KapeRest.Application.Interfaces.Cashiers.Buy
         Task<ICollection> GetHoldTransactions(string cashierId);
 
 
+        Task UpdatePaymentStatusAsync(string paymentReference, string status);
+        Task<bool> CompleteGCashPurchaseAsync(string paymentReference, string cashierId);
+        Task<bool> IsGCashTransactionCompletedAsync(string paymentReference);
+
+
         //Void request
         Task<string> RequestVoidAsync(int saleId, string reason);
         Task<string> ApproveVoidAsync(int saleId);

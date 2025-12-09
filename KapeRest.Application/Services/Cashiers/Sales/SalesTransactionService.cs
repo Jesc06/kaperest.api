@@ -13,16 +13,22 @@ namespace KapeRest.Application.Services.Cashiers.Sales
         private readonly IsalesTransaction _transaction;
         public SalesTransactionService(IsalesTransaction transaction)
         {
-           _transaction = transaction;
+            _transaction = transaction;
         }
 
-        public async Task<ICollection<SalesTransactionEntities>>SalesPurchases(string CashierId)
+        public async Task<ICollection<SalesTransactionEntities>> SalesPurchases(string CashierId)
         {
             var sales = await _transaction.Purchases(CashierId);
             return sales;
         }
 
 
+        public async Task<decimal> GetTotalSalesAsync()
+        {
+            return await _transaction.GetTotalSalesAsync();
+        }
+
 
     }
+
 }

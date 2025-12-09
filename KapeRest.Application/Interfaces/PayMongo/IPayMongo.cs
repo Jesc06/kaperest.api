@@ -11,5 +11,9 @@ namespace KapeRest.Application.Interfaces.PayMongo
     {
         Task<PaymentResultDto> CreateGcashPaymentAsync(CreatePaymentDTO dto);
         byte[] GenerateQrCode(string checkoutUrl);
+        Task SavePendingPaymentAsync(PendingPaymentDTO dto);
+        Task<PaymentVerificationResult> VerifyPaymentStatusAsync(string referenceId);
+        Task<bool> CompletePendingPaymentAsync(string paymentReference, string cashierId);
+        PendingPaymentDTO GetPendingPayment(string paymentReference);
     }
 }

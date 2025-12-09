@@ -11,7 +11,7 @@
         {
             public int Id { get; set; }
             public string ItemName { get; set; }
-            public decimal Price { get; set; }
+            public decimal Price { get; set; } // Base price (can be used as default or Small price)
             public string Category { get; set; }
             public string Description { get; set; }
             public string IsAvailable { get; set; }   
@@ -20,9 +20,12 @@
             public int? BranchId { get; set; }    // optional branch
 
             public ICollection<MenuItemProduct> MenuItemProducts { get; set; }
+            public ICollection<MenuItemSize> MenuItemSizes { get; set; }
+            
             public MenuItem()
             {
                 MenuItemProducts = new List<MenuItemProduct>();
+                MenuItemSizes = new List<MenuItemSize>();
             }
         }
     }
