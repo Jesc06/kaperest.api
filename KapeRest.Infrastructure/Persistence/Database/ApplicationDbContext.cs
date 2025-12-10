@@ -15,6 +15,8 @@ using KapeRest.Core.Entities.Branch;
 using KapeRest.Core.Entities.SalesTransaction;
 using KapeRest.Core.Entities.MenuEntities;
 using KapeRest.Core.Entities.PendingPaymentEntities;
+using KapeRest.Core.Entities.VoucherEntities;
+using KapeRest.Core.Entities.CustomerEntities;
 
 namespace KapeRest.Infrastructures.Persistence.Database
 {
@@ -105,6 +107,54 @@ namespace KapeRest.Infrastructures.Persistence.Database
                     .HasForeignKey(x => x.MenuItemId)
                     .OnDelete(DeleteBehavior.SetNull); // Safe delete
             });
+
+            // ---------------------------
+            // VOUCHER
+            // ---------------------------
+            modelBuilder.Entity<Voucher>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.HasIndex(x => x.Code).IsUnique();
+                
+                entity.HasOne<Customer>()
+                    .WithMany()
+                    .HasForeignKey(x => x.CustomerId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired(false);
+            });
+
+            // ---------------------------
+            // VOUCHER USAGE
+            // ---------------------------
+            modelBuilder.Entity<VoucherUsage>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.HasOne(x => x.Voucher)
+                    .WithMany(v => v.VoucherUsages)
+                    .HasForeignKey(x => x.VoucherId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.Customer)
+                    .WithMany(c => c.VoucherUsages)
+                    .HasForeignKey(x => x.CustomerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.SalesTransaction)
+                    .WithMany()
+                    .HasForeignKey(x => x.SalesTransactionId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .IsRequired(false);
+            });
+
+            // ---------------------------
+            // CUSTOMER
+            // ---------------------------
+            modelBuilder.Entity<Customer>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.HasIndex(x => x.ContactNumber);
+            });
         }
 
 
@@ -140,6 +190,15 @@ namespace KapeRest.Infrastructures.Persistence.Database
         public DbSet<Tax> Tax { get; set; }
         public DbSet<Discount> Discount { get; set; }
         public DbSet<BranchEntities> Branches { get; set; }
+        #endregion
+
+        #region--Vouchers--
+        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherUsage> VoucherUsages { get; set; }
+        #endregion
+
+        #region--Customers--
+        public DbSet<Customer> Customers { get; set; }
         #endregion
 
     }

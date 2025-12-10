@@ -10,6 +10,8 @@ using KapeRest.Application.Interfaces.Cashiers.Sales;
 using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Application.Interfaces.PayMongo;
 using KapeRest.Application.Interfaces.PdfService;
+using KapeRest.Application.Interfaces.Vouchers;
+using KapeRest.Application.Interfaces.Customers;
 using KapeRest.Application.Services.Admin.Audit;
 using KapeRest.Application.Services.Admin.Branch;
 using KapeRest.Application.Services.Admin.CreateMenuItem;
@@ -23,6 +25,8 @@ using KapeRest.Application.UseCases.Sales;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.Audit;
 using KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch;
 using KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales;
+using KapeRest.Infrastructure.Persistence.Repositories.Vouchers;
+using KapeRest.Infrastructure.Persistence.Repositories.Customers;
 using KapeRest.Infrastructure.Services.PayMongoService;
 using KapeRest.Infrastructure.Services.PdfServices;
 using KapeRest.Infrastructures.Persistence.Repositories.Account;
@@ -102,6 +106,9 @@ namespace KapeRest.Infrastructure.DependencyInjection
             services.AddScoped<IAudit, AuditRepository>();
             services.AddScoped<AuditService>();
 
+            services.AddScoped<IVoucherService, VoucherService>();
+
+            services.AddScoped<ICustomerService, CustomerService>();
 
             #endregion
 

@@ -3,7 +3,10 @@ using KapeRest.Application.DTOs.PayMongo;
 using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
 using KapeRest.Application.Interfaces.PayMongo;
+using KapeRest.Application.Interfaces.Vouchers;
+using KapeRest.Application.Interfaces.Customers;
 using KapeRest.Core.Entities.SalesTransaction;
+using KapeRest.Core.Entities.CustomerEntities;
 using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.MenuEntities;
 using KapeRest.Infrastructures.Persistence.Database;
@@ -21,10 +24,15 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
     {
         private readonly ApplicationDbContext _context;
         private readonly IPayMongo _payMongo;
-        public BuyRepository(ApplicationDbContext context, IPayMongo payMongo)
+        private readonly IVoucherService _voucherService;
+        private readonly ICustomerService _customerService;
+        
+        public BuyRepository(ApplicationDbContext context, IPayMongo payMongo, IVoucherService voucherService, ICustomerService customerService)
         {
             _context = context;
             _payMongo = payMongo;
+            _voucherService = voucherService;
+            _customerService = customerService;
         }
 
 
@@ -82,6 +90,30 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
             decimal subtotal = itemPrice * buy.Quantity;
             decimal tax = subtotal * (buy.Tax / 100m);
             decimal discount = subtotal * (buy.DiscountPercent / 100m);
+            
+            // Voucher handling
+            int? voucherId = null;
+            decimal voucherDiscount = 0;
+            string voucherMessage = "";
+            
+            if (!string.IsNullOrEmpty(buy.VoucherCode))
+            {
+                // Pass customerId to check if this customer already used this voucher
+                var voucherValidation = await _voucherService.ValidateVoucherAsync(buy.VoucherCode, subtotal, buy.CustomerId);
+                if (voucherValidation.IsValid)
+                {
+                    voucherId = voucherValidation.VoucherId;
+                    voucherDiscount = voucherValidation.DiscountAmount;
+                    voucherMessage = $" (Voucher: {buy.VoucherCode} - {voucherValidation.DiscountPercent}% off)";
+                    // Add voucher discount to total discount
+                    discount += voucherDiscount;
+                }
+                else
+                {
+                    throw new Exception($"Voucher validation failed: {voucherValidation.Message}");
+                }
+            }
+            
             decimal total = subtotal + tax - discount;
 
 
@@ -175,14 +207,26 @@ namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
                 Username = cashier.Email ?? cashier.UserName ?? "Unknown",
                 Role = "Cashier",
                 Action = "Purchase",
-                Description = $"Completed purchase of {menuItem.ItemName} (Qty: {buy.Quantity}, Total: ₱{total:F2})",
+                Description = $"Completed purchase of {menuItem.ItemName} (Qty: {buy.Quantity}, Total: ₱{total:F2}){voucherMessage}",
                 Date = DateTime.Now
             });
 
             await _context.SaveChangesAsync(); //Save SalesItem
 
+            // Record voucher usage if voucher was used
+            if (voucherId.HasValue && buy.CustomerId.HasValue && buy.CustomerId.Value > 0)
+            {
+                await _voucherService.UseVoucherAsync(voucherId.Value, buy.CustomerId.Value, subtotal + tax, total, sale.Id);
+            }
 
-            return $"Purchase successful (Receipt #{sale.MenuItemName})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}\nTotal: ₱{total:F2}";
+            // Update customer statistics if customer was selected
+            if (buy.CustomerId.HasValue && buy.CustomerId.Value > 0)
+            {
+                await _customerService.UpdatePurchaseStatsAsync(buy.CustomerId.Value, total);
+            }
+
+            string voucherInfo = voucherId.HasValue ? $"\nVoucher Discount: ₱{voucherDiscount:F2}{voucherMessage}" : "";
+            return $"Purchase successful (Receipt #{sale.ReceiptNumber})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}{voucherInfo}\nTotal: ₱{total:F2}";
         }
 
 

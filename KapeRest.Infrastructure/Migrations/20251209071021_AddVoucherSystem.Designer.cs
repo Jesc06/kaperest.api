@@ -4,6 +4,7 @@ using KapeRest.Infrastructures.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251209071021_AddVoucherSystem")]
+    partial class AddVoucherSystem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,51 +50,6 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Branches");
-                });
-
-            modelBuilder.Entity("KapeRest.Core.Entities.CustomerEntities.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ContactNumber")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("LastPurchaseDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("LoyaltyLevel")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LoyaltyPoints")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TotalPurchases")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalSpent")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactNumber");
-
-                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("KapeRest.Core.Entities.MenuEntities.MenuItemProduct", b =>
@@ -362,9 +320,6 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Property<int>("CurrentUses")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -378,9 +333,6 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("IsCustomerSpecific")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("MaxUses")
                         .HasColumnType("int");
 
@@ -388,8 +340,6 @@ namespace KapeRest.Infrastructure.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique();
-
-                    b.HasIndex("CustomerId");
 
                     b.ToTable("Vouchers");
                 });
@@ -401,9 +351,6 @@ namespace KapeRest.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -428,8 +375,6 @@ namespace KapeRest.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("SalesTransactionId");
 
@@ -1024,22 +969,8 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("KapeRest.Core.Entities.VoucherEntities.Voucher", b =>
-                {
-                    b.HasOne("KapeRest.Core.Entities.CustomerEntities.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("KapeRest.Core.Entities.VoucherEntities.VoucherUsage", b =>
                 {
-                    b.HasOne("KapeRest.Core.Entities.CustomerEntities.Customer", "Customer")
-                        .WithMany("VoucherUsages")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", "SalesTransaction")
                         .WithMany()
                         .HasForeignKey("SalesTransactionId")
@@ -1050,8 +981,6 @@ namespace KapeRest.Infrastructure.Migrations
                         .HasForeignKey("VoucherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Customer");
 
                     b.Navigation("SalesTransaction");
 
@@ -1170,11 +1099,6 @@ namespace KapeRest.Infrastructure.Migrations
             modelBuilder.Entity("KapeRest.Core.Entities.Branch.BranchEntities", b =>
                 {
                     b.Navigation("PendingAccounts");
-                });
-
-            modelBuilder.Entity("KapeRest.Core.Entities.CustomerEntities.Customer", b =>
-                {
-                    b.Navigation("VoucherUsages");
                 });
 
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", b =>

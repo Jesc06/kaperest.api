@@ -17,6 +17,9 @@ namespace KapeRest.Application.DTOs.Users.Buy
         public decimal DiscountPercent { get; set; } = 0;
         public decimal Tax { get; set; }
         public string PaymentMethod { get; set; } = "Cash";
+        public string? VoucherCode { get; set; } // Voucher code for automatic discount
+        public string? CustomerName { get; set; } // Customer name for voucher tracking
+        public int? CustomerId { get; set; } // Customer ID for purchase tracking
 
     }
 }
