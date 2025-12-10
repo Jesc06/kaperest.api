@@ -40,7 +40,10 @@ namespace KapeRest.Controllers.Users.Buy
                 DiscountPercent = buy.DiscountPercent,
                 Tax = buy.Tax,
                 PaymentMethod = buy.PaymentMethod,
-                CashierId = cashierIdFromJWTClaims
+                CashierId = cashierIdFromJWTClaims,
+                VoucherCode = buy.VoucherCode,
+                CustomerName = buy.CustomerName,
+                CustomerId = buy.CustomerId
             };
 
             try
