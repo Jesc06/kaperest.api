@@ -35,6 +35,9 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
             // 3. Seed Branches
             var branches = await SeedBranches(context);
 
+            // 3.1. Assign branches to users (after branches are created)
+            await AssignBranchesToUsers(userManager, users, branches);
+
             // 4. Seed Tax and Discounts
             await SeedTaxAndDiscounts(context);
 
@@ -56,7 +59,10 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
             // 10. Seed Sales Transactions (150 transactions)
             await SeedSalesTransactions(context, users, branches, menuItems);
 
-            // 11. Seed Audit Logs (50 logs)
+            // 11. Seed Vouchers (10 vouchers)
+            await SeedVouchers(context, users);
+
+            // 12. Seed Audit Logs (50 logs)
             await SeedAuditLogs(context, users);
 
             await context.SaveChangesAsync();
@@ -92,6 +98,7 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
                     LastName = "Ramos",
                     EmailConfirmed = true,
                     PhoneNumber = "09191234567"
+                    // BranchId will be assigned later after branches are created
                 };
                 var result = await userManager.CreateAsync(cashier, "Cashier@123");
                 if (!result.Succeeded)
@@ -174,7 +181,8 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
                     LastName = "Reyes",
                     EmailConfirmed = true,
                     PhoneNumber = "09187654321",
-                    CashierId = cashier.Id // Assign cashier to staff
+                    CashierId = cashier.Id
+                    // BranchId will be assigned later after branches are created
                 };
                 var result = await userManager.CreateAsync(staff, "Staff@123");
                 if (!result.Succeeded)
@@ -211,6 +219,32 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
             users["Staff"] = staff;
 
             return users;
+        }
+
+        private static async Task AssignBranchesToUsers(
+            UserManager<UsersIdentity> userManager, 
+            Dictionary<string, UsersIdentity> users,
+            List<BranchEntities> branches)
+        {
+            if (branches.Count == 0) return;
+
+            var firstBranch = branches[0];
+            
+            // Assign Cashier to first branch
+            var cashier = users["Cashier"];
+            if (cashier.BranchId == null)
+            {
+                cashier.BranchId = firstBranch.Id;
+                await userManager.UpdateAsync(cashier);
+            }
+            
+            // Assign Staff to first branch
+            var staff = users["Staff"];
+            if (staff.BranchId == null)
+            {
+                staff.BranchId = firstBranch.Id;
+                await userManager.UpdateAsync(staff);
+            }
         }
 
         private static async Task<List<BranchEntities>> SeedBranches(ApplicationDbContext context)
@@ -654,9 +688,11 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
             };
 
             // Generate more transactions (150 transactions over 30 days)
+            // Mix of transactions between Cashier and Staff users
             for (int i = 0; i < 150; i++)
             {
-                var cashier = users["Cashier"];
+                // 50% Cashier, 50% Staff transactions
+                var cashier = i % 2 == 0 ? users["Cashier"] : users["Staff"];
                 var branch = branches[random.Next(branches.Count)];
                 var itemCount = random.Next(1, 5);
                 var transactionItems = menuItems.OrderBy(x => random.Next()).Take(itemCount).ToList();
@@ -756,6 +792,60 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
             await context.SaveChangesAsync();
         }
 
+        private static async Task SeedVouchers(ApplicationDbContext context, Dictionary<string, UsersIdentity> users)
+        {
+            if (await context.Vouchers.AnyAsync())
+            {
+                return;
+            }
+
+            var vouchers = new List<KapeRest.Core.Entities.VoucherEntities.Voucher>();
+            var random = new Random();
+            var admin = users["Admin"];
+
+            // Create 10 different vouchers with various states
+            var voucherData = new[]
+            {
+                new { Code = "WELCOME10", Discount = 10m, MaxUses = 100, CurrentUses = 15, DaysUntilExpiry = 30, Description = "Welcome discount for new customers", IsActive = true },
+                new { Code = "COFFEE20", Discount = 20m, MaxUses = 50, CurrentUses = 45, DaysUntilExpiry = 15, Description = "20% off all coffee drinks", IsActive = true },
+                new { Code = "FREEPASTRY", Discount = 15m, MaxUses = 30, CurrentUses = 28, DaysUntilExpiry = 7, Description = "15% off on pastries", IsActive = true },
+                new { Code = "MONDAY25", Discount = 25m, MaxUses = 200, CurrentUses = 50, DaysUntilExpiry = 45, Description = "Monday special discount", IsActive = true },
+                new { Code = "LOYALTY50", Discount = 50m, MaxUses = 20, CurrentUses = 8, DaysUntilExpiry = 60, Description = "Loyalty reward for regular customers", IsActive = true },
+                new { Code = "EXPIRED15", Discount = 15m, MaxUses = 100, CurrentUses = 45, DaysUntilExpiry = -5, Description = "Expired promotional voucher", IsActive = true },
+                new { Code = "FULLUSED", Discount = 10m, MaxUses = 25, CurrentUses = 25, DaysUntilExpiry = 20, Description = "Fully used voucher", IsActive = true },
+                new { Code = "INACTIVE20", Discount = 20m, MaxUses = 100, CurrentUses = 10, DaysUntilExpiry = 30, Description = "Deactivated voucher", IsActive = false },
+                new { Code = "NOEXPIRY", Discount = 5m, MaxUses = 1000, CurrentUses = 150, DaysUntilExpiry = 0, Description = "Voucher with no expiry date", IsActive = true },
+                new { Code = "STUDENT15", Discount = 15m, MaxUses = 500, CurrentUses = 120, DaysUntilExpiry = 90, Description = "Student discount voucher", IsActive = true }
+            };
+
+            foreach (var data in voucherData)
+            {
+                DateTime? expiryDate = null;
+                if (data.DaysUntilExpiry != 0)
+                {
+                    expiryDate = DateTime.UtcNow.AddDays(data.DaysUntilExpiry);
+                }
+
+                vouchers.Add(new KapeRest.Core.Entities.VoucherEntities.Voucher
+                {
+                    Code = data.Code,
+                    DiscountPercent = data.Discount,
+                    MaxUses = data.MaxUses,
+                    CurrentUses = data.CurrentUses,
+                    IsActive = data.IsActive,
+                    ExpiryDate = expiryDate,
+                    CreatedDate = DateTime.UtcNow.AddDays(-random.Next(60, 120)),
+                    CreatedBy = admin.Id,
+                    Description = data.Description,
+                    IsCustomerSpecific = false,
+                    CustomerId = null
+                });
+            }
+
+            context.Vouchers.AddRange(vouchers);
+            await context.SaveChangesAsync();
+        }
+
         private static async Task SeedAuditLogs(ApplicationDbContext context, Dictionary<string, UsersIdentity> users)
         {
             if (await context.AuditLog.AnyAsync())
@@ -792,7 +882,7 @@ namespace KapeRest.Infrastructures.Persistence.Seeder
 
                 auditLogs.Add(new AuditLogEntities
                 {
-                    Username = user.Email,
+                    Username = user.Email ?? "Unknown",
                     Role = roles[random.Next(roles.Length)],
                     Action = actions[random.Next(actions.Length)],
                     Description = descriptions[random.Next(descriptions.Length)],

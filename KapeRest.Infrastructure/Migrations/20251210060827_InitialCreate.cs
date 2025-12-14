@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace KapeRest.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddPendingGCashPaymentsTable : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,6 +74,31 @@ namespace KapeRest.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Branches", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ContactNumber = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    LastPurchaseDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    TotalPurchases = table.Column<int>(type: "int", nullable: false),
+                    TotalSpent = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    LoyaltyPoints = table.Column<int>(type: "int", nullable: false),
+                    LoyaltyLevel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -304,6 +329,39 @@ namespace KapeRest.Infrastructure.Migrations
                         name: "FK_PendingUserAccount_Branches_BranchId",
                         column: x => x.BranchId,
                         principalTable: "Branches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Vouchers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Code = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DiscountPercent = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    MaxUses = table.Column<int>(type: "int", nullable: false),
+                    CurrentUses = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
+                    IsCustomerSpecific = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vouchers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vouchers_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -578,6 +636,36 @@ namespace KapeRest.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "StockMovements",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    MovementType = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Reason = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TransactionDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UserId = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BranchId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StockMovements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StockMovements_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "SalesItems",
                 columns: table => new
                 {
@@ -606,6 +694,46 @@ namespace KapeRest.Infrastructure.Migrations
                         name: "FK_SalesItems_SalesTransaction_SalesTransactionId",
                         column: x => x.SalesTransactionId,
                         principalTable: "SalesTransaction",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "VoucherUsages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    VoucherId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    CustomerName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UsedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    SalesTransactionId = table.Column<int>(type: "int", nullable: true),
+                    DiscountApplied = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    OriginalAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    FinalAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VoucherUsages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VoucherUsages_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VoucherUsages_SalesTransaction_SalesTransactionId",
+                        column: x => x.SalesTransactionId,
+                        principalTable: "SalesTransaction",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_VoucherUsages_Vouchers_VoucherId",
+                        column: x => x.VoucherId,
+                        principalTable: "Vouchers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -659,6 +787,11 @@ namespace KapeRest.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Customers_ContactNumber",
+                table: "Customers",
+                column: "ContactNumber");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MenuItemProducts_ProductOfSupplierId",
                 table: "MenuItemProducts",
                 column: "ProductOfSupplierId");
@@ -705,9 +838,40 @@ namespace KapeRest.Infrastructure.Migrations
                 column: "CashierId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StockMovements_ProductId",
+                table: "StockMovements",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SupplierTransactionHistories_SupplierId",
                 table: "SupplierTransactionHistories",
                 column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vouchers_Code",
+                table: "Vouchers",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vouchers_CustomerId",
+                table: "Vouchers",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoucherUsages_CustomerId",
+                table: "VoucherUsages",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoucherUsages_SalesTransactionId",
+                table: "VoucherUsages",
+                column: "SalesTransactionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoucherUsages_VoucherId",
+                table: "VoucherUsages",
+                column: "VoucherId");
         }
 
         /// <inheritdoc />
@@ -750,28 +914,40 @@ namespace KapeRest.Infrastructure.Migrations
                 name: "SalesItems");
 
             migrationBuilder.DropTable(
+                name: "StockMovements");
+
+            migrationBuilder.DropTable(
                 name: "SupplierTransactionHistories");
 
             migrationBuilder.DropTable(
                 name: "Tax");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "VoucherUsages");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "MenuItems");
 
             migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "SalesTransaction");
+
+            migrationBuilder.DropTable(
+                name: "Vouchers");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Branches");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KapeRest.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251209023902_AddStockMovements")]
-    partial class AddStockMovements
+    [Migration("20251210060827_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,51 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Branches");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.CustomerEntities.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactNumber")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("LastPurchaseDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("LoyaltyLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LoyaltyPoints")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("TotalPurchases")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalSpent")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactNumber");
+
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("KapeRest.Core.Entities.MenuEntities.MenuItemProduct", b =>
@@ -296,6 +341,104 @@ namespace KapeRest.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tax");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.VoucherEntities.Voucher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("CurrentUses")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsCustomerSpecific")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MaxUses")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Vouchers");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.VoucherEntities.VoucherUsage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("DiscountApplied")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("FinalAmount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("OriginalAmount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int?>("SalesTransactionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UsedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("VoucherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("SalesTransactionId");
+
+                    b.HasIndex("VoucherId");
+
+                    b.ToTable("VoucherUsages");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.AuditLogEntities.AuditLogEntities", b =>
@@ -884,6 +1027,40 @@ namespace KapeRest.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("KapeRest.Core.Entities.VoucherEntities.Voucher", b =>
+                {
+                    b.HasOne("KapeRest.Core.Entities.CustomerEntities.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.VoucherEntities.VoucherUsage", b =>
+                {
+                    b.HasOne("KapeRest.Core.Entities.CustomerEntities.Customer", "Customer")
+                        .WithMany("VoucherUsages")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", "SalesTransaction")
+                        .WithMany()
+                        .HasForeignKey("SalesTransactionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("KapeRest.Core.Entities.VoucherEntities.Voucher", "Voucher")
+                        .WithMany("VoucherUsages")
+                        .HasForeignKey("VoucherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("SalesTransaction");
+
+                    b.Navigation("Voucher");
+                });
+
             modelBuilder.Entity("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", b =>
                 {
                     b.HasOne("KapeRest.Domain.Entities.SupplierEntities.AddSupplier", "Supplier")
@@ -998,9 +1175,19 @@ namespace KapeRest.Infrastructure.Migrations
                     b.Navigation("PendingAccounts");
                 });
 
+            modelBuilder.Entity("KapeRest.Core.Entities.CustomerEntities.Customer", b =>
+                {
+                    b.Navigation("VoucherUsages");
+                });
+
             modelBuilder.Entity("KapeRest.Core.Entities.SalesTransaction.SalesTransactionEntities", b =>
                 {
                     b.Navigation("SalesItems");
+                });
+
+            modelBuilder.Entity("KapeRest.Core.Entities.VoucherEntities.Voucher", b =>
+                {
+                    b.Navigation("VoucherUsages");
                 });
 
             modelBuilder.Entity("KapeRest.Domain.Entities.InventoryEntities.ProductOfSupplier", b =>
