@@ -1,4 +1,4 @@
-# ☕ KapeRest
+# ☕ KapeRest Api
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-9.0-blue)](https://dotnet.microsoft.com/)
