@@ -4,7 +4,7 @@
 [![.NET](https://img.shields.io/badge/.NET-9.0-blue)](https://dotnet.microsoft.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange)](https://www.mysql.com/)
 
-A comprehensive café management system backend built with ASP.NET Core, featuring Point of Sale, Inventory Management, and Analytics APIs.
+Backend built with ASP.NET Core, featuring Point of Sale, Inventory Management, and Analytics APIs.
 
 ## 📋 Table of Contents
 
