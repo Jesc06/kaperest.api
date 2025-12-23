@@ -1,4 +1,5 @@
-﻿using KapeRest.Api.DTOs.AddProducts;
+﻿using System.Threading.Tasks;
+using KapeRest.Api.DTOs.AddProducts;
 using KapeRest.Application.DTOs.Admin.Inventory;
 using KapeRest.Application.Services.Admin.Inventory;
 using KapeRest.Domain.Entities.InventoryEntities;

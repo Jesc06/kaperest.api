@@ -13,7 +13,7 @@ using System.Runtime.Intrinsics.Arm;
 using System.Net.Http.Headers;
 using KapeRest.Application.Interfaces.Auth;
 
-namespace KapeRest.Infrastructures.Services.JwtService
+namespace KapeRest.Infrastructure.Services.JwtService
 {
     public class GenerateTokenService : IJwtService
     {

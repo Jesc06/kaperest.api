@@ -1,3 +1,4 @@
+using System;
 using DotNetEnv;
 using KapeRest.Application.Interfaces.Admin.Branch;
 using KapeRest.Application.Interfaces.Admin.CreateMenuItem;
@@ -18,19 +19,19 @@ using KapeRest.Application.Services.Auth;
 using KapeRest.Application.Services.Cashiers.Buy;
 using KapeRest.Application.Services.Cashiers.Sales;
 using KapeRest.Infrastructure.DependencyInjection;
-using KapeRest.Infrastructure.Persistence.Repositories.Admin.Branch;
+using KapeRest.Infrastructure.Persistence.Repositories.Admin.BranchRepo;
 using KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales;
 using KapeRest.Infrastructure.Services.PayMongoService;
-using KapeRest.Infrastructures.Persistence.Database;
-using KapeRest.Infrastructures.Persistence.Repositories.Account;
-using KapeRest.Infrastructures.Persistence.Repositories.Admin.CreateMenuItem;
-using KapeRest.Infrastructures.Persistence.Repositories.Admin.Inventory;
-using KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccounts;
-using KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers;
-using KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy;
-using KapeRest.Infrastructures.Persistence.Seeder;
-using KapeRest.Infrastructures.Services.CurrentUserService;
-using KapeRest.Infrastructures.Services.JwtService; 
+using KapeRest.Infrastructure.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Repositories.Auth;
+using KapeRest.Infrastructure.Persistence.Repositories.Admin.CreateMenuItem;
+using KapeRest.Infrastructure.Persistence.Repositories.Admin.Inventory;
+using KapeRest.Infrastructure.Persistence.Repositories.Admin.PendingAccounts;
+using KapeRest.Infrastructure.Persistence.Repositories.Admin.Suppliers;
+using KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy;
+using KapeRest.Infrastructure.Persistence.Seeder;
+using KapeRest.Infrastructure.Services.CurrentUserService;
+using KapeRest.Infrastructure.Services.JwtService; 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
+using KapeRest.Infrastructure.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Seeder;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +86,7 @@ builder.Services.AddIdentity<UsersIdentity, IdentityRole>(options =>
     options.User.RequireUniqueEmail = false;
     options.SignIn.RequireConfirmedEmail = false;
 })
+    
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
@@ -173,7 +181,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-    app.UseCors("AllowReactApp");
+app.UseCors("AllowReactApp");
 
 app.UseStaticFiles();
 
@@ -185,20 +193,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+
 #region --Seed Admin Account and Sample Data--
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UsersIdentity>>();
     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
     // Seed admin account from environment variables
     await AdminSeededAccount.AdminAccount(roleManager, userManager, config);
-    
-    // Seed comprehensive sample data (3 users, 200+ records, menu items with images)
-    await DataSeeder.SeedAllData(context, userManager, roleManager);
 }
 #endregion
+
 
 app.Run();

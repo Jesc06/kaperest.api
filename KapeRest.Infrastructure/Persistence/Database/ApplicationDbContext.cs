@@ -17,8 +17,9 @@ using KapeRest.Core.Entities.MenuEntities;
 using KapeRest.Core.Entities.PendingPaymentEntities;
 using KapeRest.Core.Entities.VoucherEntities;
 using KapeRest.Core.Entities.CustomerEntities;
+using KapeRest.Infrastructure.Persistence.Database;
 
-namespace KapeRest.Infrastructures.Persistence.Database
+namespace KapeRest.Infrastructure.Persistence.Database
 {
     public class ApplicationDbContext : IdentityDbContext<UsersIdentity>
     {

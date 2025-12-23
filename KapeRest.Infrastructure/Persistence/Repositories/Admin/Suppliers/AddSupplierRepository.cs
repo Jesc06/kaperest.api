@@ -3,7 +3,7 @@ using KapeRest.Application.Interfaces.Admin.Supplier;
 using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.InventoryEntities;
 using KapeRest.Domain.Entities.SupplierEntities;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KapeRest.Infrastructure.Persistence.Database;
 
-namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.Suppliers
+namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Suppliers
 {
     public class AddSupplierRepository : ISupplier
     {

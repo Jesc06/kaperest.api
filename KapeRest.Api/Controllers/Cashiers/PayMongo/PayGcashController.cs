@@ -1,4 +1,6 @@
-﻿using KapeRest.Application.DTOs.PayMongo;
+﻿using System;
+using System.Threading.Tasks;
+using KapeRest.Application.DTOs.PayMongo;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
 using KapeRest.Application.Interfaces.PayMongo;
 using Microsoft.AspNetCore.Http;

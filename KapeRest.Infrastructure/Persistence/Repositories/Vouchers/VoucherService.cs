@@ -1,12 +1,13 @@
 using KapeRest.Application.DTOs.Vouchers;
 using KapeRest.Application.Interfaces.Vouchers;
 using KapeRest.Core.Entities.VoucherEntities;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapeRest.Infrastructure.Persistence.Database;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Vouchers
 {

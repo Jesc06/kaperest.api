@@ -1,6 +1,9 @@
-﻿using KapeRest.Application.DTOs.Users.Sales;
+﻿using System.IO;
+using System.Threading.Tasks;
+using KapeRest.Application.DTOs.Users.Sales;
 using KapeRest.Application.Services.Cashiers.Sales;
 using KapeRest.Application.UseCases.Sales;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,6 @@
-﻿using KapeRest.Application.Services.Cashiers.Sales;
+﻿using System;
+using System.Threading.Tasks;
+using KapeRest.Application.Services.Cashiers.Sales;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,5 @@
-﻿using KapeRest.Application.Services.Admin.Audit;
+﻿using System.Threading.Tasks;
+using KapeRest.Application.Services.Admin.Audit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

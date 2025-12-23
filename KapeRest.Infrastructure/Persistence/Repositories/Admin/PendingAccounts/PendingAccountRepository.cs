@@ -4,7 +4,7 @@ using KapeRest.Application.Interfaces.CurrentUserService;
 using KapeRest.Core.Entities.Branch;
 using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.PendingAccounts;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,9 +14,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KapeRest.Infrastructure.Persistence.Database;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace KapeRest.Infrastructures.Persistence.Repositories.Admin.PendingAccounts
+namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.PendingAccounts
 {
     public class PendingAccountRepository : IpendingAccount
     {

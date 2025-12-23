@@ -1,8 +1,10 @@
-﻿using KapeRest.Api.DTOs.Buy;
+﻿using System;
+using System.Threading.Tasks;
+using KapeRest.Api.DTOs.Buy;
 using KapeRest.Application.DTOs.Users.Buy;
 using KapeRest.Application.Interfaces.Cashiers.Buy;
 using KapeRest.Application.Services.Cashiers.Buy;
-using KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy;
+using KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

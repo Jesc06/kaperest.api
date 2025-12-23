@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KapeRest.Infrastructures.Services.CurrentUserService
+namespace KapeRest.Infrastructure.Services.CurrentUserService
 {
     public class CurrentUserService : ICurrentUser
     {
