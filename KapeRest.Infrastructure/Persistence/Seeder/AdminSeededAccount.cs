@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 
-namespace KapeRest.Infrastructures.Persistence.Seeder
+namespace KapeRest.Infrastructure.Persistence.Seeder
 {
     public class AdminSeededAccount
     {

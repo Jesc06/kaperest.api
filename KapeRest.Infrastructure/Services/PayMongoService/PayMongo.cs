@@ -1,15 +1,18 @@
 ﻿using KapeRest.Application.DTOs.PayMongo;
 using KapeRest.Application.Interfaces.PayMongo;
 using KapeRest.Core.Entities.PendingPaymentEntities;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using QRCoder;
 using RestSharp;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KapeRest.Infrastructure.Persistence.Database;
 
 namespace KapeRest.Infrastructure.Services.PayMongoService
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KapeRest.Application.Interfaces.Auth;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.AspNetCore.Identity;
 using KapeRest.Application.DTOs.Auth;
 using Microsoft.Extensions.Configuration;
@@ -14,8 +14,9 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using KapeRest.Domain.Entities.AuditLogEntities;
+using KapeRest.Infrastructure.Persistence.Database;
 
-namespace KapeRest.Infrastructures.Persistence.Repositories.Account
+namespace KapeRest.Infrastructure.Persistence.Repositories.Auth
 {
     public class RegisterAccountRepositories : IAccounts
     {

@@ -1,4 +1,6 @@
-﻿namespace KapeRest.Api.DTOs.MenuItem
+﻿using Microsoft.AspNetCore.Http;
+
+namespace KapeRest.Api.DTOs.MenuItem
 {
     public class UpdateMenuItemDTOs
     {

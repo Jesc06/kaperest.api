@@ -9,7 +9,7 @@ using KapeRest.Core.Entities.SalesTransaction;
 using KapeRest.Core.Entities.CustomerEntities;
 using KapeRest.Domain.Entities.AuditLogEntities;
 using KapeRest.Domain.Entities.MenuEntities;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -17,8 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KapeRest.Infrastructure.Persistence.Database;
 
-namespace KapeRest.Infrastructures.Persistence.Repositories.Cashiers.Buy
+namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
 {
     public class BuyRepository : IBuy
     {

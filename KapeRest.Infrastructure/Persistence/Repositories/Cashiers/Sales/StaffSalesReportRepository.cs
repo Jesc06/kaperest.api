@@ -1,11 +1,12 @@
 ﻿using KapeRest.Application.DTOs.Cashiers;
 using KapeRest.Application.Interfaces.Cashiers.Sales;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapeRest.Infrastructure.Persistence.Database;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
 {

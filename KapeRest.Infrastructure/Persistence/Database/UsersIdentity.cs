@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KapeRest.Infrastructures.Persistence.Database
+namespace KapeRest.Infrastructure.Persistence.Database
 {
     public class UsersIdentity : IdentityUser
     {

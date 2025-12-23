@@ -1,13 +1,14 @@
 ﻿using KapeRest.Application.DTOs.Users.Sales;
 using KapeRest.Application.Interfaces.Cashiers.Sales;
 using KapeRest.Core.Entities.SalesTransaction;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapeRest.Infrastructure.Persistence.Database;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
 {

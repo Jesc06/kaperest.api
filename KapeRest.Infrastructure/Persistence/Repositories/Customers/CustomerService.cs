@@ -7,7 +7,8 @@ using KapeRest.Application.DTOs.Customers;
 using KapeRest.Application.Interfaces.Customers;
 using KapeRest.Core.Entities.CustomerEntities;
 using KapeRest.Core.Entities.VoucherEntities;
-using KapeRest.Infrastructures.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
+using KapeRest.Infrastructure.Persistence.Database;
 
 namespace KapeRest.Infrastructure.Persistence.Repositories.Customers
 {
