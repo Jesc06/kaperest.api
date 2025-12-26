@@ -116,8 +116,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
             }
             
             decimal total = subtotal + tax - discount;
-
-
+            
             string gcashCheckoutUrl = null;
             string paymentReference = null;
 
@@ -154,8 +153,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
                     TotalAmount = total
                 });
             }
-
-
+            
             // For GCash payments, don't save transaction yet - wait for webhook completion
             if (buy.PaymentMethod?.ToLower() == "gcash")
             {
@@ -165,7 +163,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
                     $"Pay here:\n{gcashCheckoutUrl}\n\n" +
                     $"Reference ID: {paymentReference}";
             }
-
             // For non-GCash payments, save transaction normally
             // Use Philippine Time for consistency with sales reports
             var philippineTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Manila");
@@ -229,9 +226,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
             string voucherInfo = voucherId.HasValue ? $"\nVoucher Discount: ₱{voucherDiscount:F2}{voucherMessage}" : "";
             return $"Purchase successful (Receipt #{sale.ReceiptNumber})\nSubtotal: ₱{subtotal:F2}\nTax: ₱{tax:F2}\nDiscount: ₱{discount:F2}{voucherInfo}\nTotal: ₱{total:F2}";
         }
-
-
-
+        
 
         public async Task UpdatePaymentStatusAsync(string paymentReference, string status)
         {
@@ -271,11 +266,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
 
             await _context.SaveChangesAsync();
         }
-
-
-
-
-
+        
+        
         public async Task<string> HoldTransaction(BuyMenuItemDTO buy)
         {
             var cashier = await _context.UsersIdentity.FirstOrDefaultAsync(u => u.Id == buy.CashierId);
@@ -663,17 +655,17 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
                     if (anyCashier != null)
                     {
                         actualCashierId = anyCashier.Id;
-                        Console.WriteLine($"❌ Using fallback cashier {anyCashier.Email} (ID: {actualCashierId}) for webhook completion");
+                        Console.WriteLine($"Using fallback cashier {anyCashier.Email} (ID: {actualCashierId}) for webhook completion");
                     }
                     else
                     {
-                        Console.WriteLine("❌ No cashier found in database");
+                        Console.WriteLine("No cashier found in database");
                         return false;
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"✅ Using cashier ID from pending payment: {actualCashierId}");
+                    Console.WriteLine($"Using cashier ID from pending payment: {actualCashierId}");
                 }
 
                 // Create the sales transaction
@@ -718,12 +710,12 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
                 _context.SalesTransaction.Add(sale);
                 await _context.SaveChangesAsync();
 
-                Console.WriteLine($"✅ Created sales transaction #{sale.Id} with CashierId: {sale.CashierId}, Status: {sale.Status}, PaymentMethod: {sale.PaymentMethod}");
-                Console.WriteLine($"   📅 DateTime: {sale.DateTime}");
-                Console.WriteLine($"   💵 Total: ₱{sale.Total:F2}");
-                Console.WriteLine($"   🏢 BranchId: {sale.BranchId}");
-                Console.WriteLine($"   📝 Receipt: {sale.ReceiptNumber}");
-                Console.WriteLine($"   🔍 PaymentReference: {sale.PaymentReference}");
+                Console.WriteLine($"Created sales transaction #{sale.Id} with CashierId: {sale.CashierId}, Status: {sale.Status}, PaymentMethod: {sale.PaymentMethod}");
+                Console.WriteLine($"DateTime: {sale.DateTime}");
+                Console.WriteLine($"Total: ₱{sale.Total:F2}");
+                Console.WriteLine($"BranchId: {sale.BranchId}");
+                Console.WriteLine($"Receipt: {sale.ReceiptNumber}");
+                Console.WriteLine($"PaymentReference: {sale.PaymentReference}");
                 
                 // Verify the sale was actually saved with correct CashierId
                 var verifyQuery = await _context.SalesTransaction
@@ -733,11 +725,11 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
                     
                 if (verifyQuery != null)
                 {
-                    Console.WriteLine($"   ✅ VERIFIED in DB: SalesTransaction #{verifyQuery.Id} has CashierId={verifyQuery.CashierId}");
+                    Console.WriteLine($"VERIFIED in DB: SalesTransaction #{verifyQuery.Id} has CashierId={verifyQuery.CashierId}");
                 }
                 else
                 {
-                    Console.WriteLine($"   ❌ ERROR: Could not verify transaction #{sale.Id} in database!");
+                    Console.WriteLine($"ERROR: Could not verify transaction #{sale.Id} in database!");
                 }
 
                 // Add sales items
@@ -827,6 +819,4 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Buy
 
 
     }
-
-
 }

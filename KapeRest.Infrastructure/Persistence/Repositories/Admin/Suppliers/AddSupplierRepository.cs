@@ -32,7 +32,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Suppliers
                 PhoneNumber = addSupplier.PhoneNumber,
                 Email = addSupplier.Email,
                 Address = addSupplier.Address,
-                UserId = addSupplier.UserId, // ADD THIS
+                UserId = addSupplier.UserId, 
                 Products = new List<ProductOfSupplier>(),
                 TransactionHistories = new List<SupplierTransactionHistory>()
             };
@@ -148,8 +148,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Admin.Suppliers
          .ToListAsync();
             return suppliers;
         }
-
-
 
     }
 }
