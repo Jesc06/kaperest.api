@@ -19,8 +19,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             _context = context;
         }
 
-        #region -- Helper Methods --
-
         private static DateTime GetPhilippineNow() =>
             TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
                 TimeZoneInfo.FindSystemTimeZoneById("Asia/Manila"));
@@ -57,14 +55,10 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                     Status = s.Status
                 })
                 .ToListAsync();
-
             return data;
         }
-
-        #endregion
-
+        
         #region -- Sales Reports (Based on Philippine Local Time) --
-
         public async Task<ICollection<SalesReportDTO>> GetDailySalesReportAsync()
         {
             var phNow = GetPhilippineNow();
@@ -94,7 +88,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
 
             return await GetSalesReportInRangeAsync(startUtc, endUtc);
         }
-
         #endregion
+        
     }
 }
