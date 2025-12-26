@@ -120,17 +120,12 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Customers
 
         private async Task GenerateLoyaltyVoucherAsync(Customer customer)
         {
-            // Calculate tiered discount based on loyalty level
-            // Level 1 (0): 10%
-            // Level 2 (1): 20%
-            // Level 3+ (2+): 30%
             int discountPercent = customer.LoyaltyLevel switch
             {
                 0 => 10,  // First reward
                 1 => 20,  // Second reward
                 _ => 30   // Third reward onwards (max)
             };
-
             // Create a customer-specific voucher with tiered discount
             var voucher = new Voucher
             {
@@ -146,7 +141,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Customers
                 CustomerId = customer.Id,
                 IsCustomerSpecific = true
             };
-
             _context.Vouchers.Add(voucher);
         }
 
@@ -170,5 +164,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Customers
                 LoyaltyProgress = progress
             };
         }
+        
+        
     }
 }

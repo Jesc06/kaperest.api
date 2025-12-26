@@ -48,8 +48,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
 namespace KapeRest.Infrastructure.DependencyInjection
 {
     public static class DependencyInjection
@@ -79,14 +77,12 @@ namespace KapeRest.Infrastructure.DependencyInjection
 
             services.AddScoped<IBuy, BuyRepository>();
             services.AddScoped<BuyService>();
-
-      
+            
             services.AddScoped<IBranch, BranchRepository>();
             services.AddScoped<BranchService>();
 
             services.AddScoped<ICashierSalesReport, CashierSalesReportRepository>();
             services.AddScoped<CashierSalesReportService>();
-
             //pdf
             services.AddScoped<IPdfService, PdfService>();
             services.AddScoped<GenerateSalesReportUseCase>();
@@ -111,9 +107,8 @@ namespace KapeRest.Infrastructure.DependencyInjection
             services.AddScoped<ICustomerService, CustomerService>();
 
             #endregion
-
-
             return services;
         }
+        
     }
 }

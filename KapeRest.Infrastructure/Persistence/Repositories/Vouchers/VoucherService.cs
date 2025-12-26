@@ -14,12 +14,10 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Vouchers
     public class VoucherService : IVoucherService
     {
         private readonly ApplicationDbContext _context;
-
         public VoucherService(ApplicationDbContext context)
         {
             _context = context;
         }
-
         public async Task<VoucherDTO> CreateVoucherAsync(CreateVoucherDTO createVoucher, string createdBy)
         {
             // Check if code already exists
@@ -270,5 +268,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Vouchers
                 IsCustomerSpecific = voucher.IsCustomerSpecific
             };
         }
+        
     }
 }

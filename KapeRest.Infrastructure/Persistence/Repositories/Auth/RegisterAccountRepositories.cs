@@ -226,9 +226,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Auth
                 RefreshToken = newRefreshToken
             };
         }
-
-
-
-
+        
     }
 }

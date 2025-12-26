@@ -79,34 +79,32 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                                   Total = s.Total,
                                   Status = s.Status
                               }).ToListAsync();
-
             return data;
         }
         #endregion
 
+        
         #region -- Sales Reports Per Cashier (Philippine Time) --
-
         public async Task<ICollection<SalesReportDTO>> GetDailySalesReportByCashierAsync(string cashierId)
         {
             var phNow = GetPhilippineNow();
             var startOfDay = new DateTime(phNow.Year, phNow.Month, phNow.Day, 0, 0, 0);
             var endOfDay = startOfDay.AddDays(1);
             
-            Console.WriteLine($"📅 Daily Sales Query for Cashier: {cashierId}");
-            Console.WriteLine($"📅 Philippine Now: {phNow:yyyy-MM-dd HH:mm:ss}");
-            Console.WriteLine($"📅 Start of Day: {startOfDay:yyyy-MM-dd HH:mm:ss}");
-            Console.WriteLine($"📅 End of Day: {endOfDay:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"Daily Sales Query for Cashier: {cashierId}");
+            Console.WriteLine($"Philippine Now: {phNow:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"Start of Day: {startOfDay:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"End of Day: {endOfDay:yyyy-MM-dd HH:mm:ss}");
             
             // Since we're now storing DateTime as Philippine Time directly,
             // we don't need to convert to UTC for the query
             var result = await GetSalesReportByCashierInRangeAsync(cashierId, startOfDay, endOfDay);
             
-            Console.WriteLine($"📅 Daily Sales Found: {result.Count} transactions");
+            Console.WriteLine($"Daily Sales Found: {result.Count} transactions");
             foreach (var sale in result)
             {
                 Console.WriteLine($"   - {sale.DateTime:yyyy-MM-dd HH:mm:ss} | {sale.MenuItemName} | ₱{sale.Total}");
             }
-            
             return result;
         }
 
@@ -114,10 +112,8 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
         public async Task<ICollection<SalesReportDTO>> GetYearlySalesReportByCashierAsync(string cashierId)
         {
             var phNow = GetPhilippineNow();
-
             var startOfYear = new DateTime(phNow.Year, 1, 1);
             var endOfYear = startOfYear.AddYears(1);
-
             // Since we're now storing DateTime as Philippine Time directly,
             // we don't need to convert to UTC for the query
             return await GetSalesReportByCashierInRangeAsync(cashierId, startOfYear, endOfYear);
@@ -128,12 +124,11 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             var phNow = GetPhilippineNow();
             var startOfMonth = new DateTime(phNow.Year, phNow.Month, 1);
             var endOfMonth = startOfMonth.AddMonths(1);
-            
             // Since we're now storing DateTime as Philippine Time directly,
             // we don't need to convert to UTC for the query
             return await GetSalesReportByCashierInRangeAsync(cashierId, startOfMonth, endOfMonth);
         }
-
         #endregion
+        
     }
 }

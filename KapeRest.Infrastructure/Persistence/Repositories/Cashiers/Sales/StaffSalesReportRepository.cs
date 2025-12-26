@@ -86,19 +86,7 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
             return await GetAggregatedSalesInRangeAsync(startUtc, endUtc);
         }
         #endregion
-
-
-
-
-
-
-
-
-
-
-            
-
-
-
+        
+        
     }
 }

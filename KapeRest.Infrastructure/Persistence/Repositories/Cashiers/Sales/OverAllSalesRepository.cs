@@ -46,7 +46,6 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                                          s.Total,
                                          s.Status
                                      }).ToListAsync();
-
             return data;
         }
 
@@ -72,12 +71,9 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
                                    s.Total,
                                    s.Status
                                }).ToListAsync();
-
             return sales;
         }
+        
+        
     }
-
-
-
-
 }

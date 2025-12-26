@@ -30,15 +30,12 @@ namespace KapeRest.Infrastructure.Persistence.Repositories.Cashiers.Sales
 
             return sales;
         }
-
-
+        
         public async Task<decimal> GetTotalSalesAsync()
         {
             return await _context.SalesTransaction.SumAsync(s => s.Total);
         }
 
-
-
-
+        
     }
 }
