@@ -84,7 +84,9 @@ dotnet run
 The API should now be available at `https://localhost:5001`.
 
 
-## 📖 Usage & Documentation
+
+
+## Usage & Documentation
 
 Once the API is running, you can explore the available endpoints through the **Swagger UI**. It’s a great way to see how the system works and test out the logic.
 
@@ -93,14 +95,17 @@ Once the API is running, you can explore the available endpoints through the **S
 
 
 
-## 🔧 Minor Troubleshooting
+
+## Minor Troubleshooting
 
 * **Connection**: If the app won't start, please double-check that your MySQL service is active.
 * **Migrations**: Ensure the `dotnet-ef` tool is installed globally if the update command fails.
 * **Ports**: If port 5001 is occupied, you can adjust the settings in `launchSettings.json`.
 
 
-## 📄 License
+
+
+## License
 
 This project is shared under the **MIT License**. Please see the `LICENSE` file for more details.
 
