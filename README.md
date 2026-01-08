@@ -1,4 +1,4 @@
-# ☕ KapeRest Api
+# KapeRest Api ☕
 
 A modest backend solution built with **ASP.NET Core**, designed to help small to medium café operations manage their daily tasks. This project explores the implementation of Point of Sale (POS), inventory tracking, and basic analytics using a clean, accessible API.
 
