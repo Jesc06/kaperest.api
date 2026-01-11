@@ -26,7 +26,7 @@ A modest backend solution built with **ASP.NET Core**, designed to help small to
 
 
 
-## 📥 Getting Started
+## Getting Started
 
 ### Prerequisites
 
